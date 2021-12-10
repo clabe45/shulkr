@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 gitpython = "*"
+javalang = "*"
 
 [dev-packages]
 
