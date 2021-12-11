@@ -9,9 +9,11 @@ javalang = "*"
 unidiff = "*"
 
 [dev-packages]
+pytest = "*"
 
 [requires]
 python_version = "3.9"
 
 [scripts]
 start = "python -m filter"
+test = "python -m pytest"
