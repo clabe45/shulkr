@@ -1,6 +1,10 @@
 import argparse
+from typing import List
 
-from filter.diff import diff_commits, filter_patch
+from git import Repo
+
+from filter.filter import filter_patch
+from filter.git import diff_commits
 
 
 def parse_args() -> argparse.Namespace:
@@ -8,17 +12,29 @@ def parse_args() -> argparse.Namespace:
 	parser.add_argument('repo_path', type=str, help='Path to the Minecraft git repo')
 	parser.add_argument('commit1', type=str, help='First (earlier) commit to diff')
 	parser.add_argument('commit2', type=str, help='Second (later) commit to diff')
+	parser.add_argument('paths', type=str, nargs='*')
 
 	return parser.parse_args()
+
+
+def get_filtered_diff(repo_path: str, commit1: str, commit2: str, paths: List[str] = []) -> str:
+	repo = Repo(repo_path)
+	diff_index, patch = diff_commits(repo, commit1, commit2, paths)
+	patch = filter_patch(
+		patch,
+		diff_index,
+		repo.commit(commit1),
+		repo.commit(commit2)
+	)
+
+	return str(patch)
 
 
 def main() -> None:
 	args = parse_args()
 
-	patch = diff_commits(args.repo_path, args.commit1, args.commit2)
-	patch = filter_patch(patch)
-	print(patch)
-
+	diff = get_filtered_diff(args.repo_path, args.commit1, args.commit2, args.paths)
+	print(diff)
 
 if __name__ == '__main__':
 	main()
