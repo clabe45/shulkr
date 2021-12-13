@@ -16,4 +16,4 @@ python_version = "3.9"
 
 [scripts]
 start = "python -m filter"
-test = "python -m pytest"
+test = "python -m pytest tests/unit"
