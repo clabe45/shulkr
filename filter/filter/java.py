@@ -71,11 +71,33 @@ def ast_paths_equal(path1: List[Union[Node, List[Node]]], path2: List[Union[Node
 	if len(path1) != len(path2):
 		return False
 
-	for i in range(0, len(path1), 2):  # Skip list entries in the path (because they contain irrelevant parts)
-		if not ast_nodes_equal(path1[i], path1[i], recursive=False, matches=matches):
+	for i in range(len(path1)):  # Skip list entries in the path (because they contain irrelevant parts)
+		if not ast_nodes_equal(path1[i], path2[i], recursive=False, matches=matches):
 			return False
 
 	return True
+
+
+def _filter_ast_node(node: Node, t: type, _path=[]) -> List[Union[Node, str]]:
+	if node is None:
+		return
+
+	elif type(node) is list:
+		for item in node:
+			for path, child in _filter_ast_node(item, t, _path=_path):
+				yield path, child
+
+	elif isinstance(node, Node):
+		if isinstance(node, t):
+			yield _path, node
+
+		for attr in node.attrs:
+			for path, child in _filter_ast_node(getattr(node, attr), t, _path=_path + [node, attr]):
+				yield path, child
+
+
+def filter_ast_node(node: Node, t: type) -> List[Union[Node, str]]:
+	return _filter_ast_node(node, t)
 
 
 def get_renamed_variables(source_code: str, target_code: str) -> Dict[str, str]:
@@ -85,14 +107,14 @@ def get_renamed_variables(source_code: str, target_code: str) -> Dict[str, str]:
 	except javalang.parser.JavaSyntaxError as e:
 		return None
 
-	source_declarations = list(source_tree.filter(VariableDeclaration))
-	target_declarations = list(target_tree.filter(VariableDeclaration))
+	source_declarations = list(filter_ast_node(source_tree, VariableDeclaration))
+	target_declarations = list(filter_ast_node(target_tree, VariableDeclaration))
 
 	source_var_names = [declarator.name for path, declaration in source_declarations for declarator in declaration.declarators]
 	target_var_names = [declarator.name for path, declaration in target_declarations for declarator in declaration.declarators]
 
-	source_references = list(source_tree.filter(MemberReference))
-	target_references = list(target_tree.filter(MemberReference))
+	source_references = list(filter_ast_node(source_tree, MemberReference))
+	target_references = list(filter_ast_node(target_tree, MemberReference))
 
 	renamed_variables = []
 	matches = []

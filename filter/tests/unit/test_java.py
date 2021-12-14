@@ -2,7 +2,7 @@ import pytest
 
 from javalang.tree import CompilationUnit, PackageDeclaration, ClassDeclaration, Literal, MethodDeclaration
 
-from filter.java import ast_nodes_equal, get_renamed_variables
+from filter.java import ast_nodes_equal, filter_ast_node, get_renamed_variables
 
 
 def wrap_in_class(code: str) -> str:
@@ -74,6 +74,11 @@ def test_ast_nodes_equal_recursive_with_inequal_nodes_and_the_inequal_part_ignor
 	assert ast_nodes_equal(node1, node2, matches=[('hello', 'bye')])
 
 
+def test_filter_ast_node_with_no_matching_children_returns_empty_list():
+	node = Literal(value='hello')
+	assert list(filter_ast_node(node, CompilationUnit)) == []
+
+
 def test_get_renamed_variables_identical_code_with_single_declaration_with_intialization_returns_empty_list():
 	renamed_variables = get_renamed_variables(
 		wrap_in_class('int x = 0;'),
@@ -126,7 +131,7 @@ def test_get_renamed_variables_single_declaration_with_intialization_returns_cor
 	)
 
 	actual = [type(node) for path, v in renamed_variables for node in path]
-	expected = [CompilationUnit, list, ClassDeclaration, list, MethodDeclaration, list]
+	expected = [CompilationUnit, str, ClassDeclaration, str, MethodDeclaration, str]
 	assert actual == expected
 
 
