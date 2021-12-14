@@ -164,3 +164,12 @@ def test_get_renamed_variables_single_declaration_with_one_different_reference_r
 	)
 
 	assert renamed_variables == []
+
+
+def test_get_renamed_variables_one_declaration_without_initialization_in_each_branch_of_if_statement_returns_the_mapping():
+	renamed_variables = get_renamed_variables(
+		wrap_in_class('if (true) { int x; } else { int x; }'),
+		wrap_in_class('if (true) { int y; } else { int y; }')
+	)
+
+	assert [v for path, v in renamed_variables] == [[('x', 'y')], [('x', 'y')]]
