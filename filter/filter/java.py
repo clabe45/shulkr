@@ -14,10 +14,6 @@ def _ast_nodes_equal(node1: Node, node2: Node, recursive: bool, matches: List[Tu
 	if not recursive and not _first_level:
 		return True
 
-	for a, b in matches:
-		if (node1 == a and node2 == b) or (node1 == b and node2 == a):
-			return True
-
 	if type(node1) is not type(node2):
 		# print('XA', type(node1), type(node2), '\n')
 		return False
@@ -35,7 +31,11 @@ def _ast_nodes_equal(node1: Node, node2: Node, recursive: bool, matches: List[Tu
 		return True
 
 	elif isinstance(node1, Node):
+		ignored_attrs = [attrs for a, b, attrs in matches if node1 in (a, b) or node2 in (a, b)]
 		for attr in node1.attrs:
+			if attr in ignored_attrs:
+				continue
+
 			attr1 = getattr(node1, attr)
 			attr2 = getattr(node2, attr)
 
@@ -131,9 +131,12 @@ def get_renamed_variables(source_code: str, target_code: str) -> Dict[str, str]:
 			# 1. Make sure paths would be equal if source_node (a) and
 			#	 target_node (b) were the same.
 
-			# 1a. Must be in same part of the file
-			prev_matches_here = [(old, new) for path, v in matches for old, new in v if path == target_dec_path]
-			if not ast_paths_equal(source_dec_path, target_dec_path, matches=prev_matches_here + [(source_dec_node, target_dec_node)]):
+			# 1a. Must be in the same part of the file
+			# First get all previously discovered renamed variables
+			prev_matches_here = [(old, new, attrs) for path, v in matches for old, new, attrs in v if path == target_dec_path]
+			# Now make sure the paths are equal (ignoring the previously found
+			# renamed variables and the declarations themselves)
+			if not ast_paths_equal(source_dec_path, target_dec_path, matches=prev_matches_here + [(source_dec_node, target_dec_node, ['type', 'declarators'])]):
 				continue
 
 			for source_declarator in source_dec_node.declarators:
@@ -142,9 +145,9 @@ def get_renamed_variables(source_code: str, target_code: str) -> Dict[str, str]:
 					continue
 
 				for target_declarator in target_dec_node.declarators:
-
-					# 1c. Must have same initializer
-					if not ast_nodes_equal(source_declarator.initializer, target_declarator.initializer, recursive=True, matches=prev_matches_here + [(source_dec_node, target_dec_node)]):
+					# 1c. All attributes except the name should be equal
+					declarator_match = (source_declarator, target_declarator, 'name')
+					if not ast_nodes_equal(source_declarator, target_declarator, recursive=True, matches=prev_matches_here + [declarator_match]):
 						continue
 
 					# 1c. Must have the same references
@@ -157,7 +160,8 @@ def get_renamed_variables(source_code: str, target_code: str) -> Dict[str, str]:
 					for i in range(len(sr)):
 						source_ref_path, source_ref_node = sr[i]
 						target_ref_path, target_ref_node = tr[i]
-						if not ast_paths_equal(source_ref_path, target_ref_path, matches=prev_matches_here + [(source_dec_node, target_dec_node), (source_ref_node, target_ref_node)]):
+						ref_match = (source_ref_node, target_ref_node, 'name')
+						if not ast_paths_equal(source_ref_path, target_ref_path, matches=prev_matches_here + [ref_match]):
 							refs_match = False
 							break
 
@@ -166,11 +170,10 @@ def get_renamed_variables(source_code: str, target_code: str) -> Dict[str, str]:
 								for old, new in mappings:
 									break
 
-								mappings.append((source_ref_node, target_ref_node))
+								mappings.append(ref_match)
 
 						else:
-							mappings = [(source_ref_node, target_ref_node)]
-							matches.append((target_ref_path, mappings))
+							matches.append((target_ref_path, [ref_match]))
 
 					if not refs_match:
 						continue
@@ -203,19 +206,18 @@ def get_renamed_variables(source_code: str, target_code: str) -> Dict[str, str]:
 						mappings = [(source_declarator.name, target_declarator.name)]
 						renamed_var_names.append((target_dec_path, mappings))
 
-					for path, mappings in matches:
+					for path, v in matches:
 						if path == target_dec_path:
-							for old, new in mappings:
+							for old, new, _ in v:
 								if old == source_declarator:
 									raise JavaAnalyzationError(f'duplicate declarator in source: {old}')
 
 								if new == target_declarator:
 									raise JavaAnalyzationError(f'duplicate declarator in target: {new}')
 
-							mappings.append((source_declarator, target_declarator))
+							v.append(declarator_match)
 
 					else:
-						mappings = [(source_declarator, target_declarator)]
-						matches.append((target_dec_path, mappings))
+						matches.append((target_dec_path, [declarator_match]))
 
 	return renamed_var_names

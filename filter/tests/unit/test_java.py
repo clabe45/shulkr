@@ -1,6 +1,6 @@
 import pytest
 
-from javalang.tree import CompilationUnit, PackageDeclaration, ClassDeclaration, Literal, MethodDeclaration
+from javalang.tree import Cast, CompilationUnit, PackageDeclaration, ClassDeclaration, Literal, MethodDeclaration
 
 from filter.java import ast_nodes_equal, filter_ast_node, get_renamed_variables
 
@@ -69,9 +69,13 @@ def test_ast_nodes_equal_recursive_with_inequal_nodes_wrapped_in_lists_returns_f
 
 
 def test_ast_nodes_equal_recursive_with_inequal_nodes_and_the_inequal_part_ignored_returns_true():
+	# The following doesn't make any sense, but it's just to test our code, calm
+	# down
 	node1 = Literal(value='hello')
 	node2 = Literal(value='bye')
-	assert ast_nodes_equal(node1, node2, matches=[('hello', 'bye')])
+	node3 = Literal(value=node1)
+	node4 = Literal(value=node2)
+	assert ast_nodes_equal(node3, node4, matches=[(node1, node2, 'value')])
 
 
 def test_filter_ast_node_with_no_matching_children_returns_empty_list():
