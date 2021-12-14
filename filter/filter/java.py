@@ -116,7 +116,7 @@ def get_renamed_variables(source_code: str, target_code: str) -> Dict[str, str]:
 	source_references = list(filter_ast_node(source_tree, MemberReference))
 	target_references = list(filter_ast_node(target_tree, MemberReference))
 
-	renamed_variables = []
+	renamed_var_names = []
 	matches = []
 
 	# Find all the semantically equalivalent variables that have different
@@ -126,33 +126,30 @@ def get_renamed_variables(source_code: str, target_code: str) -> Dict[str, str]:
 	# - They must have be in the same semantic section of the file
 	# - They must have the same references and assignments
 
-	for source_path, source_node in source_declarations:
-		for target_path, target_node in target_declarations:
-			# print('A')
+	for source_dec_path, source_dec_node in source_declarations:
+		for target_dec_path, target_dec_node in target_declarations:
 			# 1. Make sure paths would be equal if source_node (a) and
-			#	target_node (b) were the same.
+			#	 target_node (b) were the same.
 
 			# 1a. Must be in same part of the file
-			prev_matches_here = [(old, new) for path, v in matches for old, new in v if path == target_path]
-			if not ast_paths_equal(source_path, target_path, matches=prev_matches_here + [(source_node, target_node)]):
+			prev_matches_here = [(old, new) for path, v in matches for old, new in v if path == target_dec_path]
+			if not ast_paths_equal(source_dec_path, target_dec_path, matches=prev_matches_here + [(source_dec_node, target_dec_node)]):
 				continue
 
-			for source_declarator in source_node.declarators:
+			for source_declarator in source_dec_node.declarators:
 				# 1b. (Must have different names)
 				if source_declarator.name in target_var_names:
 					continue
 
-				for target_declarator in target_node.declarators:
-					# print('C', source_declarator.name, target_declarator.name, prev_matches_here)
+				for target_declarator in target_dec_node.declarators:
 
 					# 1c. Must have same initializer
-					if not ast_nodes_equal(source_declarator.initializer, target_declarator.initializer, recursive=True, matches=prev_matches_here + [(source_node, target_node)]):
+					if not ast_nodes_equal(source_declarator.initializer, target_declarator.initializer, recursive=True, matches=prev_matches_here + [(source_dec_node, target_dec_node)]):
 						continue
 
 					# 1c. Must have the same references
 					sr = [(path, ref) for path, ref in source_references if ref.member == source_declarator.name]
 					tr = [(path, ref) for path, ref in target_references if ref.member == target_declarator.name]
-					# print('D', source_declarator.name, len(sr), target_declarator.name, len(tr))
 					if len(sr) != len(tr):
 						continue
 
@@ -160,35 +157,34 @@ def get_renamed_variables(source_code: str, target_code: str) -> Dict[str, str]:
 					for i in range(len(sr)):
 						source_ref_path, source_ref_node = sr[i]
 						target_ref_path, target_ref_node = tr[i]
-						if not ast_paths_equal(source_ref_path, target_ref_path, matches=prev_matches_here + [(source_node, target_node), (source_ref_node, target_ref_node)]):
+						if not ast_paths_equal(source_ref_path, target_ref_path, matches=prev_matches_here + [(source_dec_node, target_dec_node), (source_ref_node, target_ref_node)]):
 							refs_match = False
 							break
 
-						for path, v_node in matches:
+						for path, mappings in matches:
 							if path == target_ref_path:
-								for old, new in v_node:
+								for old, new in mappings:
 									break
 
-								v_node.append((source_ref_node, target_ref_node))
+								mappings.append((source_ref_node, target_ref_node))
 
 						else:
-							v_node = [(source_ref_node, target_ref_node)]
-							matches.append((target_ref_path, v_node))
+							mappings = [(source_ref_node, target_ref_node)]
+							matches.append((target_ref_path, mappings))
 
 					if not refs_match:
 						continue
 
 					print(source_declarator.name, target_declarator.name)
-					# print('E', source_declarator.name, target_declarator.name)
 					# 1d. (The function cannot return multiple mappings
 					#     containing the same variable at the same path)
 					other_renames_at_path = False
 					never_used = True
-					for path, v_name in renamed_variables:
-						if path != target_path:
+					for path, mappings in renamed_var_names:
+						if path != target_dec_path:
 							continue
 
-						for old, new in v_name:
+						for old, new in mappings:
 							if old == source_declarator.name or new == target_declarator.name:
 								never_used = False
 								break
@@ -196,7 +192,7 @@ def get_renamed_variables(source_code: str, target_code: str) -> Dict[str, str]:
 						if not never_used:
 							break
 
-						v_name.append((source_declarator.name, target_declarator.name))
+						mappings.append((source_declarator.name, target_declarator.name))
 						other_renames_at_path = True
 						break
 
@@ -204,22 +200,22 @@ def get_renamed_variables(source_code: str, target_code: str) -> Dict[str, str]:
 						continue
 
 					if not other_renames_at_path:
-						v_name = [(source_declarator.name, target_declarator.name)]
-						renamed_variables.append((target_path, v_name))
+						mappings = [(source_declarator.name, target_declarator.name)]
+						renamed_var_names.append((target_dec_path, mappings))
 
-					for path, v_node in matches:
-						if path == target_path:
-							for old, new in v_node:
+					for path, mappings in matches:
+						if path == target_dec_path:
+							for old, new in mappings:
 								if old == source_declarator:
 									raise JavaAnalyzationError(f'duplicate declarator in source: {old}')
 
 								if new == target_declarator:
 									raise JavaAnalyzationError(f'duplicate declarator in target: {new}')
 
-							v_node.append((source_declarator, target_declarator))
+							mappings.append((source_declarator, target_declarator))
 
 					else:
-						v_node = [(source_declarator, target_declarator)]
-						matches.append((target_path, v_node))
+						mappings = [(source_declarator, target_declarator)]
+						matches.append((target_dec_path, mappings))
 
-	return renamed_variables
+	return renamed_var_names
