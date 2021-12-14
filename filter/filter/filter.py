@@ -1,5 +1,5 @@
 import difflib
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, IO, Tuple, Union
 
 from git import Commit, DiffIndex
 from unidiff import Hunk, PatchedFile, PatchSet
@@ -8,15 +8,9 @@ from filter.git import get_blob
 from filter.java import JavaAnalyzationError, get_renamed_variables
 
 
-def filter_hunk(diff: str, renamed_variables: Dict[str, str]) -> str:
-
-	return diff
-
-
-def filter_patch(patch: str, diff_index: DiffIndex, commit1: Commit, commit2: Commit) -> str:
+def filter_patch(patch: str, out: IO, diff_index: DiffIndex, commit1: Commit, commit2: Commit) -> str:
 	patch_set = PatchSet(patch)
 
-	filtered_patches = []
 	# For each file changed (in reverse, with indices, so we can remove elements
 	# in the for loop)
 	for i in range(len(patch_set) - 1, -1, -1):
@@ -54,7 +48,4 @@ def filter_patch(patch: str, diff_index: DiffIndex, commit1: Commit, commit2: Co
 			continue
 
 		header = '\n'.join(str(patched_file).split('\n')[:5])
-		filtered_patches.append(header + '\n' + filtered_patch)
-
-	return ''.join(filtered_patches)
-
+		out.write(header + '\n' + filtered_patch + '\n')

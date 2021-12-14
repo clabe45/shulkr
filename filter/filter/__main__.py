@@ -1,4 +1,5 @@
 import argparse
+import sys
 from typing import List
 
 from git import Repo
@@ -22,6 +23,7 @@ def get_filtered_diff(repo_path: str, commit1: str, commit2: str, paths: List[st
 	diff_index, patch = diff_commits(repo, commit1, commit2, paths)
 	patch = filter_patch(
 		patch,
+		sys.stdout,
 		diff_index,
 		repo.commit(commit1),
 		repo.commit(commit2)
