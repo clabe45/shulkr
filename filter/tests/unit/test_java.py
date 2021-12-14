@@ -115,15 +115,6 @@ def test_get_renamed_variables_single_declaration_with_intialization_returns_the
 	assert [v for path, v in renamed_variables] == [[('x', 'y')]]
 
 
-def test_get_renamed_variables_two_declarations_with_intializations_returns_both_mappings():
-	renamed_variables = get_renamed_variables(
-		wrap_in_class('int x = 0; int a = 1;'),
-		wrap_in_class('int y = 0; int b = 1;')
-	)
-
-	assert [v for path, v in renamed_variables] == [[('x', 'y'), ('a', 'b')]]
-
-
 def test_get_renamed_variables_single_declaration_with_intialization_returns_correct_path():
 	renamed_variables = get_renamed_variables(
 		wrap_in_class('int x = 0;'),
@@ -133,6 +124,24 @@ def test_get_renamed_variables_single_declaration_with_intialization_returns_cor
 	actual = [type(node) for path, v in renamed_variables for node in path]
 	expected = [CompilationUnit, str, ClassDeclaration, str, MethodDeclaration, str]
 	assert actual == expected
+
+
+def test_get_renamed_variables_two_declarations_without_intializations_returns_both_mappings():
+	renamed_variables = get_renamed_variables(
+		wrap_in_class('int x; int a;'),
+		wrap_in_class('int y; int b;')
+	)
+
+	assert [v for path, v in renamed_variables] == [[('x', 'y'), ('a', 'b')]]
+
+
+def test_get_renamed_variables_two_declarations_with_intializations_returns_both_mappings():
+	renamed_variables = get_renamed_variables(
+		wrap_in_class('int x = 0; int a = 1;'),
+		wrap_in_class('int y = 0; int b = 1;')
+	)
+
+	assert [v for path, v in renamed_variables] == [[('x', 'y'), ('a', 'b')]]
 
 
 def test_get_renamed_variables_one_declaration_with_different_intializations_returns_empty_list():

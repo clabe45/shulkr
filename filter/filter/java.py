@@ -180,21 +180,30 @@ def get_renamed_variables(source_code: str, target_code: str) -> Dict[str, str]:
 
 					print(source_declarator.name, target_declarator.name)
 					# print('E', source_declarator.name, target_declarator.name)
+					# 1d. (The function cannot return multiple mappings
+					#     containing the same variable at the same path)
+					other_renames_at_path = False
+					never_used = True
 					for path, v_name in renamed_variables:
 						if path != target_path:
 							continue
 
 						for old, new in v_name:
-							if old == source_declarator.name:
-								raise JavaAnalyzationError(f'duplicate declarator name in source: {old}')
+							if old == source_declarator.name or new == target_declarator.name:
+								never_used = False
+								break
 
-							if new == target_declarator.name:
-								raise JavaAnalyzationError(f'duplicate declarator name in target: {new}')
+						if not never_used:
+							break
 
 						v_name.append((source_declarator.name, target_declarator.name))
+						other_renames_at_path = True
 						break
 
-					else:
+					if not never_used:
+						continue
+
+					if not other_renames_at_path:
 						v_name = [(source_declarator.name, target_declarator.name)]
 						renamed_variables.append((target_path, v_name))
 
