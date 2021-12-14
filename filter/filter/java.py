@@ -2,7 +2,8 @@ from typing import Dict, List, Tuple, Union
 
 import javalang
 from javalang.ast import Node
-from javalang.tree import MemberReference, VariableDeclaration
+from javalang.tokenizer import Identifier, tokenize
+from javalang.tree import CompilationUnit, MemberReference, VariableDeclaration
 
 
 class JavaAnalyzationError(Exception):
@@ -260,3 +261,23 @@ def get_renamed_variables(source_code: str, target_code: str) -> Dict[str, str]:
 								matches.append((target_decn_path, [declarator_match]))
 
 	return renamed_var_names
+
+
+def undo_variable_renames(code: str, renamed_var_names: List[Tuple]) -> str:
+	lines = code.split('\n')
+	tokens = tokenize(code)
+
+	for token in tokens:
+		if not isinstance(token, Identifier):
+			continue
+
+		for path, mappings in renamed_var_names:
+			for old, new in mappings:
+				if token.value == new:
+					l, c = token.position
+					l -= 1
+					c -= 1
+					line = lines[l]
+					lines[l] = line[:c] + old + line[c + len(new):]
+
+	return '\n'.join(lines)

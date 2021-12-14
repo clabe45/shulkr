@@ -2,7 +2,7 @@ import pytest
 
 from javalang.tree import Cast, CompilationUnit, PackageDeclaration, ClassDeclaration, Literal, MethodDeclaration
 
-from filter.java import ast_nodes_equal, filter_ast_node, get_renamed_variables
+from filter.java import ast_nodes_equal, filter_ast_node, get_renamed_variables, undo_variable_renames
 
 
 def wrap_in_class(code: str) -> str:
@@ -191,3 +191,35 @@ def test_get_renamed_variables_one_declaration_without_initialization_in_each_br
 	)
 
 	assert [v for path, v in renamed_variables] == [[('x', 'y')], [('x', 'y')]]
+
+
+def test_undo_variable_renames_with_one_declaration_and_no_renames_returns_identical_code():
+	code = 'int x;'
+	renamed_variables = []
+
+	assert undo_variable_renames(code, renamed_variables) == code
+
+
+def test_undo_variable_renames_with_one_renamed_declaration_updates_code():
+	renamed_variables = [(None, [('x', 'y')])]
+
+	assert undo_variable_renames('int y;', renamed_variables) == 'int x;'
+
+
+def test_undo_variable_renames_with_one_declaration_with_one_renamed_variable_and_one_unchanged_variable_updates_renamed_variable():
+	renamed_variables = [(None, [('x', 'y')])]
+
+	assert undo_variable_renames('int a, y;', renamed_variables) == 'int a, x;'
+
+
+def test_undo_variable_renames_with_one_renamed_declaration_with_one_reference_updates_declaration_and_reference():
+	renamed_variables = [(None, [('x', 'y')])]
+
+	assert undo_variable_renames('int y = 0; int a = y;', renamed_variables) == 'int x = 0; int a = x;'
+
+
+def test_undo_variable_renames_with_one_renamed_declaration_set_to_string_with_same_text_only_updates_identifier():
+	renamed_variables = [(None, [('x', 'y')])]
+
+	assert undo_variable_renames('int y = "y";', renamed_variables) == 'int x = "y";'
+
