@@ -100,6 +100,22 @@ def filter_ast_node(node: Node, t: type) -> List[Union[Node, str]]:
 	return _filter_ast_node(node, t)
 
 
+def _have_same_references(var1: str, var2: str, a_refs: List[Tuple], b_refs: List[Tuple], matches: List[Tuple]) -> bool:
+	ar = [(path, ref) for path, ref in a_refs if ref.member == var1]
+	br = [(path, ref) for path, ref in b_refs if ref.member == var2]
+	if len(ar) != len(br):
+		return False
+
+	for i in range(len(ar)):
+		a_ref_path, a_ref_node = ar[i]
+		b_ref_path, b_ref_node = br[i]
+		ref_match = (a_ref_node, b_ref_node, 'name')
+		if not ast_paths_equal(a_ref_path, b_ref_path, matches=matches + [ref_match]):
+			return False
+
+	return True
+
+
 def get_renamed_variables(source_code: str, target_code: str) -> Dict[str, str]:
 	try:
 		source_tree = javalang.parse.parse(source_code)
@@ -151,19 +167,16 @@ def get_renamed_variables(source_code: str, target_code: str) -> Dict[str, str]:
 						continue
 
 					# 1c. Must have the same references
-					sr = [(path, ref) for path, ref in source_references if ref.member == source_declarator.name]
-					tr = [(path, ref) for path, ref in target_references if ref.member == target_declarator.name]
-					if len(sr) != len(tr):
+					if not _have_same_references(source_declarator.name, target_declarator.name, source_references, target_references, prev_matches_here):
 						continue
 
-					refs_match = True
+					sr = [(path, ref) for path, ref in source_references if ref.member == source_declarator.name]
+					tr = [(path, ref) for path, ref in target_references if ref.member == target_declarator.name]
+
 					for i in range(len(sr)):
 						source_ref_path, source_ref_node = sr[i]
 						target_ref_path, target_ref_node = tr[i]
 						ref_match = (source_ref_node, target_ref_node, 'name')
-						if not ast_paths_equal(source_ref_path, target_ref_path, matches=prev_matches_here + [ref_match]):
-							refs_match = False
-							break
 
 						for path, mappings in matches:
 							if path == target_ref_path:
@@ -175,10 +188,6 @@ def get_renamed_variables(source_code: str, target_code: str) -> Dict[str, str]:
 						else:
 							matches.append((target_ref_path, [ref_match]))
 
-					if not refs_match:
-						continue
-
-					print(source_declarator.name, target_declarator.name)
 					# 1d. (The function cannot return multiple mappings
 					#     containing the same variable at the same path)
 					other_renames_at_path = False
