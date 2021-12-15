@@ -10,7 +10,7 @@ from filter.minecraft import generate_sources
 
 
 def parse_args() -> argparse.Namespace:
-	parser = argparse.ArgumentParser(prog='filter', description='Generate a filtered diff of Minecraft source code, keeping only semantic changes')
+	parser = argparse.ArgumentParser(prog='filter', description='Generate multiple versions of the Minecraft source code')
 	parser.add_argument('--repo', '-r', type=str, required=True, help='Path to the Minecraft repo')
 	parser.add_argument('--undo-renamed-vars', '-u', dest='undo_renamed_vars', action='store_true', help='Revert local variables that were renamed in the new version')
 	parser.add_argument('version', nargs='+', type=str, help='List of mapping versions')
