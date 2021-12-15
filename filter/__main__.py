@@ -8,14 +8,19 @@ from filter import parse_args, create_version
 def main() -> None:
 	args = parse_args()
 
-	if not os.path.exists(args.repo):
+	repo_path = os.path.join(
+		os.getcwd(),
+		args.repo
+	)
+
+	if not os.path.exists(repo_path):
 		print('Creating a new Minecraft repo')
-		os.mkdir(args.repo)
+		os.mkdir(repo_path)
 
 	try:
-		repo = Repo(args.repo)
+		repo = Repo(repo_path)
 	except InvalidGitRepositoryError:
-		repo = Repo.init(args.repo)
+		repo = Repo.init(repo_path)
 
 	for minecraft_version in args.version:
 		create_version(repo, minecraft_version, args.undo_renamed_vars)
