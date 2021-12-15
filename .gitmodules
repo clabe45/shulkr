@@ -1,3 +1,3 @@
-[submodule "filter/fabric-example-mod"]
-	path = filter/fabric-example-mod
+[submodule "fabric-example-mod"]
+	path = fabric-example-mod
 	url = git@github.com:FabricMC/fabric-example-mod.git
