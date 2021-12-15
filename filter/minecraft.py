@@ -49,9 +49,13 @@ def generate_sources(source_repo: str, minecraft_version: str) -> None:
 	subprocess.run(['gradle', 'setup'], cwd='MCP-Reborn')
 
 	# 3. Move the generated source code to the target repo
+	dest_src_dir = os.path.join(source_repo, 'src')
+	if os.path.exists(dest_src_dir):
+		rmtree(dest_src_dir)
+
 	move(
 		os.path.join('MCP-Reborn', 'src'),
-		os.path.join(source_repo)
+		source_repo
 	)
 
 	# 4. Checkout original commit
