@@ -9,11 +9,13 @@ from filter.git import get_blob
 from filter.java import JavaAnalyzationError, get_renamed_variables, undo_variable_renames
 from filter.minecraft import generate_sources
 
+
 def parse_args() -> argparse.Namespace:
 	parser = argparse.ArgumentParser(prog='filter', description='Generate a filtered diff of Minecraft source code, keeping only semantic changes')
 	parser.add_argument('--repo', metavar='-R', type=str, required=True, help='Path to the Minecraft repo')
-	parser.add_argument('--undo-renamed-vars', metavar='-U', type=bool, required=False, default=False, help='Revert local variables that were renamed in the new version')
+	parser.add_argument('--undo-renamed-vars', '-U', dest='undo_renamed_vars', action='store_true', help='Revert local variables that were renamed in the new version')
 	parser.add_argument('version', nargs='+', type=str, help='List of mapping versions')
+	parser.set_defaults(undo_renamed_vars=False)
 
 	return parser.parse_args()
 
