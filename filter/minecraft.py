@@ -35,7 +35,7 @@ def generate_sources(source_repo: str, minecraft_version: str) -> None:
 
 	# 1. Checkout minecraft version in MCP repo
 	repo = Repo('MCP-Reborn')
-	orig_head = repo.head
+	orig_head = repo.commit('HEAD')
 	for commit in repo.iter_commits():
 		if commit.message.startswith(f'Updated to {minecraft_version}') \
 		or commit.message.startswith(f'Update to {minecraft_version}'):
