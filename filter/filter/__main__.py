@@ -3,25 +3,21 @@ import os.path
 import sys
 from typing import List
 
-from git import Repo
+from git import BadName, InvalidGitRepositoryError, Repo
 
 from filter.git import get_blob
 from filter.java import JavaAnalyzationError, get_renamed_variables, undo_variable_renames
+from filter.minecraft import generate_sources
 
 def parse_args() -> argparse.Namespace:
 	parser = argparse.ArgumentParser(prog='filter', description='Generate a filtered diff of Minecraft source code, keeping only semantic changes')
-	parser.add_argument('repo_path', type=str, help='Path to the Minecraft git repo')
+	parser.add_argument('--repo', metavar='-R', type=str, required=True, help='Path to the git repo with the Minecraft source')
+	parser.add_argument('version', nargs='+', type=str, help='List of mapping versions')
 
 	return parser.parse_args()
 
 
-def undo_renames(repo_path: str) -> None:
-	repo = Repo(repo_path)
-	try:
-		next(repo.iter_commits('HEAD'))
-	except StopIteration:
-		raise Exception('No commits on current branch')
-
+def undo_renames(repo: Repo) -> None:
 	commit1 = repo.commit('HEAD')
 	commit2 = None  # working tree
 	diff_index = commit1.diff(commit2)
@@ -53,10 +49,42 @@ def undo_renames(repo_path: str) -> None:
 			print(f'Updated {diff.a_path}')
 
 
+def commit_version(source_repo: str, mapping_version: str) -> None:
+	end = mapping_version.index('+')
+	minecraft_version = mapping_version[:end]
+	commit_msg = f'version {minecraft_version}\n\nRenamed variables reverted'
+
+	repo = Repo(source_repo)
+	repo.git.add('src')
+	repo.git.commit('-m', commit_msg)
+
+
 def main() -> None:
 	args = parse_args()
 
-	diff = undo_renames(args.repo_path)
+	if not os.path.exists(args.repo):
+		print('Creating a new Minecraft repo')
+		os.mkdir(args.repo)
+
+	try:
+		repo = Repo(args.repo)
+	except InvalidGitRepositoryError:
+		repo = Repo.init(args.repo)
+
+	for version in args.version:
+		# 1. Generate source code for the current version
+		print(f'Generating sources for version {version}')
+		generate_sources(args.repo, version)
+
+		# 2. If there are any previous versions, undo the renamed variables
+		if len(repo.git.branch()) > 0:
+			print(f'Undoing renamed variables for version {version}')
+			undo_renames(args.repo)
+
+		# 3. Commit the new version to git
+		print(f'Committing version {version} to git')
+		commit_version(args.repo, version)
+
 
 if __name__ == '__main__':
 	main()
