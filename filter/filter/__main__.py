@@ -11,7 +11,8 @@ from filter.minecraft import generate_sources
 
 def parse_args() -> argparse.Namespace:
 	parser = argparse.ArgumentParser(prog='filter', description='Generate a filtered diff of Minecraft source code, keeping only semantic changes')
-	parser.add_argument('--repo', metavar='-R', type=str, required=True, help='Path to the git repo with the Minecraft source')
+	parser.add_argument('--repo', metavar='-R', type=str, required=True, help='Path to the Minecraft repo')
+	parser.add_argument('--undo-renamed-vars', metavar='-U', type=bool, required=False, default=False, help='Revert local variables that were renamed in the new version')
 	parser.add_argument('version', nargs='+', type=str, help='List of mapping versions')
 
 	return parser.parse_args()
@@ -49,10 +50,12 @@ def undo_renames(repo: Repo) -> None:
 			print(f'Updated {diff.a_path}')
 
 
-def commit_version(source_repo: str, mapping_version: str) -> None:
+def commit_version(source_repo: str, mapping_version: str, undo_renamed_vars: bool) -> None:
 	end = mapping_version.index('+')
 	minecraft_version = mapping_version[:end]
-	commit_msg = f'version {minecraft_version}\n\nRenamed variables reverted'
+	commit_msg = f'version {minecraft_version}'
+	if undo_renamed_vars:
+		commit_msg += '\n\nRenamed variables reverted'
 
 	repo = Repo(source_repo)
 	repo.git.add('src')
@@ -77,13 +80,13 @@ def main() -> None:
 		generate_sources(args.repo, version)
 
 		# 2. If there are any previous versions, undo the renamed variables
-		if len(repo.git.branch()) > 0:
+		if args.undo_renamed_vars and len(repo.git.branch()) > 0:
 			print(f'Undoing renamed variables for version {version}')
 			undo_renames(args.repo)
 
 		# 3. Commit the new version to git
 		print(f'Committing version {version} to git')
-		commit_version(args.repo, version)
+		commit_version(args.repo, version, args.undo_renamed_vars)
 
 
 if __name__ == '__main__':
