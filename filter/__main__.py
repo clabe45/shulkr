@@ -23,7 +23,12 @@ def main() -> None:
 		repo = Repo.init(repo_path)
 
 	for minecraft_version in args.version:
-		create_version(repo, minecraft_version, args.undo_renamed_vars)
+		create_version(
+			repo,
+			minecraft_version,
+			args.undo_renamed_vars,
+			args.message
+		)
 
 
 if __name__ == '__main__':

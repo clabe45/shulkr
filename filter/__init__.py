@@ -12,6 +12,7 @@ from filter.minecraft import generate_sources
 def parse_args() -> argparse.Namespace:
 	parser = argparse.ArgumentParser(prog='filter', description='Generate multiple versions of the Minecraft source code')
 	parser.add_argument('--repo', '-p', type=str, default='.', help='Path to the Minecraft repo (defaults to the current working directory)')
+	parser.add_argument('--message', '-m', type=str, default='version {}', help='Commit message template')
 	parser.add_argument('--undo-renamed-vars', '-u', dest='undo_renamed_vars', action='store_true', help='Revert local variables that were renamed in the new version')
 	parser.add_argument('version', nargs='+', type=str, help='List of mapping versions')
 	parser.set_defaults(undo_renamed_vars=False)
@@ -51,8 +52,8 @@ def undo_renames(repo: Repo) -> None:
 			print(f'Updated {diff.a_path}')
 
 
-def commit_version(repo: Repo, minecraft_version: str, undo_renamed_vars: bool) -> None:
-	commit_msg = f'version {minecraft_version}'
+def commit_version(repo: Repo, minecraft_version: str, undo_renamed_vars: bool, message_template: str) -> None:
+	commit_msg = message_template.strip().format(minecraft_version)
 	if undo_renamed_vars and len(repo.iter_commits()) > 0:
 		commit_msg += '\n\nRenamed variables reverted'
 
@@ -60,7 +61,7 @@ def commit_version(repo: Repo, minecraft_version: str, undo_renamed_vars: bool) 
 	repo.git.commit('-m', commit_msg)
 
 
-def create_version(repo: Repo, version: str, undo_renamed_vars: bool) -> None:
+def create_version(repo: Repo, version: str, undo_renamed_vars: bool, message_template: str) -> None:
 	# 1. Generate source code for the current version
 	print(f'Generating sources for Minecraft {version}')
 	generate_sources(repo.working_tree_dir, version)
@@ -72,4 +73,4 @@ def create_version(repo: Repo, version: str, undo_renamed_vars: bool) -> None:
 
 	# 3. Commit the new version to git
 	print(f'Committing Minecraft {version} to git')
-	commit_version(repo, version, undo_renamed_vars)
+	commit_version(repo, version, undo_renamed_vars, message_template)
