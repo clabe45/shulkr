@@ -17,48 +17,29 @@ class MinecraftVersionNotFoundError(MinecraftError):
 	pass
 
 
-def _clear_loom_cache() -> None:
-	if os.path.exists(LOOM_CACHE):
-		rmtree(LOOM_CACHE)
+def get_manifest():
+	global manifest
+	if manifest is None:
+		raw = json.load()
+		manifest = Manifest.parse(raw)
 
 
-def _replace_in_file(path: str, pattern: str, replacement: str) -> None:
-	with open(path, 'r') as f:
-		updated = re.sub(pattern, replacement, f.read())
+def versions_between(a: Version, b: Version, include_snapshots=True) -> List[Version]:
 
-	with open(path, 'w') as f:
-		f.write(updated)
 
 
 def generate_sources(source_repo: str, minecraft_version: str) -> None:
-	_clear_loom_cache()
+	# 1. Generate source code there
+	subprocess.run(['python3', 'main.py', '--mcv', minecraft_version, '-c', '-f', '-q'], cwd='DecompilerMC')
 
-	# 1. Checkout minecraft version in MCP repo
-	repo = Repo('MCP-Reborn')
-	orig_head = repo.commit('HEAD')
-	for commit in repo.iter_commits():
-		if commit.message.startswith(f'Updated to {minecraft_version}') \
-		or commit.message.startswith(f'Update to {minecraft_version}'):
-			repo.git.checkout(commit)
-			break
+	# 2. Move the generated source code to the target repo
+	dest_src_dir = os.path.join(source_repo, 'src')
+	if os.path.exists(dest_src_dir):
+		rmtree(dest_src_dir)
 
-	else:
-		raise MinecraftVersionNotFoundError(minecraft_version)
+	move(
+		os.path.join('DecompilerMC', 'src'),
+		source_repo
+	)
 
-	try:
-		# 2. Generate source code there
-		subprocess.run(['gradle', 'setup'], cwd='MCP-Reborn')
-
-		# 3. Move the generated source code to the target repo
-		dest_src_dir = os.path.join(source_repo, 'src')
-		if os.path.exists(dest_src_dir):
-			rmtree(dest_src_dir)
-
-		move(
-			os.path.join('MCP-Reborn', 'src'),
-			source_repo
-		)
-
-	finally:
-		# 4. Checkout original commit
-		repo.git.checkout(orig_head)
+manifest = None
