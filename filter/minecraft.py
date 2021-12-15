@@ -1,11 +1,20 @@
 import os
 import re
-from shutil import rmtree
+from shutil import move, rmtree
 import subprocess
-import zipfile
+
+from git import Repo
 
 
 LOOM_CACHE = os.path.expanduser('~/.gradle/caches/fabric-loom')
+
+
+class MinecraftError(Exception):
+	pass
+
+
+class MinecraftVersionNotFoundError(MinecraftError):
+	pass
 
 
 def _clear_loom_cache() -> None:
@@ -21,27 +30,29 @@ def _replace_in_file(path: str, pattern: str, replacement: str) -> None:
 		f.write(updated)
 
 
-def generate_sources(source_repo: str, mapping_version: str) -> None:
+def generate_sources(source_repo: str, minecraft_version: str) -> None:
 	_clear_loom_cache()
 
-	end = mapping_version.index('+')
-	minecraft_version = mapping_version[:end]
+	# 1. Checkout minecraft version in MCP repo
+	repo = Repo('MCP-Reborn')
+	orig_head = repo.head
+	for commit in repo.iter_commits():
+		if commit.message.startswith(f'Updated to {minecraft_version}') \
+		or commit.message.startswith(f'Update to {minecraft_version}'):
+			repo.git.checkout(commit)
+			break
 
-	# 1. Configure gradle, specifying which version to generate
-	gradle_props = os.path.join('fabric-example-mod', 'gradle.properties')
-	_replace_in_file(gradle_props, r'minecraft_version=.*\n', f'minecraft_version={minecraft_version}\n')
-	_replace_in_file(gradle_props, r'yarn_mappings=.*\n', f'yarn_mappings={mapping_version}\n')
+	else:
+		raise MinecraftVersionNotFoundError(minecraft_version)
 
-	# 2. Generate source code
-	subprocess.run(['gradle', 'genSources'], cwd='fabric-example-mod')
+	# 2. Generate source code there
+	subprocess.run(['gradle', 'setup'], cwd='MCP-Reborn')
 
-	# 3. Extract source code
-	jar_path = os.path.join(
-		LOOM_CACHE,
-		minecraft_version,
-		'minecraft-merged.jar'
+	# 3. Move the generated source code to the target repo
+	move(
+		os.path.join('MCP-Reborn', 'src'),
+		os.path.join(source_repo)
 	)
 
-	with zipfile.ZipFile(jar_path) as zip:
-		src_dir = os.path.join(source_repo, 'src')
-		zip.extractall(src_dir)
+	# 4. Checkout original commit
+	repo.git.checkout(orig_head)

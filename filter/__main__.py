@@ -50,14 +50,11 @@ def undo_renames(repo: Repo) -> None:
 			print(f'Updated {diff.a_path}')
 
 
-def commit_version(source_repo: str, mapping_version: str, undo_renamed_vars: bool) -> None:
-	end = mapping_version.index('+')
-	minecraft_version = mapping_version[:end]
+def commit_version(repo: Repo, minecraft_version: str, undo_renamed_vars: bool) -> None:
 	commit_msg = f'version {minecraft_version}'
 	if undo_renamed_vars:
 		commit_msg += '\n\nRenamed variables reverted'
 
-	repo = Repo(source_repo)
 	repo.git.add('src')
 	repo.git.commit('-m', commit_msg)
 
@@ -74,19 +71,19 @@ def main() -> None:
 	except InvalidGitRepositoryError:
 		repo = Repo.init(args.repo)
 
-	for version in args.version:
+	for minecraft_version in args.version:
 		# 1. Generate source code for the current version
-		print(f'Generating sources for version {version}')
-		generate_sources(args.repo, version)
+		print(f'Generating sources for Minecraft {minecraft_version}')
+		generate_sources(args.repo, minecraft_version)
 
 		# 2. If there are any previous versions, undo the renamed variables
 		if args.undo_renamed_vars and len(repo.git.branch()) > 0:
-			print(f'Undoing renamed variables for version {version}')
-			undo_renames(args.repo)
+			print(f'Undoing renamed variables for Minecraft {minecraft_version}')
+			undo_renames(repo)
 
 		# 3. Commit the new version to git
-		print(f'Committing version {version} to git')
-		commit_version(args.repo, version, args.undo_renamed_vars)
+		print(f'Committing Minecraft {minecraft_version} to git')
+		commit_version(repo, minecraft_version, args.undo_renamed_vars)
 
 
 if __name__ == '__main__':
