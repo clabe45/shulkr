@@ -53,7 +53,7 @@ def undo_renames(repo: Repo) -> None:
 
 def commit_version(repo: Repo, minecraft_version: str, undo_renamed_vars: bool) -> None:
 	commit_msg = f'version {minecraft_version}'
-	if undo_renamed_vars:
+	if undo_renamed_vars and len(repo.iter_commits()) > 0:
 		commit_msg += '\n\nRenamed variables reverted'
 
 	repo.git.add('src')
@@ -73,5 +73,3 @@ def create_version(repo: Repo, version: str, undo_renamed_vars: bool) -> None:
 	# 3. Commit the new version to git
 	print(f'Committing Minecraft {version} to git')
 	commit_version(repo, version, undo_renamed_vars)
-
-
