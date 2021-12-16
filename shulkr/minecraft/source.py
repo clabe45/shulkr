@@ -13,15 +13,19 @@ def generate_sources(source_repo: str, version: Version) -> None:
 		os.path.join(script_dir, '..', 'DecompilerMC')
 	)
 
-	# 1. Generate source code there
+	dest_src_dir = os.path.join(source_repo, 'src')
+	if os.path.exists(dest_src_dir):
+		rmtree(dest_src_dir)
+
+	# Generate source code
 	try:
-		subprocess.run(['python3', 'main.py', '--mcv', str(version), '-c', '-f', '-q'], cwd=decompiler_dir)
+		for side in ('client', 'server'):
+			subprocess.run(
+				['python3', 'main.py', '--mcv', str(version), '-s', side, '-c', '-f', '-q'],
+				cwd=decompiler_dir
+			)
 
-		# 2. Move the generated source code to the target repo
-		dest_src_dir = os.path.join(source_repo, 'src')
-		if os.path.exists(dest_src_dir):
-			rmtree(dest_src_dir)
-
+		# Move the generated source code to the target repo
 		move(
 			os.path.join(decompiler_dir, 'src', str(version)),
 			dest_src_dir
