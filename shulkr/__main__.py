@@ -7,7 +7,7 @@ from shulkr import parse_args, create_version
 from shulkr.minecraft.version import NoSuchVersionError, Version, load_manifest
 
 
-def main() -> None:
+def main_uncaught() -> None:
 	load_manifest()
 
 	args = parse_args()
@@ -41,6 +41,13 @@ def main() -> None:
 			args.undo_renamed_vars,
 			args.message
 		)
+
+
+def main() -> None:
+	try:
+		main_uncaught()
+	except KeyboardInterrupt:
+		print('Aborted!', file=sys.stderr)
 
 
 if __name__ == '__main__':
