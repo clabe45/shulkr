@@ -69,9 +69,9 @@ def create_version(repo: Repo, version: Version, undo_renamed_vars: bool, messag
 
 	# 2. If there are any previous versions, undo the renamed variables
 	if undo_renamed_vars and len(repo.iter_commits()) > 0:
-		print(f'Undoing renamed variables for Minecraft {version}')
+		print('Undoing renamed variables')
 		undo_renames(repo)
 
 	# 3. Commit the new version to git
-	print(f'Committing Minecraft {version} to git')
+	print('Committing to git')
 	commit_version(repo, version, undo_renamed_vars, message_template)

@@ -26,10 +26,11 @@ def main_uncaught() -> None:
 		sys.exit(1)
 
 	if not os.path.exists(repo_path):
-		print('Creating a new Minecraft repo')
+		print(f'Creating {repo_path}')
 		os.mkdir(repo_path)
 
 	try:
+		print('Initializing git')
 		repo = Repo(repo_path)
 	except InvalidGitRepositoryError:
 		repo = Repo.init(repo_path)
