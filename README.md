@@ -32,7 +32,7 @@ version of Minecraft:
 
 ## Version Patterns
 
-Ranges of versions can be specified with the `..` and `...` operators:
+Ranges of versions can be specified with `..` and `...`:
 - `A..B` expands to all versions between `A` and `B` (inclusive), *not*
   including snapshots
 - `A...B` expands to all versions between `A` and `B` (inclusive), including
@@ -40,6 +40,11 @@ Ranges of versions can be specified with the `..` and `...` operators:
 
 `A` and/or `B` can be omitted, defaulting to the earliest and latest supported
 versions, respectively.
+
+Versions can be excluded by adding a *negativie pattern* after it. To negate a
+pattern, add `-`. The following pattern expands to all versions after `A`, up to
+and including `B`:
+- `A...B -A`
 
 ## Options
 

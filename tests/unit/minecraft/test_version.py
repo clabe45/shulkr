@@ -76,3 +76,18 @@ class TestVersion:
 
 	def test_pattern_with_snapshot_three_dots_release_returns_list_containing_snapshot_and_release(self):
 		assert Version.pattern('abcdef...1.0.0') == [self.snapshot, self.release]
+
+	def test_patterns_with_empty_list_returns_empty_list(self):
+		assert Version.patterns([]) == []
+
+	def test_patterns_with_one_positive_id_returns_corresponding_version(self, mocker):
+		assert Version.patterns(['1.0.0']) == [self.release]
+
+	def test_patterns_with_two_positive_identical_ids_returns_one_version(self, mocker):
+		assert Version.patterns(['1.0.0', '1.0.0']) == [self.release]
+
+	def test_patterns_with_one_positive_id_and_the_same_negative_id_returns_empty_list(self, mocker):
+		assert Version.patterns(['1.0.0', '-1.0.0']) == []
+
+	def test_patterns_with_one_positive_id_and_the_same_negative_id_and_the_same_positive_id_returns_one_version(self, mocker):
+		assert Version.patterns(['1.0.0', '-1.0.0', '1.0.0']) == [self.release]

@@ -112,6 +112,22 @@ class Version:
 			# Then, try to treat it as a version
 			return [Version.of(p)]
 
+	@staticmethod
+	def patterns(patterns: List[str]) -> List[Version]:
+		# Parse versions
+		versions = set()
+		for pattern in patterns:
+			if pattern.startswith('-'):
+				versions -= set(Version.pattern(pattern[1:]))
+			else:
+				versions |= set(Version.pattern(pattern))
+
+		# Sort
+		versions = list(versions)
+		versions.sort()
+
+		return versions
+
 
 class Release(Version):
 	@staticmethod

@@ -3,7 +3,7 @@ import sys
 
 from git import InvalidGitRepositoryError, Repo
 
-from shulkr import parse_args, create_version
+from shulkr import create_version, parse_args
 from shulkr.minecraft.version import NoSuchVersionError, Version, load_manifest
 
 
@@ -18,12 +18,14 @@ def main_uncaught() -> None:
 	)
 
 	try:
-		ranges = [Version.pattern(p) for p in args.version]
-		versions = [version for range in ranges for version in range]
-		versions.sort()
+		versions = Version.patterns(args.version)
 	except NoSuchVersionError as e:
 		print(e, file=sys.stderr)
 		sys.exit(1)
+
+	if len(versions) == 0:
+		print('No versions selected', file=sys.stderr)
+		sys.exit(2)
 
 	if not os.path.exists(repo_path):
 		print(f'Creating {repo_path}')
