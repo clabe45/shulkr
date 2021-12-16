@@ -20,10 +20,13 @@ def generate_sources(source_repo: str, version: Version) -> None:
 	# Generate source code
 	try:
 		for side in ('client', 'server'):
-			subprocess.run(
+			p = subprocess.run(
 				['python3', 'main.py', '--mcv', str(version), '-s', side, '-c', '-f', '-q'],
+				stderr=subprocess.PIPE,
 				cwd=decompiler_dir
 			)
+			if p.returncode != 0:
+				raise Exception(p.stderr.decode())
 
 		# Move the generated source code to the target repo
 		move(
@@ -34,4 +37,6 @@ def generate_sources(source_repo: str, version: Version) -> None:
 	finally:
 		# Remove large generated files so they won't end up in the build!
 		for subdir in ('mappings', 'src', 'tmp', 'versions'):
-			rmtree(os.path.join(decompiler_dir, subdir))
+			path = os.path.join(decompiler_dir, subdir)
+			if os.path.exists(path):
+				rmtree(path)
