@@ -30,9 +30,9 @@ def main_uncaught() -> None:
 		os.mkdir(repo_path)
 
 	try:
-		print('Initializing git')
 		repo = Repo(repo_path)
 	except InvalidGitRepositoryError:
+		print('Initializing git')
 		repo = Repo.init(repo_path)
 
 	for version_id in versions:
