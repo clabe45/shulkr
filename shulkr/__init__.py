@@ -4,14 +4,14 @@ import sys
 
 from git import BadName, InvalidGitRepositoryError, Repo
 
-from filter.git import get_blob
-from filter.java import JavaAnalyzationError, get_renamed_variables, undo_variable_renames
-from filter.minecraft.source import generate_sources
-from filter.minecraft.version import Version
+from shulkr.git import get_blob
+from shulkr.java import JavaAnalyzationError, get_renamed_variables, undo_variable_renames
+from shulkr.minecraft.source import generate_sources
+from shulkr.minecraft.version import Version
 
 
 def parse_args() -> argparse.Namespace:
-	parser = argparse.ArgumentParser(prog='filter', description='Generate multiple versions of the Minecraft source code')
+	parser = argparse.ArgumentParser(prog='shulkr', description='Generate multiple versions of the Minecraft source code')
 	parser.add_argument('--repo', '-p', type=str, default='.', help='Path to the Minecraft repo (defaults to the current working directory)')
 	parser.add_argument('--message', '-m', type=str, default='version {}', help='Commit message template')
 	parser.add_argument('--undo-renamed-vars', '-u', dest='undo_renamed_vars', action='store_true', help='Revert local variables that were renamed in the new version')

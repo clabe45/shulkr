@@ -2,7 +2,7 @@ from typing import Dict
 
 import pytest
 
-from filter.minecraft.version import Version, load_manifest
+from shulkr.minecraft.version import Version, load_manifest
 
 MANIFEST_DATA = {
 	'latest': {

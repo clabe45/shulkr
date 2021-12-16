@@ -5,7 +5,7 @@ from typing import Dict, List, Optional, Tuple, Union
 
 from git import Commit, Diff, DiffIndex, Repo
 
-from filter.java import get_renamed_variables
+from shulkr.java import get_renamed_variables
 
 
 def get_blob(commit: Optional[Commit], path: str, repo_path: str) -> bytes:

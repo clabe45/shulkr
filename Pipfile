@@ -17,6 +17,6 @@ pytest-mock = "*"
 python_version = "3.9"
 
 [scripts]
-start = "python -m filter"
+start = "python -m shulkr"
 test = "python -m pytest tests/unit"
 profile = "python -m tests.profile"

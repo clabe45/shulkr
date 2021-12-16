@@ -3,8 +3,8 @@ import sys
 
 from git import Repo
 
-from filter import parse_args, create_version
-from filter.minecraft.version import NoSuchVersionError, Version, load_manifest
+from shulkr import parse_args, create_version
+from shulkr.minecraft.version import NoSuchVersionError, Version, load_manifest
 
 
 def main() -> None:

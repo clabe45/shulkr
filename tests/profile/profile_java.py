@@ -1,6 +1,6 @@
 from timeit import timeit
 
-from filter.java import get_renamed_variables
+from shulkr.java import get_renamed_variables
 
 
 def wrap_in_class(code: str) -> str:
