@@ -33,7 +33,7 @@ classifiers = [
 
 setup(
 	name='shulkr',
-	version='0.1.0',
+	version='0.1.1',
 	description='Version manager for decompiled Minecraft source code',
 	long_description=README,
 	long_description_content_type='text/markdown',
