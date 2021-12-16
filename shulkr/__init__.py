@@ -65,7 +65,7 @@ def commit_version(repo: Repo, version: Version, undo_renamed_vars: bool, messag
 def create_version(repo: Repo, version: Version, undo_renamed_vars: bool, message_template: str) -> None:
 	# 1. Generate source code for the current version
 	print(f'Generating sources for Minecraft {version}')
-	generate_sources(repo.working_tree_dir, version)
+	generate_sources(repo, version)
 
 	# 2. If there are any previous versions, undo the renamed variables
 	if undo_renamed_vars and len(repo.iter_commits()) > 0:
