@@ -1,7 +1,7 @@
 import os
 import sys
 
-from git import Repo
+from git import InvalidGitRepositoryError, Repo
 
 from shulkr import parse_args, create_version
 from shulkr.minecraft.version import NoSuchVersionError, Version, load_manifest
