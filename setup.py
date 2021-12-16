@@ -33,7 +33,7 @@ classifiers = [
 
 setup(
 	name='shulkr',
-	version='0.1.1',
+	version='0.2.0',
 	description='Decompile multiple versions of Minecraft with a single command',
 	long_description=README,
 	long_description_content_type='text/markdown',
