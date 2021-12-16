@@ -20,6 +20,6 @@ def generate_sources(source_repo: str, version: Version) -> None:
 		rmtree(dest_src_dir)
 
 	move(
-		os.path.join(decompiler_dir, 'src'),
-		source_repo
+		os.path.join(decompiler_dir, 'src', str(version)),
+		dest_src_dir
 	)
