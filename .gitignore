@@ -1,1 +1,6 @@
 __pycache__/
+
+# Build
+build/
+dist/
+shulkr.egg-info/
