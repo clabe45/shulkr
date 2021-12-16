@@ -1,6 +1,15 @@
 from glob import glob
 import os.path
 from setuptools import find_packages, setup
+from typing import List
+
+
+def package_files(directory: str) -> List[str]:
+    paths = []
+    for (path, directories, filenames) in os.walk(directory):
+        for filename in filenames:
+            paths.append(os.path.join('..', path, filename))
+    return paths
 
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
@@ -36,6 +45,7 @@ setup(
     packages=find_packages(exclude=['tests']),
     py_modules=['shulkr'],
 	include_package_data=True,
+	package_data={'': package_files('shulkr/DecompilerMC')},
 	install_requires=['gitpython', 'javalang', 'unidiff', 'requests'],
 	entry_points={
         'console_scripts': ['shulkr=shulkr.__main__:main']
