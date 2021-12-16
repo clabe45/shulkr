@@ -6,7 +6,8 @@ from git import BadName, InvalidGitRepositoryError, Repo
 
 from filter.git import get_blob
 from filter.java import JavaAnalyzationError, get_renamed_variables, undo_variable_renames
-from filter.minecraft import generate_sources
+from filter.minecraft.source import generate_sources
+from filter.minecraft.version import Version
 
 
 def parse_args() -> argparse.Namespace:
@@ -52,8 +53,8 @@ def undo_renames(repo: Repo) -> None:
 			print(f'Updated {diff.a_path}')
 
 
-def commit_version(repo: Repo, minecraft_version: str, undo_renamed_vars: bool, message_template: str) -> None:
-	commit_msg = message_template.strip().format(minecraft_version)
+def commit_version(repo: Repo, version: Version, undo_renamed_vars: bool, message_template: str) -> None:
+	commit_msg = message_template.strip().format(str(version))
 	if undo_renamed_vars and len(repo.iter_commits()) > 0:
 		commit_msg += '\n\nRenamed variables reverted'
 
@@ -61,7 +62,7 @@ def commit_version(repo: Repo, minecraft_version: str, undo_renamed_vars: bool, 
 	repo.git.commit('-m', commit_msg)
 
 
-def create_version(repo: Repo, version: str, undo_renamed_vars: bool, message_template: str) -> None:
+def create_version(repo: Repo, version: Version, undo_renamed_vars: bool, message_template: str) -> None:
 	# 1. Generate source code for the current version
 	print(f'Generating sources for Minecraft {version}')
 	generate_sources(repo.working_tree_dir, version)
