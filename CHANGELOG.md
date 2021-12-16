@@ -11,6 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Each version committed to local repo
 - Range operators (`..` and `...`)
 
-[Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/olivierlacan/keep-a-changelog/releases/tag/v0.1.0
+[Unreleased]: https://github.com/clabe45/shulkr/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/clabe45/shulkr/releases/tag/v0.1.0
 [DecompilerMC]: https://github.com/hube12/DecompilerMC
