@@ -21,14 +21,18 @@ pip install shulkr
 shulkr 1.16 1.17 1.18
 ```
 
-A commit with the decompiled source code will be generated for each specified
-version of Minecraft:
+This will generate a commit with the decompiled source code for Minecraft 1.16,
+1.17 and 1.18 in the current working directory:
 
 ```
 40240b1 version 1.18
 86dc440 version 1.17
 5d13494 version 1.16
 ```
+
+Note: It's okay to skip versions. Shulkr generates the source code for each
+version and then commits it to git, so you can include as many or as little
+intermediate versions as you would like.
 
 ## Version Patterns
 
