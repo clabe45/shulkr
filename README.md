@@ -1,6 +1,7 @@
 # Shulkr
 
-This tool decompiles multiple versions of Minecraft and commits each one to Git
+Shulkr is a tool that decompiles multiple versions of Minecraft and commits each
+version to Git
 
 ## Requirements
 
@@ -9,6 +10,10 @@ This tool decompiles multiple versions of Minecraft and commits each one to Git
 - Gradle >= 7.3
 
 ## Installation
+
+```
+pip install shulkr
+```
 
 ## Usage
 
@@ -44,7 +49,7 @@ By default the source code is generated in the current working directory. To
 specify a different location:
 
 ```sh
-shulkr--repo minecraft-sources MINECRAFT_VERSION
+shulkr --repo minecraft-sources MINECRAFT_VERSION
 ```
 
 If the directory does not exist, a new git repo will be created there.
@@ -56,3 +61,16 @@ This option lets you customize the commit message format:
 ```sh
 shulkr -m "Minecraft {}" 1.18-rc4
 ```
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to
+discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+
+Licensed under the Apache License, Version 2.0.
+
+[Fork]: https://github.com/clabe45/shulkr/fork
