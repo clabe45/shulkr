@@ -1,0 +1,10 @@
+[flake8]
+exclude = shulkr/DecompilerMC
+per-file-ignores =
+	# line too long
+	tests/*: E501
+
+use-flake8-tabs = true
+indent-style = tab
+# continuation-style = hanging
+INDENT-TABS-DEF = 1
