@@ -23,3 +23,11 @@ def test_parse_args_with_one_version_has_default_message():
 
 def test_parse_args_with_one_version_sets_undo_renamed_vars_to_false():
 	assert not parse_args(['1.18']).undo_renamed_vars
+
+
+def test_parse_args_with_one_version_sets_tag_to_true():
+	assert parse_args(['1.18']).tag
+
+
+def test_parse_args_with_one_version_and_no_tags_sets_tag_to_false():
+	assert not parse_args(['--no-tags', '1.18']).tag

@@ -43,7 +43,8 @@ def main_uncaught() -> None:
 			repo,
 			version_id,
 			args.undo_renamed_vars,
-			args.message
+			args.message,
+			args.tag
 		)
 
 

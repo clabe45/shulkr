@@ -50,7 +50,11 @@ def commit_version(repo: Repo, version: Version, undo_renamed_vars: bool, messag
 	repo.index.commit(commit_msg)
 
 
-def create_version(repo: Repo, version: Version, undo_renamed_vars: bool, message_template: str) -> None:
+def tag_version(repo: Repo, version: Version) -> None:
+	repo.create_tag(str(version))
+
+
+def create_version(repo: Repo, version: Version, undo_renamed_vars: bool, message_template: str, tag: bool) -> None:
 	# 1. Generate source code for the current version
 	print(f'Generating sources for Minecraft {version}')
 	generate_sources(repo, version)
@@ -63,3 +67,7 @@ def create_version(repo: Repo, version: Version, undo_renamed_vars: bool, messag
 	# 3. Commit the new version to git
 	print('Committing to git')
 	commit_version(repo, version, undo_renamed_vars, message_template)
+
+	# 4. Tag
+	if tag:
+		tag_version(repo, version)

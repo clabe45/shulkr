@@ -25,9 +25,9 @@ This will generate a commit with the decompiled source code for Minecraft 1.16,
 1.17 and 1.18 in the current working directory:
 
 ```
-40240b1 version 1.18
-86dc440 version 1.17
-5d13494 version 1.16
+204b37c (HEAD -> main, tag: 1.18) version 1.18
+86dc440 (tag: 1.17) version 1.17
+5d13494 (tag: 1.16) version 1.16
 ```
 
 Note: It's okay to skip versions. Shulkr generates the source code for each
@@ -70,6 +70,11 @@ This option lets you customize the commit message format:
 ```sh
 shulkr -m "Minecraft {}" 1.18-rc4
 ```
+
+### `--no-tags` / `-T`
+
+By default, each commit is tagged with the name of its Minecraft version. This
+can be disabled with `--no-tags`.
 
 ## Contributing
 
