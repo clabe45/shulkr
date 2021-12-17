@@ -1,9 +1,9 @@
 from __future__ import annotations
 import re
 import requests
-from typing import Dict, Iterable, List, Optional
+from typing import Dict, List, Optional
 
-MANIFEST_LOCATION = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
+MANIFEST_LOCATION = "https://launchermeta.mojang.com/mc/game/version_manifest.json"	 # noqa: E501
 EARLIEST_SUPPORTED_VERSION_ID = '19w36a'
 
 
@@ -16,7 +16,13 @@ class NoSuchVersionError(VersionError):
 
 
 class Version:
-	def __init__(self, id: str, index: int, next: Optional[Version] = None) -> None:
+	def __init__(
+		self,
+		id: str,
+		index: int,
+		next: Optional[Version] = None
+	) -> None:
+
 		self.id = id
 		self._index = index
 		self.next = next
@@ -37,7 +43,8 @@ class Version:
 		return self._index > other._index
 
 	def to(self, other: Optional[Version], snapshots=True) -> List[Version]:
-		"""Iterate over all the versions from this version (inclusive) to `other` (exclusive)
+		"""Iterate over all the versions from this version (inclusive) to
+		`other` (exclusive)
 
 		Args:
 			other (Optional[Version]): Stop before reaching this version
@@ -48,7 +55,9 @@ class Version:
 		"""
 
 		if other < self:
-			raise ValueError('The stop commit cannot come before the current commit')
+			raise ValueError(
+				'The stop commit cannot come before the current commit'
+			)
 
 		r = []
 		curr = self
@@ -160,9 +169,17 @@ class OldBetaVersion(Version):
 
 
 class Manifest:
-	def __init__(self, versions: List[Version], earliest_release: Release, earliest_snapshot: Version, latest_release: Release, latest_snapshot: Version) -> None:
+	def __init__(
+		self,
+		versions: List[Version],
+		earliest_release: Release,
+		earliest_snapshot: Version,
+		latest_release: Release,
+		latest_snapshot: Version
+	) -> None:
+
 		self.versions = versions
-		self.version_for_id = { version.id: version for version in versions }
+		self.version_for_id = {version.id: version for version in versions}
 		self.earliest_release = earliest_release
 		self.earliest_snapshot = earliest_snapshot
 		self.latest_release = latest_release
@@ -172,7 +189,11 @@ class Manifest:
 		return self.versions
 
 	@staticmethod
-	def parse(raw: Dict, earliest_supported_version_id: Optional[str]) -> Manifest:
+	def parse(
+		raw: Dict,
+		earliest_supported_version_id: Optional[str]
+	) -> Manifest:
+
 		# Reverse to get ascending chronological order
 		reversed_versions = reversed(raw['versions'])
 
@@ -207,10 +228,20 @@ class Manifest:
 		latest_release = version_for_id[raw['latest']['release']]
 		latest_snapshot = version_for_id[raw['latest']['snapshot']]
 
-		return Manifest(versions, earliest_release, earliest_snapshot, latest_release, latest_snapshot)
+		return Manifest(
+			versions,
+			earliest_release,
+			earliest_snapshot,
+			latest_release,
+			latest_snapshot
+		)
 
 
-def load_manifest(raw: Optional[Dict] = None, earliest_supported_version_id: Optional[str] = EARLIEST_SUPPORTED_VERSION_ID):
+def load_manifest(
+	raw: Optional[Dict] = None,
+	earliest_supported_version_id: Optional[str] = EARLIEST_SUPPORTED_VERSION_ID
+):
+
 	global manifest
 
 	if raw is None:

@@ -1,6 +1,4 @@
-import pytest
-
-from javalang.tree import Cast, CompilationUnit, PackageDeclaration, ClassDeclaration, Literal, MethodDeclaration
+from javalang.tree import CompilationUnit, ClassDeclaration, Literal, MethodDeclaration
 
 from shulkr.java import ast_nodes_equal, filter_ast_node, get_renamed_variables, undo_variable_renames
 
@@ -222,4 +220,3 @@ def test_undo_variable_renames_with_one_renamed_declaration_set_to_string_with_s
 	renamed_variables = [(None, [('x', 'y')])]
 
 	assert undo_variable_renames('int y = "y";', renamed_variables) == 'int x = "y";'
-

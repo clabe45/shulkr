@@ -1,11 +1,8 @@
 from __future__ import annotations
 import os.path
-import sys
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Optional
 
-from git import Commit, Diff, DiffIndex, Repo
-
-from shulkr.java import get_renamed_variables
+from git import Commit
 
 
 def get_blob(commit: Optional[Commit], path: str, repo_path: str) -> bytes:

@@ -1,10 +1,10 @@
 import os.path
-import sys
 
-from git import BadName, InvalidGitRepositoryError, Repo
+from git import Repo
 
 from shulkr.git import get_blob
-from shulkr.java import JavaAnalyzationError, get_renamed_variables, undo_variable_renames
+from shulkr.java import JavaAnalyzationError
+from shulkr.java import get_renamed_variables, undo_variable_renames
 from shulkr.minecraft.source import generate_sources
 from shulkr.minecraft.version import Version
 
@@ -25,8 +25,8 @@ def undo_renames(repo: Repo) -> None:
 		if not diff.a_path.endswith('.java'):
 			continue
 
-		source = get_blob(commit1, diff.a_path, repo_path)
-		target = get_blob(commit2, diff.b_path, repo_path)
+		source = get_blob(commit1, diff.a_path, repo.working_tree_dir)
+		target = get_blob(commit2, diff.b_path, repo.working_tree_dir)
 
 		try:
 			renamed_variables = get_renamed_variables(source, target)
@@ -35,13 +35,20 @@ def undo_renames(repo: Repo) -> None:
 
 		if renamed_variables is not None:
 			updated_target = undo_variable_renames(target, renamed_variables)
-			with open(os.path.join(repo_path, diff.a_path), 'w') as f:
+			p = os.path.join(repo.working_tree_dir, diff.a_path)
+			with open(p, 'w') as f:
 				f.write(updated_target)
 
 			print(f'Updated {diff.a_path}')
 
 
-def commit_version(repo: Repo, version: Version, undo_renamed_vars: bool, message_template: str) -> None:
+def commit_version(
+	repo: Repo,
+	version: Version,
+	undo_renamed_vars: bool,
+	message_template: str
+) -> None:
+
 	commit_msg = message_template.strip().replace('{}', str(version))
 	if undo_renamed_vars and len(repo.iter_commits()) > 0:
 		commit_msg += '\n\nRenamed variables reverted'
@@ -54,7 +61,14 @@ def tag_version(repo: Repo, version: Version) -> None:
 	repo.create_tag(str(version))
 
 
-def create_version(repo: Repo, version: Version, undo_renamed_vars: bool, message_template: str, tag: bool) -> None:
+def create_version(
+	repo: Repo,
+	version: Version,
+	undo_renamed_vars: bool,
+	message_template: str,
+	tag: bool
+) -> None:
+
 	# 1. Generate source code for the current version
 	print(f'Generating sources for Minecraft {version}')
 	generate_sources(repo, version)

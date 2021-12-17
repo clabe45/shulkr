@@ -1,5 +1,4 @@
 import git
-import pytest
 
 import shulkr
 from shulkr.minecraft.version import Version

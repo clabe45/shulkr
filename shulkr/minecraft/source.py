@@ -21,7 +21,17 @@ def generate_sources(repo: Repo, version: Version) -> None:
 	try:
 		for side in ('client', 'server'):
 			p = subprocess.run(
-				['python3', 'main.py', '--mcv', str(version), '-s', side, '-c', '-f', '-q'],
+				[
+					'python3',
+					'main.py',
+					'--mcv',
+					str(version),
+					'-s',
+					side,
+					'-c',
+					'-f',
+					'-q'
+				],
 				stderr=subprocess.PIPE,
 				cwd=decompiler_dir
 			)

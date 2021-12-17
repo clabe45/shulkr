@@ -42,7 +42,10 @@ def profile_get_renamed_variables():
 		print(after, end='\n')
 		before_wrapped = wrap_in_class(before)
 		after_wrapped = wrap_in_class(after)
-		duration = timeit(lambda: get_renamed_variables(before_wrapped, after_wrapped), number=100)
+		duration = timeit(
+			lambda: get_renamed_variables(before_wrapped, after_wrapped),
+			number=100
+		)
 		total_time += duration
 		print(f'{duration}s', end='\n\n')
 

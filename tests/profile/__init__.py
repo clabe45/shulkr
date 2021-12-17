@@ -1,1 +1,0 @@
-from .profile_java import profile_get_renamed_variables

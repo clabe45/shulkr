@@ -1,5 +1,3 @@
-import pytest
-
 from shulkr.arguments import parse_args
 
 

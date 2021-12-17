@@ -1,5 +1,3 @@
-from typing import Dict
-
 import pytest
 
 from shulkr.minecraft.version import Version, load_manifest
