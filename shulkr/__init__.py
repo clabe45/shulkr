@@ -46,8 +46,8 @@ def commit_version(repo: Repo, version: Version, undo_renamed_vars: bool, messag
 	if undo_renamed_vars and len(repo.iter_commits()) > 0:
 		commit_msg += '\n\nRenamed variables reverted'
 
-	repo.git.add('src')
-	repo.git.commit('-m', commit_msg)
+	repo.add('src')
+	repo.index.commit(commit_msg)
 
 
 def create_version(repo: Repo, version: Version, undo_renamed_vars: bool, message_template: str) -> None:
