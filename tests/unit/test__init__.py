@@ -5,6 +5,35 @@ import shulkr
 from shulkr.minecraft.version import Version
 
 
+def test_commit_version_stages_the_repos_src_directory(mocker):
+	# Create a mock repo
+	mocker.patch('git.Repo')
+	repo = git.Repo()
+	git_add = mocker.patch.object(repo, 'add')
+	mocker.patch.object(repo.index, 'commit')
+
+	# Call commit_version
+	version = Version('1.18.1', 0)
+	shulkr.commit_version(repo, version, undo_renamed_vars=False, message_template='{}')
+
+	# src must have been staged
+	git_add.assert_called_once_with('src')
+
+
+def test_commit_version_creates_a_commit(mocker):
+	# Create a mock repo
+	mocker.patch('git.Repo')
+	repo = git.Repo()
+	mocker.patch.object(repo, 'add')
+	git_commit = mocker.patch.object(repo.index, 'commit')
+
+	# Call commit_version
+	version = Version('1.18.1', 0)
+	shulkr.commit_version(repo, version, undo_renamed_vars=False, message_template='{}')
+
+	# commit must have been called
+	git_commit.assert_called_once()
+
 
 def test_create_version_with_undo_renamed_vars_on_repo_with_no_commits_does_not_call_undo_renames(mocker):
 	# Mock
