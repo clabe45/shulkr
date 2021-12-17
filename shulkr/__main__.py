@@ -3,14 +3,15 @@ import sys
 
 from git import InvalidGitRepositoryError, Repo
 
-from shulkr import create_version, parse_args
+from shulkr import create_version
+from shulkr.arguments import parse_args
 from shulkr.minecraft.version import NoSuchVersionError, Version, load_manifest
 
 
 def main_uncaught() -> None:
 	load_manifest()
 
-	args = parse_args()
+	args = parse_args(sys.argv[1:])
 
 	repo_path = os.path.join(
 		os.getcwd(),
