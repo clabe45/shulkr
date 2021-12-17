@@ -43,7 +43,6 @@ def test_create_version_with_undo_renamed_vars_on_repo_with_no_commits_does_not_
 	mocker.patch('shulkr.commit_version')
 
 	repo = git.Repo()
-	mocker.patch.object(repo, 'bare', return_value=False)
 
 	# Call create_version
 	version = Version('1.18.1', 0)
