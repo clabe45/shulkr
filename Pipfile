@@ -8,6 +8,7 @@ gitpython = "*"
 javalang = "*"
 unidiff = "*"
 requests = "*"
+flake8-tabs = "*"
 
 [dev-packages]
 pytest = "*"
