@@ -42,7 +42,7 @@ def undo_renames(repo: Repo) -> None:
 
 
 def commit_version(repo: Repo, version: Version, undo_renamed_vars: bool, message_template: str) -> None:
-	commit_msg = message_template.strip().format(str(version))
+	commit_msg = message_template.strip().replace('{}', str(version))
 	if undo_renamed_vars and len(repo.iter_commits()) > 0:
 		commit_msg += '\n\nRenamed variables reverted'
 

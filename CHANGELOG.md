@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Each commit is now tagged with its Minecraft version
 
+### Fixed
+- Issue with commit message substition
+
 ## [0.2.0] - 2021-12-16
 ### Added
 - Negative version patterns

@@ -35,6 +35,23 @@ def test_commit_version_creates_a_commit(mocker):
 	git_commit.assert_called_once()
 
 
+def test_commit_version_replaces_all_brackets_with_the_version(mocker):
+	# Create a mock repo
+	mocker.patch('git.Repo')
+	repo = git.Repo()
+	mocker.patch.object(repo, 'add')
+	git_commit = mocker.patch.object(repo.index, 'commit')
+
+	# Call commit_version
+	message_template = '{} {}'
+	version = Version('1.18.1', 0)
+	shulkr.commit_version(repo, version, undo_renamed_vars=False, message_template=message_template)
+
+	# commit must have been called
+	expected_message = message_template.replace('{}', str(version))
+	git_commit.assert_called_once_with(expected_message)
+
+
 def test_create_version_with_undo_renamed_vars_on_repo_with_no_commits_does_not_call_undo_renames(mocker):
 	# Mock
 	mocker.patch('git.Repo')
