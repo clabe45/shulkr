@@ -30,8 +30,8 @@ This will generate a commit with the decompiled source code for Minecraft 1.16,
 5d13494 (tag: 1.16) version 1.16
 ```
 
-Note: It's okay to skip versions. Shulkr generates the source code for each
-version and then commits it to git, so you can include as many or as little
+Note: It's okay to skip versions. Shulkr generates the complete source code for
+each version before committing to git, so you can include as many or as little
 intermediate versions as you would like.
 
 ## Version Patterns
@@ -45,9 +45,9 @@ Ranges of versions can be specified with `..` and `...`:
 `A` and/or `B` can be omitted, defaulting to the earliest and latest supported
 versions, respectively.
 
-Versions can be excluded by adding a *negativie pattern* after it. To negate a
-pattern, add `-`. The following pattern expands to all versions after `A`, up to
-and including `B`:
+A *negative pattern* removes all matching versions that came before it. To
+negate a pattern, add `-`. The following pattern expands to all versions after
+`A`, up to and including `B` (the order is important):
 - `A...B -A`
 
 ## Options
@@ -58,7 +58,7 @@ By default the source code is generated in the current working directory. To
 specify a different location:
 
 ```sh
-shulkr --repo minecraft-sources MINECRAFT_VERSION
+shulkr --repo minecraft-sources 1.17..
 ```
 
 If the directory does not exist, a new git repo will be created there.
