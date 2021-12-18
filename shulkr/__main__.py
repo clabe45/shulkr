@@ -23,10 +23,13 @@ def main_uncaught() -> None:
 	except NoSuchVersionError as e:
 		print(e, file=sys.stderr)
 		sys.exit(1)
+	except ValueError as e:
+		print(e, file=sys.stderr)
+		sys.exit(2)
 
 	if len(versions) == 0:
 		print('No versions selected', file=sys.stderr)
-		sys.exit(2)
+		sys.exit(3)
 
 	if not os.path.exists(repo_path):
 		print(f'Creating {repo_path}')
