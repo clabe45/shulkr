@@ -55,8 +55,10 @@ class Version:
 		"""
 
 		if other < self:
+			dots = '...' if snapshots else '..'
 			raise ValueError(
-				'The stop commit cannot come before the current commit'
+				'Version B cannot have been released sooner than version A in'
+				+ f' A{dots}B syntax'
 			)
 
 		r = []
