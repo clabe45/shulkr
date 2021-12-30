@@ -1,5 +1,5 @@
 import os
-from shutil import move, rmtree
+import shutil
 import subprocess
 
 from git import Repo
@@ -15,11 +15,11 @@ def generate_sources(repo: Repo, version: Version) -> None:
 
 	dest_src_dir = os.path.join(repo.working_tree_dir, 'src')
 	if os.path.exists(dest_src_dir):
-		rmtree(dest_src_dir)
+		shutil.rmtree(dest_src_dir)
 
-	# Generate source code
 	try:
-		for side in ('client', 'server'):
+		for env in ('client', 'server'):
+			# Generate source code
 			p = subprocess.run(
 				[
 					'python3',
@@ -27,7 +27,7 @@ def generate_sources(repo: Repo, version: Version) -> None:
 					'--mcv',
 					str(version),
 					'-s',
-					side,
+					env,
 					'-c',
 					'-f',
 					'-q'
@@ -39,7 +39,7 @@ def generate_sources(repo: Repo, version: Version) -> None:
 				raise Exception(p.stderr.decode())
 
 		# Move the generated source code to the target repo
-		move(
+		shutil.move(
 			os.path.join(decompiler_dir, 'src', str(version)),
 			dest_src_dir
 		)
@@ -55,4 +55,4 @@ def generate_sources(repo: Repo, version: Version) -> None:
 		for subdir in ('mappings', 'src', 'tmp', 'versions'):
 			path = os.path.join(decompiler_dir, subdir)
 			if os.path.exists(path):
-				rmtree(path)
+				shutil.rmtree(path)
