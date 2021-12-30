@@ -26,7 +26,12 @@ jobs:
         with:
           command: run lint
 
-      - name: Run tests
+      - name: Run unit tests
         uses: VaultVulp/action-pipenv@v2.0.1
         with:
-          command: run test
+          command: run test-unit
+
+      - name: Run functional tests
+        uses: VaultVulp/action-pipenv@v2.0.1
+        with:
+          command: run test-func

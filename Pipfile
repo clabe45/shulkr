@@ -21,7 +21,8 @@ python_version = "3.9"
 
 [scripts]
 start = "python -m shulkr"
-test = "python -m pytest tests/unit"
+test-unit = "python -m pytest tests/unit"
+test-func = "python -m pytest tests/functional"
 lint = "python -m flake8 shulkr tests"
 profile = "python -m tests.profile"
 build = "python setup.py clean --all sdist bdist_wheel"
