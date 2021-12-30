@@ -10,7 +10,7 @@ def test_commit_version_stages_the_repos_src_directory(repo):
 	shulkr.commit_version(repo, version, undo_renamed_vars=False, message_template='{}')
 
 	# src must have been staged
-	repo.add.assert_called_once_with('client', 'server')
+	repo.index.add.assert_called_once_with('client', 'server')
 
 
 def test_commit_version_creates_a_commit(repo):
