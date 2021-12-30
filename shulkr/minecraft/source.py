@@ -53,7 +53,9 @@ def generate_sources(repo: Repo, version: Version) -> None:
 	except BaseException as e:
 		# Undo src/ deletion
 		print('Resetting working tree')
-		repo.git.restore('src')
+		if len(repo.iter_commits()) > 0:
+			repo.git.restore('client', 'server')
+
 		raise e
 
 	finally:
