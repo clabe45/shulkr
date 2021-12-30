@@ -1,3 +1,5 @@
+import os
+
 import git
 import pytest
 
@@ -21,13 +23,14 @@ MANIFEST_DATA = {
 	]
 }
 
+
 class TestVersions:
 	def __init__(self, snapshot: Version, release: Version) -> None:
 		self.snapshot = snapshot
 		self.release = release
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture
 def repo(mocker):
 	mocker.patch('git.Repo')
 	repo = git.Repo()
@@ -38,10 +41,18 @@ def repo(mocker):
 	return repo
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture
 def versions():
 	load_manifest(MANIFEST_DATA, earliest_supported_version_id='abcdef')
 
 	snapshot = Version.of('abcdef')
 	release = Version.of('1.0.0')
 	return TestVersions(snapshot, release)
+
+
+@pytest.fixture
+def root_dir():
+	script_dir = os.path.dirname(__file__)
+	return os.path.realpath(
+		os.path.join(script_dir, '..', '..')
+	)
