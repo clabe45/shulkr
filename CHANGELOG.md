@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Each commit is now tagged with its Minecraft version
 
+### Changed
+- Restructured source roots for easier project organization in IDEs
+  - `src/client` &rarr; `client/src`
+  - `src/server` &rarr; `server/src`
+
 ### Fixed
 - Issue with commit message substition
 

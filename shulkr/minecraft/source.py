@@ -13,10 +13,6 @@ def generate_sources(repo: Repo, version: Version) -> None:
 		os.path.join(script_dir, '..', 'DecompilerMC')
 	)
 
-	dest_src_dir = os.path.join(repo.working_tree_dir, 'src')
-	if os.path.exists(dest_src_dir):
-		shutil.rmtree(dest_src_dir)
-
 	try:
 		for env in ('client', 'server'):
 			# Generate source code
@@ -38,11 +34,21 @@ def generate_sources(repo: Repo, version: Version) -> None:
 			if p.returncode != 0:
 				raise Exception(p.stderr.decode())
 
-		# Move the generated source code to the target repo
-		shutil.move(
-			os.path.join(decompiler_dir, 'src', str(version)),
-			dest_src_dir
-		)
+			# Top-level destination directory ($repo/client or $repo/server)
+			dest_dir = os.path.join(repo.working_tree_dir, env)
+
+			# Remove existing top-level destination directory
+			if os.path.exists(dest_dir):
+				shutil.rmtree(dest_dir)
+
+			# Make top-level destination directory
+			os.makedirs(dest_dir)
+
+			# Move the generated source code to $dest_dir/src
+			shutil.move(
+				os.path.join(decompiler_dir, 'src', str(version), env),
+				os.path.join(dest_dir, 'src')
+			)
 
 	except BaseException as e:
 		# Undo src/ deletion
