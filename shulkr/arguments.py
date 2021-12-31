@@ -21,7 +21,7 @@ def parse_args(args: List[str]) -> argparse.Namespace:
 		'-m',
 		type=str,
 		default='version {}',
-		help='Commit message template'
+		help="Commit message template (defaults to 'version {}')"
 	)
 
 	parser.add_argument(
@@ -37,14 +37,17 @@ def parse_args(args: List[str]) -> argparse.Namespace:
 		'-u',
 		dest='undo_renamed_vars',
 		action='store_true',
-		help='Revert local variables that were renamed in the new version'
+		help=(
+			'Revert local variables that were renamed in new versions to their '
+			'original names'
+		)
 	)
 
 	parser.add_argument(
 		'version',
 		nargs='+',
 		type=str,
-		help='List of mapping versions'
+		help='List of versions to decompile'
 	)
 
 	parser.set_defaults(tag=True, undo_renamed_vars=False)
