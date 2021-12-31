@@ -6,7 +6,7 @@ def test_git_repo_initiated(run):
 	Repo(run.repo_path)
 
 
-def test_commit_created(run):
+def test_commits_created(run):
 	repo = Repo(run.repo_path)
 	actual = set([commit.message for commit in repo.iter_commits()])
 	expected = set([f'version {version}' for version in run.versions])
@@ -20,7 +20,7 @@ def test_latest_commit_has_client_and_server(run):
 	assert actual == expected
 
 
-def test_tag_created(run):
+def test_tags_created(run):
 	repo = Repo(run.repo_path)
 	actual = set([tag.name for tag in repo.tags])
 	expected = set(run.versions)
