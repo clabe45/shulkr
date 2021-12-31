@@ -6,7 +6,7 @@ on:
       - 'v*'
 
 jobs:
-  lint-test:
+  release:
     runs-on: ubuntu-latest
 
     steps:
@@ -38,11 +38,13 @@ jobs:
       - name: Build distribution
         run: pipenv run build
 
-      - name: Publish release on Pypi
+      - name: Publish release to PyPi
         run: pipenv run publish -u __token__ -p ${{ secrets.PYPI_TOKEN }}
 
-      - name: Publish release on GitHub
+      - name: Publish release to GitHub
         uses: actions/create-release@v1
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
