@@ -23,9 +23,11 @@ def run(request):
 	p = subprocess.Popen(['pipenv', 'run', 'start', '--repo', repo_path] + version_names)
 	try:
 		stdout, stderr = p.communicate()
-	except KeyboardInterrupt:
+	except KeyboardInterrupt as e:
 		if os.path.exists(repo_path):
 			shutil.rmtree(repo_path)
+
+		raise e
 
 	if p.returncode != 0:
 		if os.path.exists(repo_path):
