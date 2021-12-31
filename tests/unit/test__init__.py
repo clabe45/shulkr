@@ -38,6 +38,9 @@ def test_create_version_with_undo_renamed_vars_on_repo_with_no_commits_does_not_
 	mocker.patch('shulkr.generate_sources')
 	mocker.patch('shulkr.undo_renames')
 	mocker.patch('shulkr.commit_version')
+	# Since there are no commits, iter_commits() must throw an error
+	e = ValueError('Reference at ... does not exist')
+	repo.iter_commits.side_effect = mocker.Mock(side_effect=e)
 
 	# Call create_version
 	version = Version('1.18.1', 0)

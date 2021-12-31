@@ -2,7 +2,7 @@ import os.path
 
 from git import Repo
 
-from shulkr.git import get_blob
+from shulkr.git import get_blob, head_has_commits
 from shulkr.java import JavaAnalyzationError
 from shulkr.java import get_renamed_variables, undo_variable_renames
 from shulkr.minecraft.source import generate_sources
@@ -74,7 +74,7 @@ def create_version(
 	generate_sources(repo, version)
 
 	# 2. If there are any previous versions, undo the renamed variables
-	if undo_renamed_vars and len(repo.iter_commits()) > 0:
+	if undo_renamed_vars and head_has_commits(repo):
 		print('Undoing renamed variables')
 		undo_renames(repo)
 

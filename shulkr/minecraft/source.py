@@ -4,6 +4,7 @@ import subprocess
 
 from git import Repo
 
+from ..git import head_has_commits
 from .version import Version
 
 
@@ -55,7 +56,7 @@ def generate_sources(repo: Repo, version: Version) -> None:
 	except BaseException as e:
 		# Undo src/ deletion
 		print('Resetting working tree')
-		if len(repo.iter_commits()) > 0:
+		if head_has_commits(repo):
 			repo.git.restore('client', 'server')
 
 		raise e
