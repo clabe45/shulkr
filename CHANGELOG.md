@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Each commit is now tagged with its Minecraft version
 
 ### Changed
-- Restructured source roots for easier project organization in IDEs
+- Restructure source roots for easier project organization in IDEs
   - `src/client` &rarr; `client/src`
   - `src/server` &rarr; `server/src`
 
