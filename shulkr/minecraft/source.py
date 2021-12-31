@@ -43,7 +43,8 @@ def generate_sources(repo: Repo, version: Version) -> None:
 				shutil.rmtree(dest_src_dir)
 
 			# Make top-level destination directory
-			os.makedirs(dest_dir)
+			if not os.path.exists(dest_dir):
+				os.makedirs(dest_dir)
 
 			# Move the generated source code to $dest_dir/src
 			shutil.move(
