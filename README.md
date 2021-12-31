@@ -3,6 +3,10 @@
 Shulkr is a tool that decompiles multiple versions of Minecraft and commits each
 version to Git
 
+*Version 0.3 altered the directory structure of the generated sources. It is
+recommended to regenerate all commits after upgrading. See the [changelog] for
+more info.*
+
 ## Requirements
 
 - Git
@@ -88,3 +92,4 @@ Please make sure to update tests as appropriate.
 Licensed under the Apache License, Version 2.0.
 
 [Fork]: https://github.com/clabe45/shulkr/fork
+[changelog]: CHANGELOG.md
