@@ -16,5 +16,5 @@ def test_commit_created(run):
 def test_tag_created(run):
 	repo = Repo(run.repo_path)
 	actual = set([tag.name for tag in repo.tags])
-	expected = set([str(version) for version in run.versions])
+	expected = set(run.versions)
 	assert actual == expected
