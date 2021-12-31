@@ -38,6 +38,13 @@ jobs:
       - name: Build distribution
         run: pipenv run build
 
+      - name: Get changelog notes
+        id: changelog_reader
+        uses: mindsers/changelog-reader-action@v2
+        with:
+          version: ${{ github.ref }}
+          path: ./CHANGELOG.md
+
       - name: Publish release to PyPi
         run: pipenv run publish -u __token__ -p ${{ secrets.PYPI_TOKEN }}
 
@@ -46,5 +53,6 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
+          body: ${{ steps.changelog_reader.outputs.changes }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
