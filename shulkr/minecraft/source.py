@@ -36,10 +36,11 @@ def generate_sources(repo: Repo, version: Version) -> None:
 
 			# Top-level destination directory ($repo/client or $repo/server)
 			dest_dir = os.path.join(repo.working_tree_dir, env)
+			dest_src_dir = os.path.join(dest_dir, 'src')
 
 			# Remove existing top-level destination directory
-			if os.path.exists(dest_dir):
-				shutil.rmtree(dest_dir)
+			if os.path.exists(dest_src_dir):
+				shutil.rmtree(dest_src_dir)
 
 			# Make top-level destination directory
 			os.makedirs(dest_dir)
@@ -47,7 +48,7 @@ def generate_sources(repo: Repo, version: Version) -> None:
 			# Move the generated source code to $dest_dir/src
 			shutil.move(
 				os.path.join(decompiler_dir, 'src', str(version), env),
-				os.path.join(dest_dir, 'src')
+				dest_src_dir
 			)
 
 	except BaseException as e:
