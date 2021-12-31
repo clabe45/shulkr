@@ -13,6 +13,13 @@ def test_commit_created(run):
 	assert actual == expected
 
 
+def test_latest_commit_has_client_and_server(run):
+	repo = Repo(run.repo_path)
+	actual = set([tree.path for tree in repo.head.commit.tree.trees])
+	expected = set(['client', 'server'])
+	assert actual == expected
+
+
 def test_tag_created(run):
 	repo = Repo(run.repo_path)
 	actual = set([tag.name for tag in repo.tags])

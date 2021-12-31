@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Fixed
+- Not all files being added to commits
 - `File exists` error when decompiling the second version
 - `--undo-renamed-vars` causing error
 
