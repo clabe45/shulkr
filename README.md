@@ -92,4 +92,4 @@ Please make sure to update tests as appropriate.
 Licensed under the Apache License, Version 2.0.
 
 [Fork]: https://github.com/clabe45/shulkr/fork
-[changelog]: CHANGELOG.md
+[changelog]: https://github.com/clabe45/shulkr/blob/main/CHANGELOG.md
