@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install pipenv
-        uses: pip install pipenv
+        runs: pip install pipenv
 
       - name: Install dependencies
         run: pipenv install -d
