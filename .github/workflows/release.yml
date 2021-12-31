@@ -1,0 +1,38 @@
+name: Publish Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: pipenv install -d
+
+      - name: Lint code
+        run: pipenv run lint
+
+      - name: Run unit tests
+        run: pipenv run test-unit
+
+      - name: Run functional tests
+        run: pipenv run test-func
+
+      - name: Build distribution
+        run: pipenv run build
+
+      - name: Publish release on Pypi
+        run: pipenv run publish -u __token__ -p ${{ secrets.PYPI_TOKEN }}
+
+      - name: Publish release on GitHub
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
