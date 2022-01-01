@@ -1,5 +1,8 @@
 # Shulkr
 
+![Check New Commits](https://github.com/clabe45/shulkr/actions/workflows/check.yml/badge.svg)
+[![PyPI version](https://badge.fury.io/py/shulkr.svg)](https://badge.fury.io/py/shulkr)
+
 Shulkr is a tool that decompiles multiple versions of Minecraft and commits each
 version to Git
 
