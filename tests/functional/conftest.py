@@ -16,9 +16,12 @@ def _run(versions: List[str]):
 	script_dir = os.path.dirname(__file__)
 	repo_path = os.path.join(script_dir, 'repo')
 
-	p = subprocess.Popen(['pipenv', 'run', 'start', '--repo', repo_path] + versions)
 	try:
-		stdout, stderr = p.communicate()
+		p = subprocess.run(
+			['pipenv', 'run', 'start', '--repo', repo_path] + versions,
+			stderr=subprocess.PIPE
+		)
+
 	except KeyboardInterrupt as e:
 		if os.path.exists(repo_path):
 			shutil.rmtree(repo_path)
@@ -29,7 +32,7 @@ def _run(versions: List[str]):
 		if os.path.exists(repo_path):
 			shutil.rmtree(repo_path)
 
-		raise Exception(stderr)
+		raise Exception(p.stderr.decode())
 
 	yield RunParams(repo_path, versions)
 
