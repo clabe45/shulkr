@@ -1,4 +1,4 @@
-name: Check New Commits
+name: check
 
 on:
   push:
