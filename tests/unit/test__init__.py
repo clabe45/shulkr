@@ -10,7 +10,7 @@ def test_commit_version_stages_the_repos_src_directory(repo):
 	shulkr.commit_version(repo, version, undo_renamed_vars=False, message_template='{}')
 
 	# src must have been staged
-	repo.index.add.assert_called_once_with(['client', 'server'])
+	repo.git.add.assert_called_once_with('client', 'server')
 
 
 def test_commit_version_creates_a_commit(repo):
@@ -19,7 +19,7 @@ def test_commit_version_creates_a_commit(repo):
 	shulkr.commit_version(repo, version, undo_renamed_vars=False, message_template='{}')
 
 	# commit must have been called
-	repo.index.commit.assert_called_once()
+	repo.git.commit.assert_called_once()
 
 
 def test_commit_version_replaces_all_brackets_with_the_version(repo):
@@ -30,7 +30,7 @@ def test_commit_version_replaces_all_brackets_with_the_version(repo):
 
 	# commit must have been called
 	expected_message = message_template.replace('{}', str(version))
-	repo.index.commit.assert_called_once_with(expected_message)
+	repo.git.commit.assert_called_once_with(message=expected_message)
 
 
 def test_commit_version_with_existing_commits_and_undo_renamed_vars_adds_note_to_commit_message(repo, commit):

@@ -53,8 +53,8 @@ def commit_version(
 	if undo_renamed_vars and head_has_commits(repo):
 		commit_msg += '\n\nRenamed variables reverted'
 
-	repo.index.add(['client', 'server'])
-	repo.index.commit(commit_msg)
+	repo.git.add('client', 'server')
+	repo.git.commit(message=commit_msg)
 
 
 def tag_version(repo: Repo, version: Version) -> None:

@@ -25,3 +25,8 @@ def test_tags_created(run):
 	actual = set([tag.name for tag in repo.tags])
 	expected = set(run.versions)
 	assert actual == expected
+
+
+def test_working_tree_clean(run):
+	repo = Repo(run.repo_path)
+	assert len(repo.git.status(porcelain=True)) == 0

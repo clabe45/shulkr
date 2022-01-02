@@ -33,12 +33,9 @@ class TestVersions:
 @pytest.fixture
 def repo(mocker):
 	mocker.patch('git.Repo')
-	repo = git.Repo()
+	return git.Repo()
 
-	mocker.patch.object(repo.index, 'add')
-	mocker.patch.object(repo.index, 'commit')
 
-	return repo
 @pytest.fixture
 def commit(mocker):
 	mocker.patch('git.objects.commit.Commit')
