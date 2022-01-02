@@ -32,5 +32,10 @@ jobs:
       - name: Run unit tests
         run: pipenv run test-unit
 
+      - name: Use fake git credentials
+        run: |
+          git config --global user.email "example@xyz.com"
+          git config --global user.name "Quentin Beck"
+
       - name: Run functional tests
         run: pipenv run test-func
