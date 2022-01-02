@@ -33,6 +33,19 @@ def test_commit_version_replaces_all_brackets_with_the_version(repo):
 	repo.index.commit.assert_called_once_with(expected_message)
 
 
+def test_commit_version_with_existing_commits_and_undo_renamed_vars_adds_note_to_commit_message(repo, commit):
+	# Generator of commits
+	repo.iter_commits.return_value = iter([commit()])
+
+	# Call commit_version
+	version = Version('1.18.1', 0)
+	shulkr.commit_version(repo, version, undo_renamed_vars=True, message_template='{}')
+
+	# commit must have been called
+	expected_message = f'{version}\n\nRenamed variables reverted'
+	repo.git.commit.assert_called_once_with(message=expected_message)
+
+
 def test_create_version_with_undo_renamed_vars_on_repo_with_no_commits_does_not_call_undo_renames(mocker, repo):
 	# Mock
 	mocker.patch('shulkr.generate_sources')

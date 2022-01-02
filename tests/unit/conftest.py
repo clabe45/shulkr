@@ -39,6 +39,10 @@ def repo(mocker):
 	mocker.patch.object(repo.index, 'commit')
 
 	return repo
+@pytest.fixture
+def commit(mocker):
+	mocker.patch('git.objects.commit.Commit')
+	return git.objects.commit.Commit
 
 
 @pytest.fixture

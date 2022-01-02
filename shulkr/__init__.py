@@ -50,7 +50,7 @@ def commit_version(
 ) -> None:
 
 	commit_msg = message_template.strip().replace('{}', str(version))
-	if undo_renamed_vars and len(repo.iter_commits()) > 0:
+	if undo_renamed_vars and head_has_commits(repo):
 		commit_msg += '\n\nRenamed variables reverted'
 
 	repo.index.add(['client', 'server'])
