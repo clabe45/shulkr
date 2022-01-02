@@ -39,6 +39,6 @@ def _run(versions: List[str]):
 	shutil.rmtree(repo_path)
 
 
-@pytest.fixture(scope='session', params=[['1.18', '1.18.1']])
+@pytest.fixture(scope='session', params=[['1.17.1', '1.18']])
 def run(request):
 	yield from _run(request.param)
