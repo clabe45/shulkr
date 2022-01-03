@@ -12,15 +12,23 @@ class RunParams:
 		self.versions = versions
 
 
-def _run(versions: List[str]):
+def create_command(versions: List[str], repo_path: str, undo_renamed_vars: bool) -> List[str]:
+	command = ['pipenv', 'run', 'start', '-p', repo_path]
+	if undo_renamed_vars:
+		command.append('-u')
+
+	command.extend(versions)
+
+	return command
+
+
+def _run(versions: List[str], undo_renamed_vars: bool) -> None:
 	script_dir = os.path.dirname(__file__)
 	repo_path = os.path.join(script_dir, 'repo')
 
 	try:
-		p = subprocess.run(
-			['pipenv', 'run', 'start', '--repo', repo_path] + versions,
-			stderr=subprocess.PIPE
-		)
+		command = create_command(versions, repo_path, undo_renamed_vars)
+		p = subprocess.run(command, stderr=subprocess.PIPE)
 
 	except KeyboardInterrupt as e:
 		if os.path.exists(repo_path):
@@ -39,6 +47,13 @@ def _run(versions: List[str]):
 	shutil.rmtree(repo_path)
 
 
-@pytest.fixture(scope='session', params=[['1.17.1', '1.18']])
+@pytest.fixture(
+	scope='session',
+	params=[
+		(['1.17.1', '1.18'], False),
+		(['1.17.1', '1.18'], True)
+	]
+)
 def run(request):
-	yield from _run(request.param)
+	versions, undo_variable_renames = request.param
+	yield from _run(versions, undo_variable_renames)
