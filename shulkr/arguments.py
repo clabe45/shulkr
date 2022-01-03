@@ -39,7 +39,7 @@ def parse_args(args: List[str]) -> argparse.Namespace:
 		action='store_true',
 		help=(
 			'Revert local variables that were renamed in new versions to their '
-			'original names'
+			'original names (experimental)'
 		)
 	)
 
