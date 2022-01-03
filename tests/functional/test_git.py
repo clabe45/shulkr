@@ -9,7 +9,18 @@ def test_git_repo_initiated(run):
 def test_commits_created(run):
 	repo = Repo(run.repo_path)
 	actual = set([commit.message.rstrip() for commit in repo.iter_commits()])
-	expected = set([f'version {version}' for version in run.versions])
+
+	# Calculate expected commit messages from versions
+	if run.undo_renamed_vars:
+		first = f'version {run.versions[0]}'
+		rest = [
+			f'version {version}\n\nRenamed variables reverted'
+			for version in run.versions[1:]
+		]
+		expected = set([first] + rest)
+	else:
+		expected = set([f'version {version}' for version in run.versions])
+
 	assert actual == expected
 
 

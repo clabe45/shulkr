@@ -7,12 +7,24 @@ import pytest
 
 
 class RunParams:
-	def __init__(self, repo_path: str, versions: List[str]) -> None:
-		self.repo_path = repo_path
+	def __init__(
+		self,
+		versions: List[str],
+		repo_path: str,
+		undo_renamed_vars: bool
+	) -> None:
+
 		self.versions = versions
+		self.repo_path = repo_path
+		self.undo_renamed_vars = undo_renamed_vars
 
 
-def create_command(versions: List[str], repo_path: str, undo_renamed_vars: bool) -> List[str]:
+def create_command(
+	versions: List[str],
+	repo_path: str,
+	undo_renamed_vars: bool
+) -> List[str]:
+
 	command = ['pipenv', 'run', 'start', '-p', repo_path]
 	if undo_renamed_vars:
 		command.append('-u')
@@ -42,7 +54,7 @@ def _run(versions: List[str], undo_renamed_vars: bool) -> None:
 
 		raise Exception(p.stderr.decode())
 
-	yield RunParams(repo_path, versions)
+	yield RunParams(versions, repo_path, undo_renamed_vars)
 
 	shutil.rmtree(repo_path)
 
