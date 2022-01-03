@@ -14,6 +14,8 @@ def undo_renames(repo: Repo) -> None:
 	commit2 = None  # working tree
 	diff_index = commit1.diff(commit2)
 
+	updated_count = 0
+
 	# For each file changed (in reverse, with indices, so we can remove elements
 	# in the for loop)
 	for diff in diff_index:
@@ -39,7 +41,9 @@ def undo_renames(repo: Repo) -> None:
 			with open(p, 'w') as f:
 				f.write(updated_target)
 
-			print(f'Updated {diff.a_path}')
+			updated_count += 1
+
+	print(f'+ Updated {updated_count} files')
 
 
 def commit_version(
