@@ -8,7 +8,7 @@ def test_git_repo_initiated(run):
 
 def test_commits_created(run):
 	repo = Repo(run.repo_path)
-	actual = set([commit.message for commit in repo.iter_commits()])
+	actual = set([commit.message.rstrip() for commit in repo.iter_commits()])
 	expected = set([f'version {version}' for version in run.versions])
 	assert actual == expected
 
