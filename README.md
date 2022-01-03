@@ -85,6 +85,13 @@ shulkr -m "Minecraft {}" 1.18-rc4
 By default, each commit is tagged with the name of its Minecraft version. This
 can be disabled with `--no-tags`.
 
+## Experimental Options
+
+### `--undo-renamed-vars` / `-u`
+
+When this option is enabled, local variables that were renamed in new versions
+will be reverted to their original names.
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to
