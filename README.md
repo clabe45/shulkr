@@ -12,6 +12,12 @@ see the [usage guidelines].**
 *Version 0.3.3 fixed a major bug with the commit generation. It is recommended
 to remove all commits create before this and recreate them with the patch.*
 
+## No Log4j Vulnerabilities Found
+
+The decompiler has been scanned for the recent log4j vulnerabilities, including
+CVE-2021-44228, CVE-2021-45046, CVE-2021-45105, and CVE-2021-44832, and none
+were present.
+
 ## Requirements
 
 - Git
