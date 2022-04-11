@@ -3,6 +3,8 @@ import re
 import requests
 from typing import Dict, List, Optional
 
+from shulkr.git import get_repo, head_has_commits
+
 MANIFEST_LOCATION = "https://launchermeta.mojang.com/mc/game/version_manifest.json"	 # noqa: E501
 EARLIEST_SUPPORTED_VERSION_ID = '19w36a'
 
@@ -108,8 +110,12 @@ class Version:
 			if a_id:
 				a = Version.of(a_id)
 			else:
-				# Get the earliest release or snapshot to start at
-				a = manifest.earliest_snapshot if snapshots else manifest.earliest_release
+				# Get the next version after the latest committed one
+				if head_has_commits():
+					parent_name = get_latest_commit_version_name()
+					a = Version.of(parent_name).next
+				else:
+					raise ValueError('No commits from which to derive current version')
 
 			if b_id:
 				b = Version.of(b_id)
@@ -249,6 +255,12 @@ def load_manifest(
 	if raw is None:
 		raw = requests.get(MANIFEST_LOCATION).json()
 	manifest = Manifest.parse(raw, earliest_supported_version_id)
+
+
+def get_latest_commit_version_name():
+	repo = get_repo()
+	latest_tag = repo.tags[-1]
+	return latest_tag.name
 
 
 manifest = None

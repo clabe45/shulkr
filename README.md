@@ -57,8 +57,8 @@ Ranges of versions can be specified with `..` and `...`:
 - `A...B` expands to all versions between `A` and `B` (inclusive), including
   snapshots
 
-`A` and/or `B` can be omitted, defaulting to the earliest and latest supported
-versions, respectively.
+`A` and/or `B` can be omitted, defaulting to the version after the most recent
+commit and the latest supported version, respectively.
 
 A *negative pattern* removes all matching versions that came before it. To
 negate a pattern, add `-`. The following pattern expands to all versions after

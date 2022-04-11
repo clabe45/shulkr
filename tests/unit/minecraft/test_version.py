@@ -38,11 +38,11 @@ class TestVersion:
 	def test_pattern_with_no_range_operator_returns_list_containing_version(self, versions):
 		assert Version.pattern('1.0.0') == [versions.release]
 
-	def test_pattern_with_two_dots_returns_list_containing_release(self, versions):
-		assert Version.pattern('..') == [versions.release]
+	def test_pattern_with_snapshot_two_dots_returns_list_containing_release(self, versions):
+		assert Version.pattern('abcdef..') == [versions.release]
 
-	def test_pattern_with_three_dots_returns_list_containing_snapshot_and_release(self, versions):
-		assert Version.pattern('...') == [versions.snapshot, versions.release]
+	def test_pattern_with_snapshot_three_dots_returns_list_containing_snapshot_and_release(self, versions):
+		assert Version.pattern('abcdef...') == [versions.snapshot, versions.release]
 
 	def test_pattern_with_release_two_dots_returns_list_containing_release(self, versions):
 		assert Version.pattern('1.0.0..') == [versions.release]
@@ -52,6 +52,13 @@ class TestVersion:
 
 	def test_pattern_with_snapshot_three_dots_release_returns_list_containing_snapshot_and_release(self, versions):
 		assert Version.pattern('abcdef...1.0.0') == [versions.snapshot, versions.release]
+
+	def test_pattern_with_three_dots_on_empty_repo_throws_value_error(self, empty_repo, versions):
+		with pytest.raises(ValueError, match='No commits from which to derive current version'):
+			Version.pattern('...') == [versions.snapshot, versions.release]
+
+	def test_pattern_with_three_dots_on_repo_with_snapshot_returns_list_containing_release(self, nonempty_repo, versions):
+		assert Version.pattern('...') == [versions.release]
 
 	def test_patterns_with_empty_list_returns_empty_list(self, versions):
 		assert Version.patterns([]) == []
