@@ -10,7 +10,7 @@ class SubprocessMock:
 		self.stderr = stderr
 
 
-def test_generate_sources_runs_decompiler(mocker, repo, versions, root_dir):
+def test_generate_sources_runs_decompiler(mocker, empty_repo, versions, root_dir):
 	subprocess_run = mocker.patch(
 		'subprocess.run',
 		return_value=SubprocessMock()
@@ -43,9 +43,9 @@ def test_generate_sources_runs_decompiler(mocker, repo, versions, root_dir):
 	subprocess_run.assert_has_calls(calls)
 
 
-def test_generate_sources_moves_sources_to_repo(mocker, repo, versions, root_dir):
+def test_generate_sources_moves_sources_to_repo(mocker, empty_repo, versions, root_dir):
 	repo_dir = 'foo'
-	repo.working_tree_dir = repo_dir
+	empty_repo.working_tree_dir = repo_dir
 
 	mocker.patch(
 		'subprocess.run',

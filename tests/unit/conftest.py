@@ -30,16 +30,56 @@ class TestVersions:
 		self.release = release
 
 
-@pytest.fixture
-def repo(mocker):
-	mocker.patch('git.Repo')
+def create_commit(mocker):
+	mocker.patch('git.objects.commit.Commit')
+	return git.objects.commit.Commit()
+
+
+def create_tag(mocker):
+	mocker.patch('git.tag.Tag')
+	tag = git.tag.Tag()
+
+	# To match 'versions' fixture, for testing Version.pattern()
+	mocker.patch.object(tag, 'name', 'abcdef')
+
+	return tag
+
+
+def create_repo(mocker):
+	mocker.patch.object(git, 'Repo')
 	return git.Repo()
 
 
 @pytest.fixture
-def commit(mocker):
-	mocker.patch('git.objects.commit.Commit')
-	return git.objects.commit.Commit
+def empty_repo(mocker):
+	repo = create_repo(mocker)
+
+	# Since there are no commits, iter_commits() must throw an error
+	e = ValueError('Reference at ... does not exist')
+	repo.iter_commits.side_effect = mocker.Mock(side_effect=e)
+
+	# get_repo() will return this value
+	mocker.patch('shulkr.git.repo', repo)
+
+	return repo
+
+
+@pytest.fixture
+def nonempty_repo(mocker):
+	repo = create_repo(mocker)
+
+	# Add a fake commit
+	commit = create_commit(mocker)
+	mocker.patch.object(repo, 'iter_commits', return_value=iter([commit]))
+
+	# Add a fake tag for that commit
+	tag = create_tag(mocker)
+	repo.tags = [tag]
+
+	# get_repo() will return this value
+	mocker.patch('shulkr.git.repo', repo)
+
+	return repo
 
 
 @pytest.fixture
