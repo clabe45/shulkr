@@ -3,7 +3,7 @@ import os
 import git
 import pytest
 
-from shulkr.minecraft.version import Version, load_manifest
+from shulkr.minecraft.version import Version, clear_manifest, load_manifest
 
 
 MANIFEST_DATA = {
@@ -88,7 +88,10 @@ def versions():
 
 	snapshot = Version.of('abcdef')
 	release = Version.of('1.0.0')
-	return TestVersions(snapshot, release)
+
+	yield TestVersions(snapshot, release)
+
+	clear_manifest()
 
 
 @pytest.fixture

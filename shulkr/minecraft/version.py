@@ -257,6 +257,12 @@ def load_manifest(
 	manifest = Manifest.parse(raw, earliest_supported_version_id)
 
 
+def clear_manifest():
+	global manifest
+
+	manifest = None
+
+
 def get_latest_commit_version_name():
 	repo = get_repo()
 	latest_tag = repo.tags[-1]
