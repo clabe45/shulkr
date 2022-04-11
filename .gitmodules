@@ -1,6 +1,9 @@
 [submodule "fabric-example-mod"]
 	path = fabric-example-mod
 	url = git@github.com:FabricMC/fabric-example-mod.git
-[submodule "DecompilerMC"]
+[submodule "shulkr/yarn"]
+	path = shulkr/yarn
+	url = https://github.com/FabricMC/yarn.git
+[submodule "shulkr/DecompilerMC"]
 	path = shulkr/DecompilerMC
-	url = git@github.com:hube12/DecompilerMC.git
+	url = https://github.com/hube12/DecompilerMC.git

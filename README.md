@@ -78,6 +78,16 @@ shulkr --repo minecraft-sources 1.17..
 
 If the directory does not exist, a new git repo will be created there.
 
+### `--mappings`
+
+By default, Minecraft's bytecode is deobfuscated using [yarn's] mappings. You
+can also use `--mappings mojang` to use Mojang's official mappings. Yarn merges
+the client and server sources into one directory, which Shulkr currently does
+not support for Mojang's mappings.
+
+If left unspecified, the mappings used to generate the previous commit are
+detected.
+
 ### `--message` / `-m`
 
 This option lets you customize the commit message format:
@@ -109,6 +119,7 @@ Please make sure to update tests as appropriate.
 
 Licensed under the Apache License, Version 2.0.
 
+[yarn's]: https://github.com/FabricMC/yarn
 [Fork]: https://github.com/clabe45/shulkr/fork
 [changelog]: https://github.com/clabe45/shulkr/blob/main/CHANGELOG.md
 [usage guidelines]: https://github.com/clabe45/shulkr/blob/main/usage-guidelines.md

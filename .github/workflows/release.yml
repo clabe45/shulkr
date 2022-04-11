@@ -16,6 +16,12 @@ jobs:
           echo ::set-output name=current_version::${GITHUB_REF#refs/tags/v}
         shell: bash
 
+      - name: Set up java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
       - name: Check out repository code
         uses: actions/checkout@v2
         with:

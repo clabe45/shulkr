@@ -24,10 +24,13 @@ def test_commits_created(run):
 	assert actual == expected
 
 
-def test_latest_commit_has_client_and_server(run):
+def test_latest_commit_has_gitignore_and_src(run):
 	repo = Repo(run.repo_path)
-	actual = set([tree.path for tree in repo.head.commit.tree.trees])
-	expected = set(['client', 'server'])
+
+	# List files and directories that were changed directly under the root
+	root_tree = repo.head.commit.tree
+	actual = set([obj.name for obj in (root_tree.trees + root_tree.blobs)])
+	expected = set(['.gitignore', 'src'])
 	assert actual == expected
 
 

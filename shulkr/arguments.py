@@ -9,6 +9,13 @@ def parse_args(args: List[str]) -> argparse.Namespace:
 	)
 
 	parser.add_argument(
+		'--mappings',
+		type=str,
+		required=False,
+		help='Mappings for deobfuscation, mojang or yarn (default)'
+	)
+
+	parser.add_argument(
 		'--repo',
 		'-p',
 		type=str,

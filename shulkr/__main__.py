@@ -39,6 +39,7 @@ def main_uncaught() -> None:
 	for version_id in versions:
 		create_version(
 			version_id,
+			args.mappings,
 			args.undo_renamed_vars,
 			args.message,
 			args.tag

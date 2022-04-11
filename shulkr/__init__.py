@@ -3,8 +3,17 @@ import os.path
 from shulkr.git import get_blob, get_repo, head_has_commits
 from shulkr.java import JavaAnalyzationError
 from shulkr.java import get_renamed_variables, undo_variable_renames
-from shulkr.minecraft.source import generate_sources
+from shulkr.minecraft.source import detect_mappings, generate_sources
 from shulkr.minecraft.version import Version
+
+
+def create_gitignore() -> None:
+	repo = get_repo()
+
+	gitignore_path = os.path.join(repo.working_tree_dir, '.gitignore')
+
+	with open(gitignore_path, 'w+') as gitignore:
+		gitignore.write('.yarn\n')
 
 
 def undo_renames() -> None:
@@ -58,7 +67,7 @@ def commit_version(
 	if undo_renamed_vars and head_has_commits():
 		commit_msg += '\n\nRenamed variables reverted'
 
-	repo.git.add('client', 'server')
+	repo.git.add('.gitignore', 'src')
 	repo.git.commit(message=commit_msg)
 
 
@@ -70,24 +79,40 @@ def tag_version(version: Version) -> None:
 
 def create_version(
 	version: Version,
+	mappings: str,
 	undo_renamed_vars: bool,
 	message_template: str,
 	tag: bool
 ) -> None:
 
-	# 1. Generate source code for the current version
-	print(f'Generating sources for Minecraft {version}')
-	generate_sources(version)
+	repo = get_repo()
 
-	# 2. If there are any previous versions, undo the renamed variables
+	# 1. Gitignore .yarn
+	gitignore = os.path.join(repo.working_tree_dir, '.gitignore')
+	if not os.path.isfile(gitignore):
+		create_gitignore()
+
+	# 2. Generate source code for the current version
+	print(f'\nGenerating sources for Minecraft {version}')
+	if mappings is None:
+		if head_has_commits():
+			# Use mappings from previous version
+			mappings = detect_mappings()
+		else:
+			# Use default
+			mappings = 'yarn'
+
+	generate_sources(version, mappings)
+
+	# 3. If there are any previous versions, undo the renamed variables
 	if undo_renamed_vars and head_has_commits():
 		print('Undoing renamed variables')
 		undo_renames()
 
-	# 3. Commit the new version to git
+	# 4. Commit the new version to git
 	print('Committing to git')
 	commit_version(version, undo_renamed_vars, message_template)
 
-	# 4. Tag
+	# 5. Tag
 	if tag:
 		tag_version(version)
