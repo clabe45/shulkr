@@ -1,9 +1,8 @@
 import os
 import sys
 
-from git import InvalidGitRepositoryError, Repo
-
 from shulkr import create_version
+from shulkr.config import get_config
 from shulkr.arguments import parse_args
 from shulkr.minecraft.version import NoSuchVersionError, Version, load_manifest
 
@@ -13,7 +12,9 @@ def main_uncaught() -> None:
 
 	args = parse_args(sys.argv[1:])
 
-	repo_path = os.path.join(
+	config = get_config()
+
+	config.repo_path = os.path.join(
 		os.getcwd(),
 		args.repo
 	)
@@ -31,19 +32,12 @@ def main_uncaught() -> None:
 		print('No versions selected', file=sys.stderr)
 		sys.exit(3)
 
-	if not os.path.exists(repo_path):
-		print(f'Creating {repo_path}')
-		os.mkdir(repo_path)
-
-	try:
-		repo = Repo(repo_path)
-	except InvalidGitRepositoryError:
-		print('Initializing git')
-		repo = Repo.init(repo_path)
+	if not os.path.exists(config.repo_path):
+		print(f'Creating {config.repo_path}')
+		os.mkdir(config.repo_path)
 
 	for version_id in versions:
 		create_version(
-			repo,
 			version_id,
 			args.undo_renamed_vars,
 			args.message,

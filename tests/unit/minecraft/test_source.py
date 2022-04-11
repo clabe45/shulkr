@@ -19,7 +19,7 @@ def test_generate_sources_runs_decompiler(mocker, repo, versions, root_dir):
 	mocker.patch('shutil.move')
 	mocker.patch('os.makedirs')
 
-	generate_sources(repo, versions.snapshot)
+	generate_sources(versions.snapshot)
 
 	decompiler_dir = os.path.join(root_dir, 'shulkr', 'DecompilerMC')
 	calls = [
@@ -55,7 +55,7 @@ def test_generate_sources_moves_sources_to_repo(mocker, repo, versions, root_dir
 	mocker.patch('os.makedirs')
 	move = mocker.patch('shutil.move')
 
-	generate_sources(repo, versions.snapshot)
+	generate_sources(versions.snapshot)
 
 	decompiler_dir = os.path.join(root_dir, 'shulkr', 'DecompilerMC')
 	calls = [

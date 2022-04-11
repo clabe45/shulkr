@@ -2,12 +2,31 @@ from __future__ import annotations
 import os.path
 from typing import Optional
 
-from git import Commit, Repo
+from git import Commit, InvalidGitRepositoryError, Repo
+
+from shulkr.config import get_config
 
 
-def get_blob(commit: Optional[Commit], path: str, repo_path: str) -> bytes:
+def get_repo():
+	global repo
+
+	if not repo:
+		config = get_config()
+
+		try:
+			repo = Repo(config.repo_path)
+		except InvalidGitRepositoryError:
+			print('Initializing git')
+			repo = Repo.init(config.repo_path)
+
+	return repo
+
+
+def get_blob(commit: Optional[Commit], path: str) -> bytes:
+	config = get_config()
+
 	if commit is None:
-		p = os.path.join(repo_path, path)
+		p = os.path.join(config.repo_path, path)
 		with open(p, 'r') as f:
 			return f.read()
 
@@ -21,7 +40,9 @@ def get_blob(commit: Optional[Commit], path: str, repo_path: str) -> bytes:
 	return curr.data_stream.read().decode()
 
 
-def head_has_commits(repo: Repo) -> bool:
+def head_has_commits() -> bool:
+	repo = get_repo()
+
 	try:
 		repo.iter_commits()
 		return True
@@ -31,3 +52,6 @@ def head_has_commits(repo: Repo) -> bool:
 			return False
 
 		raise e
+
+
+repo = None

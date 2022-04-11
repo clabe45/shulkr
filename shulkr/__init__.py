@@ -1,15 +1,15 @@
 import os.path
 
-from git import Repo
-
-from shulkr.git import get_blob, head_has_commits
+from shulkr.git import get_blob, get_repo, head_has_commits
 from shulkr.java import JavaAnalyzationError
 from shulkr.java import get_renamed_variables, undo_variable_renames
 from shulkr.minecraft.source import generate_sources
 from shulkr.minecraft.version import Version
 
 
-def undo_renames(repo: Repo) -> None:
+def undo_renames() -> None:
+	repo = get_repo()
+
 	commit1 = repo.commit('HEAD')
 	commit2 = None  # working tree
 	diff_index = commit1.diff(commit2)
@@ -47,26 +47,28 @@ def undo_renames(repo: Repo) -> None:
 
 
 def commit_version(
-	repo: Repo,
 	version: Version,
 	undo_renamed_vars: bool,
 	message_template: str
 ) -> None:
 
+	repo = get_repo()
+
 	commit_msg = message_template.strip().replace('{}', str(version))
-	if undo_renamed_vars and head_has_commits(repo):
+	if undo_renamed_vars and head_has_commits():
 		commit_msg += '\n\nRenamed variables reverted'
 
 	repo.git.add('client', 'server')
 	repo.git.commit(message=commit_msg)
 
 
-def tag_version(repo: Repo, version: Version) -> None:
+def tag_version(version: Version) -> None:
+	repo = get_repo()
+
 	repo.create_tag(str(version))
 
 
 def create_version(
-	repo: Repo,
 	version: Version,
 	undo_renamed_vars: bool,
 	message_template: str,
@@ -75,17 +77,17 @@ def create_version(
 
 	# 1. Generate source code for the current version
 	print(f'Generating sources for Minecraft {version}')
-	generate_sources(repo, version)
+	generate_sources(version)
 
 	# 2. If there are any previous versions, undo the renamed variables
-	if undo_renamed_vars and head_has_commits(repo):
+	if undo_renamed_vars and head_has_commits():
 		print('Undoing renamed variables')
-		undo_renames(repo)
+		undo_renames()
 
 	# 3. Commit the new version to git
 	print('Committing to git')
-	commit_version(repo, version, undo_renamed_vars, message_template)
+	commit_version(version, undo_renamed_vars, message_template)
 
 	# 4. Tag
 	if tag:
-		tag_version(repo, version)
+		tag_version(version)

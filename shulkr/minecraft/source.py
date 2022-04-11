@@ -2,13 +2,13 @@ import os
 import shutil
 import subprocess
 
-from git import Repo
-
-from ..git import head_has_commits
+from shulkr.git import get_repo, head_has_commits
 from .version import Version
 
 
-def generate_sources(repo: Repo, version: Version) -> None:
+def generate_sources(version: Version) -> None:
+	repo = get_repo()
+
 	script_dir = os.path.dirname(__file__)
 	decompiler_dir = os.path.realpath(
 		os.path.join(script_dir, '..', 'DecompilerMC')
@@ -55,7 +55,7 @@ def generate_sources(repo: Repo, version: Version) -> None:
 
 	except BaseException as e:
 		# Undo src/ deletions
-		if head_has_commits(repo):
+		if head_has_commits():
 			repo.git.restore('client', 'server')
 		else:
 			for env in ('client', 'server'):
