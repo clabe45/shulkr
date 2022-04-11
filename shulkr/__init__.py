@@ -27,8 +27,8 @@ def undo_renames() -> None:
 		if not diff.a_path.endswith('.java'):
 			continue
 
-		source = get_blob(commit1, diff.a_path, repo.working_tree_dir)
-		target = get_blob(commit2, diff.b_path, repo.working_tree_dir)
+		source = get_blob(commit1, diff.a_path)
+		target = get_blob(commit2, diff.b_path)
 
 		try:
 			renamed_variables = get_renamed_variables(source, target)
