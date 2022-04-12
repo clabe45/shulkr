@@ -2,13 +2,22 @@ import shulkr
 from shulkr.minecraft.version import Version
 
 
-def test_commit_version_stages_the_repos_src_directory(empty_repo):
+def test_commit_version_with_yarn_mappings_stages_the_src_directory(empty_repo, yarn_mappings):
 	# Call commit_version
 	version = Version('1.18.1', 0)
 	shulkr.commit_version(version, undo_renamed_vars=False, message_template='{}')
 
 	# src needs to have been staged
 	empty_repo.git.add.assert_called_once_with('src')
+
+
+def test_commit_version_with_mojang_mappings_stages_the_src_directory(empty_repo, mojang_mappings):
+	# Call commit_version
+	version = Version('1.18.1', 0)
+	shulkr.commit_version(version, undo_renamed_vars=False, message_template='{}')
+
+	# client and server need to have been staged
+	empty_repo.git.add.assert_called_once_with('client', 'server')
 
 
 def test_commit_version_creates_a_commit(empty_repo):

@@ -2,6 +2,7 @@ import os
 
 import git
 import pytest
+from shulkr.config import get_config
 from shulkr.git import get_repo
 
 from shulkr.minecraft.version import Version, clear_manifest, load_manifest
@@ -125,6 +126,30 @@ def nonempty_repo(mocker, decompiler):
 	mocker.patch('shulkr.git.repo', repo)
 
 	return repo
+
+
+@pytest.fixture
+def yarn_mappings():
+	config = get_config()
+
+	prev_mappings = config.mappings
+	config.mappings = 'yarn'
+
+	yield
+
+	config.mappings = prev_mappings
+
+
+@pytest.fixture
+def mojang_mappings():
+	config = get_config()
+
+	prev_mappings = config.mappings
+	config.mappings = 'mojang'
+
+	yield
+
+	config.mappings = prev_mappings
 
 
 @pytest.fixture
