@@ -63,9 +63,21 @@ def _run(versions: List[str], mappings: str, undo_renamed_vars: bool) -> None:
 		# Testing every combination of mappings to undo_variable_renames will
 		# take too long, so just mix and match
 		(['1.17.1', '1.18'], 'mojang', False),
-		(['1.17.1', '1.18'], 'yarn', True)
 	]
 )
-def run(request):
+def run_mojang(request):
+	versions, mappings, undo_variable_renames = request.param
+	yield from _run(versions, mappings, undo_variable_renames)
+
+
+@pytest.fixture(
+	scope='session',
+	params=[
+		# Testing every combination of mappings to undo_variable_renames will
+		# take too long, so just mix and match
+		(['1.17.1', '1.18'], 'yarn', True),
+	]
+)
+def run_yarn(request):
 	versions, mappings, undo_variable_renames = request.param
 	yield from _run(versions, mappings, undo_variable_renames)
