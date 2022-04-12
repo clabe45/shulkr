@@ -165,13 +165,6 @@ def _generate_sources_with_mojang(version: Version) -> None:
 
 		raise e
 
-	finally:
-		# Remove large generated files so they won't end up in the build!
-		for subdir in ('mappings', 'src', 'tmp', 'versions'):
-			path = os.path.join(decompiler_repo.working_tree_dir, subdir)
-			if os.path.exists(path):
-				shutil.rmtree(path)
-
 
 def generate_sources(version: Version, mappings: str) -> None:
 	if mappings == 'mojang':
