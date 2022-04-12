@@ -38,10 +38,7 @@ def test_generate_sources_with_yarn_runs_decompiler(mocker, empty_repo, versions
 
 	generate_sources(versions.snapshot, 'yarn')
 
-	decompiler_dir = os.path.join(
-		os.path.abspath(empty_repo.working_tree_dir),
-		'.yarn'
-	)
+	decompiler_dir = os.path.join(empty_repo.working_tree_dir, '.yarn')
 	subprocess_run.assert_called_once_with(
 		['./gradlew', 'decompileCFR'],
 		stdout=subprocess.DEVNULL,
@@ -61,10 +58,7 @@ def test_generate_sources_with_yarn_moves_sources_to_repo(mocker, empty_repo, ve
 
 	generate_sources(versions.snapshot, 'yarn')
 
-	decompiler_dir = os.path.join(
-		os.path.abspath(empty_repo.working_tree_dir),
-		'.yarn'
-	)
+	decompiler_dir = os.path.join(empty_repo.working_tree_dir, '.yarn')
 	move.assert_called_once_with(
 		os.path.join(decompiler_dir, 'namedSrc'),
 		os.path.join(empty_repo.working_tree_dir, 'src')
