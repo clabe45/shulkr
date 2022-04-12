@@ -1,7 +1,7 @@
 import os
 import sys
 
-from shulkr import create_version
+from shulkr import create_gitignore, create_version
 from shulkr.config import get_config
 from shulkr.arguments import parse_args
 from shulkr.minecraft.version import NoSuchVersionError, Version, load_manifest
@@ -35,6 +35,10 @@ def main_uncaught() -> None:
 	if not os.path.exists(config.repo_path):
 		print(f'Creating {config.repo_path}')
 		os.mkdir(config.repo_path)
+
+	gitignore = os.path.join(config.repo_path, '.gitignore')
+	if not os.path.isfile(gitignore):
+		create_gitignore()
 
 	for version_id in versions:
 		create_version(

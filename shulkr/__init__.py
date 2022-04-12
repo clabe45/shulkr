@@ -8,12 +8,17 @@ from shulkr.minecraft.version import Version
 
 
 def create_gitignore() -> None:
+	print('Creating gitignore')
+
 	repo = get_repo()
 
 	gitignore_path = os.path.join(repo.working_tree_dir, '.gitignore')
 
 	with open(gitignore_path, 'w+') as gitignore:
 		gitignore.write('.yarn\n')
+
+	repo.git.add('.gitignore')
+	repo.git.commit('-m', 'add .gitignore')
 
 
 def undo_renames() -> None:
@@ -85,14 +90,7 @@ def create_version(
 	tag: bool
 ) -> None:
 
-	repo = get_repo()
-
-	# 1. Gitignore .yarn
-	gitignore = os.path.join(repo.working_tree_dir, '.gitignore')
-	if not os.path.isfile(gitignore):
-		create_gitignore()
-
-	# 2. Generate source code for the current version
+	# 1. Generate source code for the current version
 	print(f'\nGenerating sources for Minecraft {version}')
 	if mappings is None:
 		if head_has_versions():
@@ -104,15 +102,15 @@ def create_version(
 
 	generate_sources(version, mappings)
 
-	# 3. If there are any previous versions, undo the renamed variables
+	# 2. If there are any previous versions, undo the renamed variables
 	if undo_renamed_vars and head_has_versions():
 		print('Undoing renamed variables')
 		undo_renames()
 
-	# 4. Commit the new version to git
+	# 3. Commit the new version to git
 	print('Committing to git')
 	commit_version(version, undo_renamed_vars, message_template)
 
-	# 5. Tag
+	# 4. Tag
 	if tag:
 		tag_version(version)

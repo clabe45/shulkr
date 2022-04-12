@@ -7,8 +7,8 @@ def test_commit_version_stages_the_repos_src_directory(empty_repo):
 	version = Version('1.18.1', 0)
 	shulkr.commit_version(version, undo_renamed_vars=False, message_template='{}')
 
-	# .gitignore and src need to have been staged
-	empty_repo.git.add.assert_called_once_with('.gitignore', 'src')
+	# src needs to have been staged
+	empty_repo.git.add.assert_called_once_with('src')
 
 
 def test_commit_version_creates_a_commit(empty_repo):

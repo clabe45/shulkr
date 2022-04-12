@@ -8,23 +8,24 @@ def test_git_repo_initiated(run_yarn):
 
 def test_commits_created(run_yarn):
 	repo = Repo(run_yarn.repo_path)
-	actual = set([commit.message.rstrip() for commit in repo.iter_commits()])
+	actual = [commit.message.rstrip() for commit in repo.iter_commits()]
+	actual.reverse()
 
 	# Calculate expected commit messages from versions
+	expected = ['add .gitignore']
 	if run_yarn.undo_renamed_vars:
-		first = f'version {run_yarn.versions[0]}'
-		rest = [
+		expected.append(f'version {run_yarn.versions[0]}')
+		expected.extend([
 			f'version {version}\n\nRenamed variables reverted'
 			for version in run_yarn.versions[1:]
-		]
-		expected = set([first] + rest)
+		])
 	else:
-		expected = set([f'version {version}' for version in run_yarn.versions])
+		expected.extend([f'version {version}' for version in run_yarn.versions])
 
 	assert actual == expected
 
 
-def test_when_running_with_yarn_latest_commit_has_gitignore_and_src(run_yarn):
+def test_when_running_with_yarn_gitignore_and_src_are_tracked(run_yarn):
 	repo = Repo(run_yarn.repo_path)
 
 	# List files and directories that were changed directly under the root
@@ -34,7 +35,7 @@ def test_when_running_with_yarn_latest_commit_has_gitignore_and_src(run_yarn):
 	assert actual == expected
 
 
-def test_when_running_with_decompilermc_latest_commit_has_gitignore_client_and_server(run_mojang):
+def test_when_running_with_decompilermc_gitignore_client_and_server_are_tracked(run_mojang):
 	repo = Repo(run_mojang.repo_path)
 
 	# List files and directories that were changed directly under the root
