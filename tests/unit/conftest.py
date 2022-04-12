@@ -31,13 +31,11 @@ class TestVersions:
 
 
 def create_commit(mocker):
-	mocker.patch('git.objects.commit.Commit')
-	return git.objects.commit.Commit()
+	return mocker.create_autospec(git.Commit)
 
 
 def create_tag(mocker):
-	mocker.patch('git.tag.Tag')
-	tag = git.tag.Tag()
+	tag = mocker.create_autospec(git.Tag)
 
 	# To match 'versions' fixture, for testing Version.pattern()
 	mocker.patch.object(tag, 'name', 'abcdef')
@@ -46,8 +44,7 @@ def create_tag(mocker):
 
 
 def create_repo(mocker):
-	mocker.patch.object(git, 'Repo')
-	return git.Repo()
+	return mocker.create_autospec(git.Repo)
 
 
 @pytest.fixture
