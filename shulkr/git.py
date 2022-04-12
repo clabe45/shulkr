@@ -40,12 +40,13 @@ def get_blob(commit: Optional[Commit], path: str) -> bytes:
 	return curr.data_stream.read().decode()
 
 
-def head_has_commits() -> bool:
+def head_has_versions() -> bool:
 	repo = get_repo()
 
 	try:
-		repo.iter_commits()
-		return True
+		# List tags reachable by HEAD
+		tags = repo.git.tag('--merged')
+		return len(tags) > 0
 
 	except ValueError as e:
 		if 'does not exist' in str(e):

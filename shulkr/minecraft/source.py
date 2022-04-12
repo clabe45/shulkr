@@ -4,7 +4,7 @@ import subprocess
 
 from git import Repo
 
-from shulkr.git import get_repo, head_has_commits
+from shulkr.git import get_repo, head_has_versions
 from .version import Version
 
 
@@ -89,7 +89,7 @@ def _generate_sources_with_yarn(version: Version) -> None:
 
 	except BaseException as e:
 		# Undo src/ deletions
-		if head_has_commits():
+		if head_has_versions():
 			repo.git.restore('src')
 		else:
 			path = os.path.join(repo.working_tree_dir, 'src')
@@ -155,7 +155,7 @@ def _generate_sources_with_mojang(version: Version) -> None:
 
 	except BaseException as e:
 		# Undo src/ deletions
-		if head_has_commits():
+		if head_has_versions():
 			repo.git.restore('client', 'server')
 		else:
 			for env in ('client', 'server'):

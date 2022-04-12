@@ -3,7 +3,7 @@ import re
 import requests
 from typing import Dict, List, Optional
 
-from shulkr.git import get_repo, head_has_commits
+from shulkr.git import get_repo, head_has_versions
 
 MANIFEST_LOCATION = "https://launchermeta.mojang.com/mc/game/version_manifest.json"	 # noqa: E501
 EARLIEST_SUPPORTED_VERSION_ID = '19w36a'
@@ -111,7 +111,7 @@ class Version:
 				a = Version.of(a_id)
 			else:
 				# Get the next version after the latest committed one
-				if head_has_commits():
+				if head_has_versions():
 					parent_name = get_latest_commit_version_name()
 					a = Version.of(parent_name).next
 				else:
@@ -265,8 +265,9 @@ def clear_manifest():
 
 def get_latest_commit_version_name():
 	repo = get_repo()
-	latest_tag = repo.tags[-1]
-	return latest_tag.name
+	# List tags reachable by HEAD
+	latest_tag = repo.git.tag('--merged')[-1]
+	return latest_tag
 
 
 manifest = None

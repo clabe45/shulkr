@@ -84,9 +84,15 @@ def decompiler(mocker):
 def empty_repo(mocker, decompiler):
 	repo = create_repo(mocker)
 
-	# Since there are no commits, iter_commits() must throw an error
-	e = ValueError('Reference at ... does not exist')
-	repo.iter_commits.side_effect = mocker.Mock(side_effect=e)
+	orig_git_tag = repo.git.tag
+
+	def new_git_tag(*args):
+		if args == ('--merged',):
+			return []
+
+		return orig_git_tag(*args)
+
+	mocker.patch.object(repo.git, 'tag', new=new_git_tag)
 
 	# get_repo() will return this value
 	mocker.patch('shulkr.git.repo', repo)
@@ -104,7 +110,16 @@ def nonempty_repo(mocker, decompiler):
 
 	# Add a fake tag for that commit
 	tag = create_tag(mocker)
-	repo.tags = [tag]
+
+	orig_git_tag = repo.git.tag
+
+	def new_git_tag(*args):
+		if args == ('--merged',):
+			return [tag.name]
+
+		return orig_git_tag(*args)
+
+	mocker.patch.object(repo.git, 'tag', new=new_git_tag)
 
 	# get_repo() will return this value
 	mocker.patch('shulkr.git.repo', repo)

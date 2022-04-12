@@ -1,6 +1,6 @@
 import os.path
 
-from shulkr.git import get_blob, get_repo, head_has_commits
+from shulkr.git import get_blob, get_repo, head_has_versions
 from shulkr.java import JavaAnalyzationError
 from shulkr.java import get_renamed_variables, undo_variable_renames
 from shulkr.minecraft.source import detect_mappings, generate_sources
@@ -64,7 +64,7 @@ def commit_version(
 	repo = get_repo()
 
 	commit_msg = message_template.strip().replace('{}', str(version))
-	if undo_renamed_vars and head_has_commits():
+	if undo_renamed_vars and head_has_versions():
 		commit_msg += '\n\nRenamed variables reverted'
 
 	repo.git.add('.gitignore', 'src')
@@ -95,7 +95,7 @@ def create_version(
 	# 2. Generate source code for the current version
 	print(f'\nGenerating sources for Minecraft {version}')
 	if mappings is None:
-		if head_has_commits():
+		if head_has_versions():
 			# Use mappings from previous version
 			mappings = detect_mappings()
 		else:
@@ -105,7 +105,7 @@ def create_version(
 	generate_sources(version, mappings)
 
 	# 3. If there are any previous versions, undo the renamed variables
-	if undo_renamed_vars and head_has_commits():
+	if undo_renamed_vars and head_has_versions():
 		print('Undoing renamed variables')
 		undo_renames()
 
