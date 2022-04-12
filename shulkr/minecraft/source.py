@@ -16,7 +16,6 @@ def detect_mappings() -> str:
 	repo = get_repo()
 
 	subdirectories = set([tree.name for tree in repo.head.commit.tree.trees])
-	print(subdirectories)
 	if subdirectories == set(['client', 'server']):
 		# DecompilerMC does not support merged sources
 		return 'mojang'
