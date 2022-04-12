@@ -27,7 +27,7 @@ def test_detect_mappings_with_mojang_commit_returns_mojang(mocker, nonempty_repo
 	assert detect_mappings() == 'mojang'
 
 
-def test_generate_sources_with_yarn_runs_decompiler(mocker, empty_repo, versions, root_dir):
+def test_generate_sources_with_yarn_runs_decompiler(mocker, empty_repo, versions):
 	subprocess_run = mocker.patch(
 		'subprocess.run',
 		return_value=SubprocessMock()
