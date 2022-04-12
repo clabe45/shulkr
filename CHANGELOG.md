@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Support for [Yarn](https://github.com/FabricMC/yarn) mappings.
+- Can now be invoked in different repos at the same time.
 
 ### Changed
 - Omitting the first version in a range pattern defaults to the version after the latest commit.

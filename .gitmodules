@@ -4,6 +4,3 @@
 [submodule "shulkr/yarn"]
 	path = shulkr/yarn
 	url = https://github.com/FabricMC/yarn.git
-[submodule "shulkr/DecompilerMC"]
-	path = shulkr/DecompilerMC
-	url = https://github.com/hube12/DecompilerMC.git

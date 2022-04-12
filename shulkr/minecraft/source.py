@@ -8,6 +8,7 @@ from shulkr.git import get_repo, head_has_commits
 from .version import Version
 
 
+DECOMPILER_MC_REMOTE_URL = 'https://github.com/hube12/DecompilerMC.git'
 YARN_REMOTE_URL = 'https://github.com/FabricMC/yarn.git'
 
 
@@ -27,22 +28,28 @@ def detect_mappings() -> str:
 	raise Exception('Unable to detect mappings from previous commit')
 
 
-def _generate_sources_with_yarn(version: Version) -> None:
+def _setup_decompiler(local_dir: str, remote_url: str) -> Repo:
 	repo = get_repo()
 
 	decompiler_dir = os.path.realpath(
-		os.path.join(repo.working_tree_dir, '.yarn')
+		os.path.join(repo.working_tree_dir, local_dir)
 	)
 
 	if os.path.exists(
 		os.path.join(decompiler_dir, '.git')
 	):
 		# Used cached yarn repo
-		decompiler_repo = Repo(decompiler_dir)
+		return Repo(decompiler_dir)
 	else:
 		# Clone the yarn repo
-		print(f'- Cloning {YARN_REMOTE_URL} into {decompiler_dir}')
-		decompiler_repo = Repo.clone_from(YARN_REMOTE_URL, decompiler_dir)
+		print(f'- Cloning {remote_url} into {decompiler_dir}')
+		return Repo.clone_from(remote_url, decompiler_dir)
+
+
+def _generate_sources_with_yarn(version: Version) -> None:
+	repo = get_repo()
+
+	decompiler_repo = _setup_decompiler('.yarn', YARN_REMOTE_URL)
 
 	print(f'- Updating mappings to Minecraft {version}')
 
@@ -63,7 +70,7 @@ def _generate_sources_with_yarn(version: Version) -> None:
 			['./gradlew', 'decompileCFR'],
 			stdout=subprocess.DEVNULL,
 			stderr=subprocess.PIPE,
-			cwd=decompiler_dir
+			cwd=decompiler_repo.working_tree_dir
 		)
 		if p.returncode != 0:
 			raise Exception(p.stderr.decode())
@@ -77,7 +84,7 @@ def _generate_sources_with_yarn(version: Version) -> None:
 
 		# Move the generated source code to $repo_dir/src
 		shutil.move(
-			os.path.join(decompiler_dir, 'namedSrc'),
+			os.path.join(decompiler_repo.working_tree_dir, 'namedSrc'),
 			dest_src_dir
 		)
 
@@ -106,10 +113,7 @@ def _generate_sources_with_mojang(version: Version) -> None:
 
 	repo = get_repo()
 
-	script_dir = os.path.dirname(__file__)
-	decompiler_dir = os.path.realpath(
-		os.path.join(script_dir, '..', 'DecompilerMC')
-	)
+	decompiler_repo = _setup_decompiler('.DecompilerMC', DECOMPILER_MC_REMOTE_URL)
 
 	try:
 		for env in ('client', 'server'):
@@ -127,7 +131,7 @@ def _generate_sources_with_mojang(version: Version) -> None:
 					'-q'
 				],
 				stderr=subprocess.PIPE,
-				cwd=decompiler_dir
+				cwd=decompiler_repo.working_tree_dir
 			)
 			if p.returncode != 0:
 				raise Exception(p.stderr.decode())
@@ -146,7 +150,7 @@ def _generate_sources_with_mojang(version: Version) -> None:
 
 			# Move the generated source code to $dest_dir/src
 			shutil.move(
-				os.path.join(decompiler_dir, 'src', str(version), env),
+				os.path.join(decompiler_repo.working_tree_dir, 'src', str(version), env),
 				dest_src_dir
 			)
 
@@ -165,7 +169,7 @@ def _generate_sources_with_mojang(version: Version) -> None:
 	finally:
 		# Remove large generated files so they won't end up in the build!
 		for subdir in ('mappings', 'src', 'tmp', 'versions'):
-			path = os.path.join(decompiler_dir, subdir)
+			path = os.path.join(decompiler_repo.working_tree_dir, subdir)
 			if os.path.exists(path):
 				shutil.rmtree(path)
 

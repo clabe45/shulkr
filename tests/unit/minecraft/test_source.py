@@ -65,7 +65,7 @@ def test_generate_sources_with_yarn_moves_sources_to_repo(mocker, empty_repo, ve
 	)
 
 
-def test_generate_sources_with_mojang_runs_decompiler(mocker, empty_repo, versions, root_dir):
+def test_generate_sources_with_mojang_runs_decompiler(mocker, empty_repo, versions):
 	subprocess_run = mocker.patch(
 		'subprocess.run',
 		return_value=SubprocessMock()
@@ -76,7 +76,7 @@ def test_generate_sources_with_mojang_runs_decompiler(mocker, empty_repo, versio
 
 	generate_sources(versions.snapshot, 'mojang')
 
-	decompiler_dir = os.path.join(root_dir, 'shulkr', 'DecompilerMC')
+	decompiler_dir = os.path.join(empty_repo.working_tree_dir, '.DecompilerMC')
 	calls = [
 		mocker.call(
 			[
@@ -98,7 +98,7 @@ def test_generate_sources_with_mojang_runs_decompiler(mocker, empty_repo, versio
 	subprocess_run.assert_has_calls(calls)
 
 
-def test_generate_sources_with_mojang_moves_sources_to_repo(mocker, empty_repo, versions, root_dir):
+def test_generate_sources_with_mojang_moves_sources_to_repo(mocker, empty_repo, versions):
 	mocker.patch(
 		'subprocess.run',
 		return_value=SubprocessMock()
@@ -109,7 +109,7 @@ def test_generate_sources_with_mojang_moves_sources_to_repo(mocker, empty_repo, 
 
 	generate_sources(versions.snapshot, 'mojang')
 
-	decompiler_dir = os.path.join(root_dir, 'shulkr', 'DecompilerMC')
+	decompiler_dir = os.path.join(empty_repo.working_tree_dir, '.DecompilerMC')
 	calls = [
 		mocker.call(
 			os.path.join(decompiler_dir, 'src', str(versions.snapshot), env),
