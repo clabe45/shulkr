@@ -4,6 +4,8 @@ import sys
 from shulkr import create_gitignore, create_version
 from shulkr.config import get_config
 from shulkr.arguments import parse_args
+from shulkr.git import head_has_versions
+from shulkr.minecraft.source import detect_mappings
 from shulkr.minecraft.version import NoSuchVersionError, Version, load_manifest
 
 
@@ -18,6 +20,16 @@ def main_uncaught() -> None:
 		os.getcwd(),
 		args.repo
 	)
+
+	if args.mappings is None:
+		if head_has_versions():
+			# Use mappings from previous version
+			config.mappings = detect_mappings()
+		else:
+			# Use default
+			config.mappings = 'yarn'
+	else:
+		config.mappings = args.mappings
 
 	try:
 		versions = Version.patterns(args.version)

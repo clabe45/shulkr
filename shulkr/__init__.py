@@ -1,9 +1,10 @@
 import os.path
+from shulkr.config import get_config
 
 from shulkr.git import get_blob, get_repo, head_has_versions
 from shulkr.java import JavaAnalyzationError
 from shulkr.java import get_renamed_variables, undo_variable_renames
-from shulkr.minecraft.source import detect_mappings, generate_sources
+from shulkr.minecraft.source import generate_sources
 from shulkr.minecraft.version import Version
 
 
@@ -93,14 +94,8 @@ def create_version(
 
 	# 1. Generate source code for the current version
 	print(f'\nGenerating sources for Minecraft {version}')
-	if mappings is None:
-		if head_has_versions():
-			# Use mappings from previous version
-			mappings = detect_mappings()
-		else:
-			# Use default
-			mappings = 'yarn'
 
+	mappings = get_config().mappings
 	generate_sources(version, mappings)
 
 	# 2. If there are any previous versions, undo the renamed variables
