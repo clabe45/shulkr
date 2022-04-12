@@ -2,6 +2,7 @@ import os
 
 import git
 import pytest
+from shulkr.git import get_repo
 
 from shulkr.minecraft.version import Version, clear_manifest, load_manifest
 
@@ -53,7 +54,34 @@ def create_repo(mocker):
 
 
 @pytest.fixture
-def empty_repo(mocker):
+def decompiler(mocker):
+	"""
+	Mock _setup_decompiler() to return a fake git repo with the current
+	working_tree_dir
+	"""
+
+	def mocked_setup_decompiler(local_dir: str, _remote_url: str) -> git.Repo:
+		"""Create a fake decompiler subdirectory (.yarn or .DecompilerMC)"""
+
+		# It will be located directly under the shulkr repo directory
+		repo = get_repo()
+		decompiler_dir = os.path.join(repo.working_tree_dir, local_dir)
+
+		# Create a fake git repo, and set the working_tree_dir property
+		decompiler_repo = mocker.create_autospec(git.Repo)
+		decompiler_repo.working_tree_dir = decompiler_dir
+
+		return decompiler_repo
+
+	# Tell the generate_sources functions to use our fake decompiler creator
+	mocker.patch(
+		'shulkr.minecraft.source._setup_decompiler',
+		new=mocked_setup_decompiler
+	)
+
+
+@pytest.fixture
+def empty_repo(mocker, decompiler):
 	repo = create_repo(mocker)
 
 	# Since there are no commits, iter_commits() must throw an error
@@ -67,7 +95,7 @@ def empty_repo(mocker):
 
 
 @pytest.fixture
-def nonempty_repo(mocker):
+def nonempty_repo(mocker, decompiler):
 	repo = create_repo(mocker)
 
 	# Add a fake commit

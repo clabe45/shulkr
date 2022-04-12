@@ -28,7 +28,6 @@ def test_detect_mappings_with_mojang_commit_returns_mojang(mocker, nonempty_repo
 
 
 def test_generate_sources_with_yarn_runs_decompiler(mocker, empty_repo, versions, root_dir):
-	mocker.patch('shulkr.minecraft.source.Repo')
 	subprocess_run = mocker.patch(
 		'subprocess.run',
 		return_value=SubprocessMock()
@@ -51,7 +50,6 @@ def test_generate_sources_with_yarn_runs_decompiler(mocker, empty_repo, versions
 	)
 
 
-	mocker.patch('shulkr.minecraft.source.Repo')
 def test_generate_sources_with_yarn_moves_sources_to_repo(mocker, empty_repo, versions):
 	mocker.patch(
 		'subprocess.run',
