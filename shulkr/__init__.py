@@ -15,7 +15,8 @@ def create_gitignore() -> None:
 	gitignore_path = os.path.join(repo.working_tree_dir, '.gitignore')
 
 	with open(gitignore_path, 'w+') as gitignore:
-		gitignore.write('.yarn\n')
+		to_ignore = ['.yarn', '.DecompilerMC']
+		gitignore.write('\n'.join(to_ignore) + '\n')
 
 	repo.git.add('.gitignore')
 	repo.git.commit('-m', 'add .gitignore')
@@ -72,7 +73,7 @@ def commit_version(
 	if undo_renamed_vars and head_has_versions():
 		commit_msg += '\n\nRenamed variables reverted'
 
-	repo.git.add('.gitignore', 'src')
+	repo.git.add('src')
 	repo.git.commit(message=commit_msg)
 
 
