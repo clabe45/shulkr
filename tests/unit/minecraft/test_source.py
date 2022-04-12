@@ -51,11 +51,8 @@ def test_generate_sources_with_yarn_runs_decompiler(mocker, empty_repo, versions
 	)
 
 
-def test_generate_sources_with_yarn_moves_sources_to_repo(mocker, empty_repo, versions, root_dir):
-	repo_dir = 'foo'
-	empty_repo.working_tree_dir = repo_dir
-
 	mocker.patch('shulkr.minecraft.source.Repo')
+def test_generate_sources_with_yarn_moves_sources_to_repo(mocker, empty_repo, versions):
 	mocker.patch(
 		'subprocess.run',
 		return_value=SubprocessMock()
@@ -72,7 +69,7 @@ def test_generate_sources_with_yarn_moves_sources_to_repo(mocker, empty_repo, ve
 	)
 	move.assert_called_once_with(
 		os.path.join(decompiler_dir, 'namedSrc'),
-		os.path.join(repo_dir, 'src')
+		os.path.join(empty_repo.working_tree_dir, 'src')
 	)
 
 
@@ -110,9 +107,6 @@ def test_generate_sources_with_mojang_runs_decompiler(mocker, empty_repo, versio
 
 
 def test_generate_sources_with_mojang_moves_sources_to_repo(mocker, empty_repo, versions, root_dir):
-	repo_dir = 'foo'
-	empty_repo.working_tree_dir = repo_dir
-
 	mocker.patch(
 		'subprocess.run',
 		return_value=SubprocessMock()
@@ -127,7 +121,7 @@ def test_generate_sources_with_mojang_moves_sources_to_repo(mocker, empty_repo, 
 	calls = [
 		mocker.call(
 			os.path.join(decompiler_dir, 'src', str(versions.snapshot), env),
-			os.path.join(repo_dir, env, 'src')
+			os.path.join(empty_repo.working_tree_dir, env, 'src')
 		)
 		for env in ('client', 'server')
 	]

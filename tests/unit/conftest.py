@@ -44,7 +44,12 @@ def create_tag(mocker):
 
 
 def create_repo(mocker):
-	return mocker.create_autospec(git.Repo)
+	repo = mocker.create_autospec(git.Repo)
+
+	# Make the repo directory useful for testing shulkr.minecraft.source
+	repo.working_tree_dir = os.path.abspath('foo')
+
+	return repo
 
 
 @pytest.fixture
