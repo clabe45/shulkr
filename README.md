@@ -18,8 +18,8 @@ were present.
 ## Requirements
 
 - Git
+- Python 3
 - JDK (>= 17 for Minecraft 1.18 and above)
-- Gradle (>= 7.3 for Minecraft 1.18 and above)
 
 ## Installation
 
