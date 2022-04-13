@@ -112,7 +112,7 @@ class Version:
 			else:
 				# Get the next version after the latest committed one
 				if head_has_versions():
-					parent_name = get_latest_commit_version_name()
+					parent_name = get_latest_generated_version()
 					a = Version.of(parent_name).next
 				else:
 					raise ValueError('No commits from which to derive current version')
@@ -263,7 +263,7 @@ def clear_manifest():
 	manifest = None
 
 
-def get_latest_commit_version_name():
+def get_latest_generated_version():
 	repo = get_repo()
 	# List tags reachable by HEAD
 	reachable_tags = repo.git.tag('--merged') \
