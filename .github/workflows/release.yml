@@ -71,4 +71,3 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
           body: ${{ steps.changelog_reader.outputs.changes }}
-          token: ${{ secrets.GITHUB_TOKEN }}
