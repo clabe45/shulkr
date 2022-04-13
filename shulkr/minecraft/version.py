@@ -114,6 +114,10 @@ class Version:
 				if head_has_versions():
 					parent_name = get_latest_generated_version()
 					a = Version.of(parent_name).next
+					if not snapshots:
+						# Find the next release
+						while a is not None and not isinstance(a, Release):
+							a = a.next
 				else:
 					raise ValueError('No commits from which to derive current version')
 

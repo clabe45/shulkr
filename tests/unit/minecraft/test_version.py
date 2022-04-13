@@ -57,6 +57,9 @@ class TestVersion:
 		with pytest.raises(ValueError, match='No commits from which to derive current version'):
 			Version.pattern('...') == [versions.snapshot, versions.release]
 
+	def test_pattern_with_two_dots_on_repo_with_snapshot_returns_list_containing_release(self, nonempty_repo, versions):
+		assert Version.pattern('..') == [versions.release]
+
 	def test_pattern_with_three_dots_on_repo_with_snapshot_returns_list_containing_release(self, nonempty_repo, versions):
 		assert Version.pattern('...') == [versions.release]
 
