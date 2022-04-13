@@ -4,6 +4,7 @@ from typing import Optional
 
 from git import (
 	Commit,
+	GitCommandError,
 	InvalidGitRepositoryError,
 	NoSuchPathError,
 	Repo
@@ -58,8 +59,8 @@ def head_has_versions() -> bool:
 		tags = repo.git.tag('--merged')
 		return len(tags) > 0
 
-	except ValueError as e:
-		if 'does not exist' in str(e):
+	except GitCommandError as e:
+		if 'fatal: malformed object name HEAD' in str(e):
 			return False
 
 		raise e
