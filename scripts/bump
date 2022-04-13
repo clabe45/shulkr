@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [[ $# -ne 1 ]]; then
+	echo "usage: bump PART"
+	exit 1
+fi
+
+part=$1
+latest=$(git tag --list | grep v | sed -e 's/v//' | tail -1)
+
+bump2version --commit --message 'release v{new_version}' --tag --current-version $latest $part
