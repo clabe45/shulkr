@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed
 - `..X` now starts with the next release (not including snapshots).
+- `..X` and `...X` raising an exception if the repo is up-to-date.
 
 ## [0.4.1] - 2022-04-13
 ### Fixed

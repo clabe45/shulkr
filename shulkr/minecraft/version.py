@@ -121,6 +121,10 @@ class Version:
 				else:
 					raise ValueError('No commits from which to derive current version')
 
+			if a is None:
+				# No more versions or releases to generate
+				return []
+
 			if b_id:
 				b = Version.of(b_id)
 			else:
