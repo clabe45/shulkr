@@ -266,8 +266,10 @@ def clear_manifest():
 def get_latest_commit_version_name():
 	repo = get_repo()
 	# List tags reachable by HEAD
-	latest_tag = repo.git.tag('--merged')[-1]
-	return latest_tag
+	reachable_tags = repo.git.tag('--merged') \
+		.strip() \
+		.split('\n')
+	return reachable_tags[-1]
 
 
 manifest = None

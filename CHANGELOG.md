@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Fixed
+- Next version not being detected correctly.
 - `NoSuchPathError` when creating a repo without a mapping specified.
 - `GitCommandError` when using a brand-new repo without a mapping specified.
 

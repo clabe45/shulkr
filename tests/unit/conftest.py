@@ -89,7 +89,7 @@ def empty_repo(mocker, decompiler):
 
 	def new_git_tag(*args):
 		if args == ('--merged',):
-			return []
+			return ''
 
 		return orig_git_tag(*args)
 
@@ -116,7 +116,7 @@ def nonempty_repo(mocker, decompiler):
 
 	def new_git_tag(*args):
 		if args == ('--merged',):
-			return [tag.name]
+			return tag.name
 
 		return orig_git_tag(*args)
 
