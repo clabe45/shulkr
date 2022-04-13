@@ -2,7 +2,12 @@ from __future__ import annotations
 import os.path
 from typing import Optional
 
-from git import Commit, InvalidGitRepositoryError, Repo
+from git import (
+	Commit,
+	InvalidGitRepositoryError,
+	NoSuchPathError,
+	Repo
+)
 
 from shulkr.config import get_config
 
@@ -15,6 +20,11 @@ def get_repo():
 
 		try:
 			repo = Repo(config.repo_path)
+
+		except NoSuchPathError:
+			print('Initializing git')
+			repo = Repo.init(config.repo_path)
+
 		except InvalidGitRepositoryError:
 			print('Initializing git')
 			repo = Repo.init(config.repo_path)

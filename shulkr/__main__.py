@@ -44,10 +44,6 @@ def main_uncaught() -> None:
 		print('No versions selected', file=sys.stderr)
 		sys.exit(3)
 
-	if not os.path.exists(config.repo_path):
-		print(f'Creating {config.repo_path}')
-		os.mkdir(config.repo_path)
-
 	gitignore = os.path.join(config.repo_path, '.gitignore')
 	if not os.path.isfile(gitignore):
 		create_gitignore()
