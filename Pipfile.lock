@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "da72b7268ef6a57bd9b77bcf7227e14a3b723f829b46730a7508060a8cf197e9"
+            "sha256": "0f8fe6468968d85b842229d4b96e4ec4c0d49a5e5654aa1d009bd83793013307"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -326,6 +326,14 @@
             "markers": "sys_platform == 'linux'",
             "version": "==0.8.0"
         },
+        "keepachangelog": {
+            "hashes": [
+                "sha256:0d3331f6601aeccf73620319782f0e993b1147b1fcba0ee2a534e4eef4b252b4",
+                "sha256:1b73548ce85518b73009ce71af79c617c663437268cb085071973440c0505158"
+            ],
+            "index": "pypi",
+            "version": "==1.0.0"
+        },
         "keyring": {
             "hashes": [
                 "sha256:9012508e141a80bd1c0b6778d5c610dd9f8c464d75ac6774248500503f972fb9",
@@ -463,7 +471,7 @@
                 "sha256:c50f3d253bc6a9bb9c79d61a26d510d74abdf1b16881260fab5edfc3edfb082f",
                 "sha256:ea74bc9dad9589d8eea3e3fd0b136d8bf6e428888955f215824c2894f0da8b47"
             ],
-            "markers": "python_version < '4' and python_full_version >= '3.6.3'",
+            "markers": "python_full_version >= '3.6.3' and python_full_version < '4.0.0'",
             "version": "==12.2.0"
         },
         "secretstorage": {
