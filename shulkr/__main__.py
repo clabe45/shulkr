@@ -1,10 +1,10 @@
 import os
 import sys
 
-from shulkr import create_gitignore, create_version
+from shulkr import create_version
 from shulkr.config import get_config
 from shulkr.arguments import parse_args
-from shulkr.git import head_has_versions
+from shulkr.git import create_gitignore, head_has_versions
 from shulkr.minecraft.source import detect_mappings
 from shulkr.minecraft.version import NoSuchVersionError, Version, load_manifest
 

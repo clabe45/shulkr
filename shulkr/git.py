@@ -1,6 +1,6 @@
 from __future__ import annotations
 import os.path
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from git import (
 	Commit,
@@ -11,6 +11,9 @@ from git import (
 )
 
 from shulkr.config import get_config
+
+if TYPE_CHECKING:
+	from shulkr.minecraft.version import Version
 
 
 def get_repo():
@@ -64,6 +67,47 @@ def head_has_versions() -> bool:
 			return False
 
 		raise e
+
+
+def create_gitignore() -> None:
+	print('Creating gitignore')
+
+	repo = get_repo()
+
+	gitignore_path = os.path.join(repo.working_tree_dir, '.gitignore')
+
+	with open(gitignore_path, 'w+') as gitignore:
+		to_ignore = ['.yarn', '.DecompilerMC']
+		gitignore.write('\n'.join(to_ignore) + '\n')
+
+	repo.git.add('.gitignore')
+	repo.git.commit('-m', 'add .gitignore')
+
+
+def commit_version(
+	version: Version,
+	undo_renamed_vars: bool,
+	message_template: str
+) -> None:
+
+	repo = get_repo()
+
+	commit_msg = message_template.strip().replace('{}', str(version))
+	if undo_renamed_vars and head_has_versions():
+		commit_msg += '\n\nRenamed variables reverted'
+
+	if get_config().mappings == 'mojang':
+		repo.git.add('client', 'server')
+	else:
+		repo.git.add('src')
+
+	repo.git.commit(message=commit_msg)
+
+
+def tag_version(version: 'Version') -> None:
+	repo = get_repo()
+
+	repo.create_tag(str(version))
 
 
 repo = None

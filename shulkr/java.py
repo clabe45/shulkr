@@ -1,9 +1,12 @@
+import os
 from typing import Dict, List, Tuple, Union
 
 import javalang
 from javalang.ast import Node
 from javalang.tokenizer import Identifier, tokenize
 from javalang.tree import MemberReference, VariableDeclaration
+
+from shulkr.git import get_blob, get_repo
 
 
 class JavaAnalyzationError(Exception):
@@ -376,3 +379,42 @@ def undo_variable_renames(code: str, renamed_var_names: List[Tuple]) -> str:
 					lines[line] = lines[line][:col] + old + lines[line][col + len(new):]
 
 	return '\n'.join(lines)
+
+
+def undo_renames() -> None:
+	repo = get_repo()
+
+	commit1 = repo.commit('HEAD')
+	commit2 = None  # working tree
+	diff_index = commit1.diff(commit2)
+
+	updated_count = 0
+
+	# For each file changed (in reverse, with indices, so we can remove elements
+	# in the for loop)
+	for diff in diff_index:
+		# Only process modified files (no new, deleted, ... files)
+		if diff.change_type != 'M':
+			continue
+
+		# Only process Java files; leave everything else unchanged
+		if not diff.a_path.endswith('.java'):
+			continue
+
+		source = get_blob(commit1, diff.a_path)
+		target = get_blob(commit2, diff.b_path)
+
+		try:
+			renamed_variables = get_renamed_variables(source, target)
+		except JavaAnalyzationError as e:
+			raise Exception(f'{e} [{diff.a_path} -> {diff.b_path}]')
+
+		if renamed_variables is not None:
+			updated_target = undo_variable_renames(target, renamed_variables)
+			p = os.path.join(repo.working_tree_dir, diff.a_path)
+			with open(p, 'w') as f:
+				f.write(updated_target)
+
+			updated_count += 1
+
+	print(f'+ Updated {updated_count} files')
