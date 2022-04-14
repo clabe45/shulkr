@@ -62,6 +62,14 @@ negate a pattern, add `-`. The following pattern expands to all versions after
 `A`, up to and including `B` (the order is important):
 - `A...B -A`
 
+Note that you need to include `--` before the versions when using negative
+versions, so the argument parser knows that the negative version is not an
+option:
+
+```sh
+shulkr -- ...1.19 -1.19
+```
+
 ## Options
 
 ### `--repo` / `-p`
