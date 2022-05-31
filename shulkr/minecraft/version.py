@@ -112,8 +112,8 @@ class Version:
 			else:
 				# Get the next version after the latest committed one
 				if head_has_versions():
-					parent_name = get_latest_generated_version()
-					a = Version.of(parent_name).next
+					latest_generated_version = get_latest_generated_version()
+					a = latest_generated_version.next
 					if not snapshots:
 						# Find the next release
 						while a is not None and not isinstance(a, Release):
@@ -271,13 +271,14 @@ def clear_manifest():
 	manifest = None
 
 
-def get_latest_generated_version():
+def get_latest_generated_version() -> Version:
 	repo = get_repo()
 	# List tags reachable by HEAD
 	reachable_tags = repo.git.tag('--merged') \
 		.strip() \
 		.split('\n')
-	return reachable_tags[-1]
+
+	return Version.of(reachable_tags[-1])
 
 
 manifest = None
