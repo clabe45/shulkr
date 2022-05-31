@@ -278,7 +278,6 @@ def get_latest_generated_version() -> Version:
 		.strip() \
 		.split('\n')
 
-	print(Version.of(reachable_tags[-1]))
 	return Version.of(reachable_tags[-1])
 
 
