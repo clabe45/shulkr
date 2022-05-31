@@ -274,10 +274,11 @@ def clear_manifest():
 def get_latest_generated_version() -> Version:
 	repo = get_repo()
 	# List tags reachable by HEAD
-	reachable_tags = repo.git.tag('--merged') \
+	reachable_tags = repo.git.tag(sort='-creatordate', merged=True) \
 		.strip() \
 		.split('\n')
 
+	print(Version.of(reachable_tags[-1]))
 	return Version.of(reachable_tags[-1])
 
 

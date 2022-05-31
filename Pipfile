@@ -24,6 +24,7 @@ python_version = "3.9"
 [scripts]
 start = "python -m shulkr"
 test-unit = "python -m pytest tests/unit"
+test-int = "python -m pytest tests/integration"
 test-func = "python -m pytest tests/functional"
 lint = "python -m flake8 shulkr tests"
 profile = "python -m tests.profile"
