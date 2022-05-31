@@ -59,7 +59,7 @@ def head_has_versions() -> bool:
 
 	try:
 		# List tags reachable by HEAD
-		tags = repo.git.tag('--merged')
+		tags = repo.git.tag(merged=True)
 		return len(tags) > 0
 
 	except GitCommandError as e:

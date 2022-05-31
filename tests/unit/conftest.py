@@ -87,11 +87,13 @@ def empty_repo(mocker, decompiler):
 
 	orig_git_tag = repo.git.tag
 
-	def new_git_tag(*args):
-		if args == ('--merged',):
+	def new_git_tag(**kwargs):
+		if 'merged' in kwargs:
+			# If --merged is supplied, we're probably listing the existing tags
+			# (as opposted to creating a new one)
 			return ''
 
-		return orig_git_tag(*args)
+		return orig_git_tag(**kwargs)
 
 	mocker.patch.object(repo.git, 'tag', new=new_git_tag)
 
@@ -114,11 +116,13 @@ def nonempty_repo(mocker, decompiler):
 
 	orig_git_tag = repo.git.tag
 
-	def new_git_tag(*args):
-		if args == ('--merged',):
+	def new_git_tag(**kwargs):
+		if 'merged' in kwargs:
+			# If --merged is supplied, we're probably listing the existing tags
+			# (as opposted to creating a new one)
 			return tag.name
 
-		return orig_git_tag(*args)
+		return orig_git_tag(**kwargs)
 
 	mocker.patch.object(repo.git, 'tag', new=new_git_tag)
 
