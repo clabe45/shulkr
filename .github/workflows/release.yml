@@ -49,6 +49,9 @@ jobs:
           git config --global user.email "example@xyz.com"
           git config --global user.name "Quentin Beck"
 
+      - name: Run integration tests
+        run: pipenv run test-int
+
       - name: Run functional tests
         run: pipenv run test-func
 
