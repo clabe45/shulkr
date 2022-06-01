@@ -59,11 +59,13 @@ def head_has_versions() -> bool:
 
 	try:
 		# List tags reachable by HEAD
-		tags = repo.git.tag(merged=True)
-		return len(tags) > 0
+		repo.git.describe(tags=True)
+
+		# If we made it here, there is at least one tag.
+		return True
 
 	except GitCommandError as e:
-		if 'fatal: malformed object name HEAD' in str(e):
+		if 'fatal: No names found, cannot describe anything.' in e.stderr:
 			return False
 
 		raise e

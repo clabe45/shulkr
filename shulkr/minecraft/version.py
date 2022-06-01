@@ -273,12 +273,11 @@ def clear_manifest():
 
 def get_latest_generated_version() -> Version:
 	repo = get_repo()
-	# List tags reachable by HEAD
-	reachable_tags = repo.git.tag(sort='-creatordate', merged=True) \
-		.strip() \
-		.split('\n')
 
-	return Version.of(reachable_tags[-1])
+	# Get most recent tag reachable by HEAD
+	tag_name = repo.git.describe(tags=True)
+
+	return Version.of(tag_name)
 
 
 manifest = None

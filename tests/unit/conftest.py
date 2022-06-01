@@ -85,17 +85,13 @@ def decompiler(mocker):
 def empty_repo(mocker, decompiler):
 	repo = create_repo(mocker)
 
-	orig_git_tag = repo.git.tag
-
-	def new_git_tag(**kwargs):
-		if 'merged' in kwargs:
-			# If --merged is supplied, we're probably listing the existing tags
-			# (as opposted to creating a new one)
-			return ''
-
-		return orig_git_tag(**kwargs)
-
-	mocker.patch.object(repo.git, 'tag', new=new_git_tag)
+	# Throw error when 'git describe' is called (it will only be called with
+	# --tags)
+	describe_error = git.GitCommandError(
+		'git describe...',
+		stderr='fatal: No names found, cannot describe anything.'
+	)
+	mocker.patch.object(repo.git, 'describe', side_effect=describe_error)
 
 	# get_repo() will return this value
 	mocker.patch('shulkr.git.repo', repo)
@@ -111,20 +107,8 @@ def nonempty_repo(mocker, decompiler):
 	commit = create_commit(mocker)
 	mocker.patch.object(repo, 'iter_commits', return_value=iter([commit]))
 
-	# Add a fake tag for that commit
-	tag = create_tag(mocker)
-
-	orig_git_tag = repo.git.tag
-
-	def new_git_tag(**kwargs):
-		if 'merged' in kwargs:
-			# If --merged is supplied, we're probably listing the existing tags
-			# (as opposted to creating a new one)
-			return tag.name
-
-		return orig_git_tag(**kwargs)
-
-	mocker.patch.object(repo.git, 'tag', new=new_git_tag)
+	# Add a fake tag for that commit (it will only be called with --tags)
+	mocker.patch.object(repo.git, 'describe', return_value='abcdef')
 
 	# get_repo() will return this value
 	mocker.patch('shulkr.git.repo', repo)
