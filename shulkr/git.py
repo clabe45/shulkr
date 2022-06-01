@@ -81,7 +81,7 @@ def create_gitignore() -> None:
 		gitignore.write('\n'.join(to_ignore) + '\n')
 
 	repo.git.add('.gitignore')
-	repo.git.commit('-m', 'add .gitignore')
+	repo.git.commit(message='add .gitignore')
 
 
 def commit_version(

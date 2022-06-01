@@ -53,10 +53,10 @@ def _generate_sources_with_yarn(version: Version) -> None:
 	print(f'- Updating mappings to Minecraft {version}')
 
 	# Get latest versions from remote
-	decompiler_repo.git.fetch('--prune')
+	decompiler_repo.git.fetch(prune=True)
 
-	decompiler_repo.git.reset('--hard', 'HEAD')
-	decompiler_repo.git.clean('-fd')
+	decompiler_repo.git.reset('HEAD', hard=True)
+	decompiler_repo.git.clean(force=True, d=True)
 
 	# Checkout version branch
 	decompiler_repo.git.checkout(f'origin/{version}')

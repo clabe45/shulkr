@@ -24,8 +24,8 @@ def main():
 
 	repo = git.Repo()
 	commit_message = f'chore: release version {new_version}\n\nBump version {old_version} → {new_version}'
-	repo.git.commit('-m', commit_message, 'CHANGELOG.md', 'setup.py')
-	repo.git.tag('-a', '-m', f'version {new_version}', f'v{new_version}')
+	repo.git.commit('CHANGELOG.md', 'setup.py', message=commit_message)
+	repo.git.tag(f'v{new_version}', annotate=True, message=f'version {new_version}')
 
 	print(f'Bumped version {old_version} → {new_version}')
 
