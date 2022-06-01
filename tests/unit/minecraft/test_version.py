@@ -1,6 +1,6 @@
 import pytest
 
-from shulkr.minecraft.version import Version
+from shulkr.minecraft.version import Version, get_latest_generated_version
 
 
 class TestVersion:
@@ -77,3 +77,8 @@ class TestVersion:
 
 	def test_patterns_with_one_positive_id_and_the_same_negative_id_and_the_same_positive_id_returns_one_version(self, versions):
 		assert Version.patterns(['1.0.0', '-1.0.0', '1.0.0']) == [versions.release]
+
+
+def test_get_latest_generated_version_with_repo_with_one_version_returns_version(nonempty_repo, versions):
+	# nonempty_repo contains one commit (the snapshot)
+	assert get_latest_generated_version() == versions.snapshot
