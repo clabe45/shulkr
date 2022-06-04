@@ -1,8 +1,26 @@
 import shulkr
+from shulkr.config import Config
 from shulkr.minecraft.version import Version
 
 
-def test_create_version_with_undo_renamed_vars_on_repo_with_no_commits_does_not_call_undo_renames(mocker, empty_repo):
+def test_create_version_calls_generate_sources_with_mappings_from_config_and_correct_version(mocker, config: Config, empty_repo):
+	# Set mappings in config
+	config.mappings = 'foo'
+
+	# Mock
+	mocker.patch('shulkr.generate_sources')
+	mocker.patch('shulkr.undo_renames')
+	mocker.patch('shulkr.commit_version')
+
+	# Call create_version
+	version = Version('1.18.1', 0)
+	shulkr.create_version(version, mappings=None, undo_renamed_vars=False, message_template=None, tag=False)
+
+	# generate_sources() should have been called with the correct arguments
+	shulkr.generate_sources.assert_called_once_with(version, 'foo')
+
+
+def test_create_version_with_undo_renamed_vars_on_repo_with_no_commits_does_not_call_undo_renames(mocker, config, empty_repo):
 	# Mock
 	mocker.patch('shulkr.open', create=True)
 	mocker.patch('shulkr.generate_sources')
@@ -17,7 +35,7 @@ def test_create_version_with_undo_renamed_vars_on_repo_with_no_commits_does_not_
 	shulkr.undo_renames.assert_not_called()
 
 
-def test_create_version_with_undo_renamed_vars_on_repo_with_one_commit_calls_undo_renames(mocker, nonempty_repo):
+def test_create_version_with_undo_renamed_vars_on_repo_with_one_commit_calls_undo_renames(mocker, config, nonempty_repo):
 	# Mock
 	mocker.patch('shulkr.open', create=True)
 	mocker.patch('shulkr.generate_sources')
@@ -32,7 +50,7 @@ def test_create_version_with_undo_renamed_vars_on_repo_with_one_commit_calls_und
 	shulkr.undo_renames.assert_called_once()
 
 
-def test_create_version_with_tag_false_does_not_call_tag_version(mocker, empty_repo):
+def test_create_version_with_tag_false_does_not_call_tag_version(mocker, config, empty_repo):
 	# Mock
 	mocker.patch('shulkr.open', create=True)
 	mocker.patch('shulkr.generate_sources')
@@ -47,7 +65,7 @@ def test_create_version_with_tag_false_does_not_call_tag_version(mocker, empty_r
 	shulkr.tag_version.assert_not_called()
 
 
-def test_create_version_with_tag_true_calls_tag_version(mocker, empty_repo):
+def test_create_version_with_tag_true_calls_tag_version(mocker, config, empty_repo):
 	# Mock
 	mocker.patch('shulkr.open', create=True)
 	mocker.patch('shulkr.generate_sources')

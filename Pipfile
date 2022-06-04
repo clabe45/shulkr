@@ -9,6 +9,7 @@ javalang = "*"
 unidiff = "*"
 requests = "*"
 flake8-tabs = "*"
+toml = "*"
 
 [dev-packages]
 pytest = "*"

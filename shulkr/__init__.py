@@ -2,7 +2,7 @@ import os
 import sys
 
 from shulkr.arguments import parse_args
-from shulkr.config import get_config
+from shulkr.config import get_config, init_config
 from shulkr.git import (
 	commit_version,
 	create_gitignore,
@@ -10,7 +10,7 @@ from shulkr.git import (
 	tag_version
 )
 from shulkr.java import undo_renames
-from shulkr.minecraft.source import detect_mappings, generate_sources
+from shulkr.minecraft.source import generate_sources
 from shulkr.minecraft.version import (
 	NoSuchVersionError,
 	Version,
@@ -51,22 +51,11 @@ def main_uncaught() -> None:
 
 	args = parse_args(sys.argv[1:])
 
-	config = get_config()
-
-	config.repo_path = os.path.join(
+	repo_path = os.path.join(
 		os.getcwd(),
 		args.repo
 	)
-
-	if args.mappings is None:
-		if head_has_versions():
-			# Use mappings from previous version
-			config.mappings = detect_mappings()
-		else:
-			# Use default
-			config.mappings = 'yarn'
-	else:
-		config.mappings = args.mappings
+	init_config(repo_path=repo_path, mappings=args.mappings)
 
 	try:
 		versions = Version.patterns(args.version)
@@ -78,7 +67,7 @@ def main_uncaught() -> None:
 		print('No versions selected', file=sys.stderr)
 		sys.exit(3)
 
-	gitignore = os.path.join(config.repo_path, '.gitignore')
+	gitignore = os.path.join(repo_path, '.gitignore')
 	if not os.path.isfile(gitignore):
 		create_gitignore()
 

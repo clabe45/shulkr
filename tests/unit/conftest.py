@@ -2,7 +2,7 @@ import os
 
 import git
 import pytest
-from shulkr.config import get_config
+from shulkr.config import Config, get_config
 from shulkr.git import get_repo
 
 from shulkr.minecraft.version import Version, clear_manifest, load_manifest
@@ -52,6 +52,23 @@ def create_repo(mocker):
 	repo.working_tree_dir = os.path.abspath('foo')
 
 	return repo
+
+
+@pytest.fixture
+def config(mocker):
+	"""
+	Use a fake config
+
+	The advantage of using this fixture over calling init_config is that this
+	fixture does not use any operating system resources.
+	"""
+
+	config = Config(
+		os.path.abspath('foo')
+	)
+	mocker.patch('shulkr.config.config', config)
+
+	return config
 
 
 @pytest.fixture
@@ -117,7 +134,7 @@ def nonempty_repo(mocker, decompiler):
 
 
 @pytest.fixture
-def yarn_mappings():
+def yarn_mappings(config):
 	config = get_config()
 
 	prev_mappings = config.mappings
@@ -129,7 +146,7 @@ def yarn_mappings():
 
 
 @pytest.fixture
-def mojang_mappings():
+def mojang_mappings(config):
 	config = get_config()
 
 	prev_mappings = config.mappings
