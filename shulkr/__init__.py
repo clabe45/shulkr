@@ -20,7 +20,6 @@ from shulkr.minecraft.version import (
 
 def create_version(
 	version: Version,
-	mappings: str,
 	undo_renamed_vars: bool,
 	message_template: str,
 	tag: bool
@@ -74,7 +73,6 @@ def main_uncaught() -> None:
 	for version_id in versions:
 		create_version(
 			version_id,
-			args.mappings,
 			args.undo_renamed_vars,
 			args.message,
 			args.tag
