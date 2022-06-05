@@ -2,13 +2,9 @@ from __future__ import annotations
 import os.path
 from typing import Optional, TYPE_CHECKING
 
-from git import (
-	Commit,
-	GitCommandError,
-	InvalidGitRepositoryError,
-	NoSuchPathError,
-	Repo
-)
+from git import Commit
+from mint.command import GitCommandError
+from mint.repo import NoSuchRepoError, Repo
 
 from shulkr.config import get_config
 
@@ -16,7 +12,7 @@ if TYPE_CHECKING:
 	from shulkr.minecraft.version import Version
 
 
-def get_repo():
+def get_repo() -> Repo:
 	global repo
 
 	if not repo:
@@ -25,11 +21,15 @@ def get_repo():
 		try:
 			repo = Repo(config.repo_path)
 
-		except NoSuchPathError:
+		except FileNotFoundError:
 			print('Initializing git')
 			repo = Repo.init(config.repo_path)
 
-		except InvalidGitRepositoryError:
+		except NotADirectoryError:
+			print('Initializing git')
+			repo = Repo.init(config.repo_path)
+
+		except NoSuchRepoError:
 			print('Initializing git')
 			repo = Repo.init(config.repo_path)
 
@@ -76,7 +76,7 @@ def create_gitignore() -> None:
 
 	repo = get_repo()
 
-	gitignore_path = os.path.join(repo.working_tree_dir, '.gitignore')
+	gitignore_path = os.path.join(repo.path, '.gitignore')
 
 	with open(gitignore_path, 'w+') as gitignore:
 		to_ignore = ['.yarn', '.DecompilerMC']
@@ -109,7 +109,7 @@ def commit_version(
 def tag_version(version: 'Version') -> None:
 	repo = get_repo()
 
-	repo.create_tag(str(version))
+	repo.git.tag(version)
 
 
 repo = None

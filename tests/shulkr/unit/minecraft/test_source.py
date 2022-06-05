@@ -38,7 +38,7 @@ def test_generate_sources_with_yarn_runs_decompiler(mocker, empty_repo, versions
 
 	generate_sources(versions.snapshot, 'yarn')
 
-	decompiler_dir = os.path.join(empty_repo.working_tree_dir, '.yarn')
+	decompiler_dir = os.path.join(empty_repo.path, '.yarn')
 	subprocess_run.assert_called_once_with(
 		['./gradlew', 'decompileCFR'],
 		stdout=subprocess.DEVNULL,
@@ -58,10 +58,10 @@ def test_generate_sources_with_yarn_moves_sources_to_repo(mocker, empty_repo, ve
 
 	generate_sources(versions.snapshot, 'yarn')
 
-	decompiler_dir = os.path.join(empty_repo.working_tree_dir, '.yarn')
+	decompiler_dir = os.path.join(empty_repo.path, '.yarn')
 	move.assert_called_once_with(
 		os.path.join(decompiler_dir, 'namedSrc'),
-		os.path.join(empty_repo.working_tree_dir, 'src')
+		os.path.join(empty_repo.path, 'src')
 	)
 
 
@@ -76,7 +76,7 @@ def test_generate_sources_with_mojang_runs_decompiler(mocker, empty_repo, versio
 
 	generate_sources(versions.snapshot, 'mojang')
 
-	decompiler_dir = os.path.join(empty_repo.working_tree_dir, '.DecompilerMC')
+	decompiler_dir = os.path.join(empty_repo.path, '.DecompilerMC')
 	calls = [
 		mocker.call(
 			[
@@ -109,11 +109,11 @@ def test_generate_sources_with_mojang_moves_sources_to_repo(mocker, empty_repo, 
 
 	generate_sources(versions.snapshot, 'mojang')
 
-	decompiler_dir = os.path.join(empty_repo.working_tree_dir, '.DecompilerMC')
+	decompiler_dir = os.path.join(empty_repo.path, '.DecompilerMC')
 	calls = [
 		mocker.call(
 			os.path.join(decompiler_dir, 'src', str(versions.snapshot), env),
-			os.path.join(empty_repo.working_tree_dir, env, 'src')
+			os.path.join(empty_repo.path, env, 'src')
 		)
 		for env in ('client', 'server')
 	]

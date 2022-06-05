@@ -48,3 +48,9 @@ def test_commit_version_with_existing_commits_and_undo_renamed_vars_adds_note_to
 	# commit must have been called
 	expected_message = f'{version}\n\nRenamed variables reverted'
 	nonempty_repo.git.commit.assert_called_once_with(message=expected_message)
+
+
+def test_tag_version_calls_git_tag(config, nonempty_repo):
+	version = Version('1.18.1', 0)
+	shulkr.tag_version(version)
+	nonempty_repo.git.tag.assert_called_once_with(version)

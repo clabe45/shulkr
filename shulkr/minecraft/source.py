@@ -2,7 +2,7 @@ import os
 import shutil
 import subprocess
 
-from git import Repo
+from mint.repo import Repo
 
 from shulkr.git import get_repo, head_has_versions
 from .version import Version
@@ -31,7 +31,7 @@ def _setup_decompiler(local_dir: str, remote_url: str) -> Repo:
 	repo = get_repo()
 
 	decompiler_dir = os.path.realpath(
-		os.path.join(repo.working_tree_dir, local_dir)
+		os.path.join(repo.path, local_dir)
 	)
 
 	if os.path.exists(
@@ -42,7 +42,7 @@ def _setup_decompiler(local_dir: str, remote_url: str) -> Repo:
 	else:
 		# Clone the yarn repo
 		print(f'- Cloning {remote_url} into {decompiler_dir}')
-		return Repo.clone_from(remote_url, decompiler_dir)
+		return Repo.clone(remote_url, decompiler_dir)
 
 
 def _generate_sources_with_yarn(version: Version) -> None:
@@ -69,13 +69,13 @@ def _generate_sources_with_yarn(version: Version) -> None:
 			['./gradlew', 'decompileCFR'],
 			stdout=subprocess.DEVNULL,
 			stderr=subprocess.PIPE,
-			cwd=decompiler_repo.working_tree_dir
+			cwd=decompiler_repo.path
 		)
 		if p.returncode != 0:
 			raise Exception(p.stderr.decode())
 
 		# Output directory
-		dest_src_dir = os.path.join(repo.working_tree_dir, 'src')
+		dest_src_dir = os.path.join(repo.path, 'src')
 
 		# Remove existing top-level destination directory
 		if os.path.exists(dest_src_dir):
@@ -83,7 +83,7 @@ def _generate_sources_with_yarn(version: Version) -> None:
 
 		# Move the generated source code to $repo_dir/src
 		shutil.move(
-			os.path.join(decompiler_repo.working_tree_dir, 'namedSrc'),
+			os.path.join(decompiler_repo.path, 'namedSrc'),
 			dest_src_dir
 		)
 
@@ -92,7 +92,7 @@ def _generate_sources_with_yarn(version: Version) -> None:
 		if head_has_versions():
 			repo.git.restore('src')
 		else:
-			path = os.path.join(repo.working_tree_dir, 'src')
+			path = os.path.join(repo.path, 'src')
 			if os.path.exists(path):
 				shutil.rmtree(path)
 
@@ -130,13 +130,13 @@ def _generate_sources_with_mojang(version: Version) -> None:
 					'-q'
 				],
 				stderr=subprocess.PIPE,
-				cwd=decompiler_repo.working_tree_dir
+				cwd=decompiler_repo.path
 			)
 			if p.returncode != 0:
 				raise Exception(p.stderr.decode())
 
 			# Top-level destination directory ($repo/client or $repo/server)
-			dest_dir = os.path.join(repo.working_tree_dir, env)
+			dest_dir = os.path.join(repo.path, env)
 			dest_src_dir = os.path.join(dest_dir, 'src')
 
 			# Remove existing top-level destination directory
@@ -149,7 +149,7 @@ def _generate_sources_with_mojang(version: Version) -> None:
 
 			# Move the generated source code to $dest_dir/src
 			shutil.move(
-				os.path.join(decompiler_repo.working_tree_dir, 'src', str(version), env),
+				os.path.join(decompiler_repo.path, 'src', str(version), env),
 				dest_src_dir
 			)
 
@@ -159,7 +159,7 @@ def _generate_sources_with_mojang(version: Version) -> None:
 			repo.git.restore('client', 'server')
 		else:
 			for env in ('client', 'server'):
-				path = os.path.join(repo.working_tree_dir, env, 'src')
+				path = os.path.join(repo.path, env, 'src')
 				if os.path.exists(path):
 					shutil.rmtree(path)
 

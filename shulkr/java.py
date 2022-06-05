@@ -382,7 +382,9 @@ def undo_variable_renames(code: str, renamed_var_names: List[Tuple]) -> str:
 
 
 def undo_renames() -> None:
-	repo = get_repo()
+	# Since mint does not parse commits into objects, convert the repo to a
+	# gitpython repo
+	repo = get_repo().to_gitpython()
 
 	commit1 = repo.commit('HEAD')
 	commit2 = None  # working tree

@@ -1,4 +1,4 @@
-import git
+import mint
 import keepachangelog
 
 
@@ -22,7 +22,7 @@ def main():
 	with open('setup.py', 'w') as setuppy:
 		setuppy.write(new_setuppy_code)
 
-	repo = git.Repo()
+	repo = mint.Repo()
 	commit_message = f'chore: release version {new_version}\n\nBump version {old_version} → {new_version}'
 	repo.git.commit('CHANGELOG.md', 'setup.py', message=commit_message)
 	repo.git.tag(f'v{new_version}', annotate=True, message=f'version {new_version}')

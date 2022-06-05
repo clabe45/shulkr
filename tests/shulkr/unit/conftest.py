@@ -1,6 +1,8 @@
 import os
+from unittest.mock import MagicMock
 
-import git
+from mint.command import GitCommandError
+from mint.repo import Repo
 import pytest
 from shulkr.config import Config, get_config
 from shulkr.git import get_repo
@@ -32,24 +34,41 @@ class TestVersions:
 		self.release = release
 
 
-def create_commit(mocker):
-	return mocker.create_autospec(git.Commit)
-
-
-def create_tag(mocker):
-	tag = mocker.create_autospec(git.Tag)
-
-	# To match 'versions' fixture, for testing Version.pattern()
-	mocker.patch.object(tag, 'name', 'abcdef')
-
-	return tag
-
-
-def create_repo(mocker):
-	repo = mocker.create_autospec(git.Repo)
+def create_repo(mocker, path: str):
+	repo = MagicMock()
 
 	# Make the repo directory useful for testing shulkr.minecraft.source
-	repo.working_tree_dir = os.path.abspath('foo')
+	repo.path = os.path.abspath(path)
+
+	class MockGitCommand:
+		def add():
+			pass
+
+		def checkout():
+			pass
+
+		def clean():
+			pass
+
+		def commit():
+			pass
+
+		def describe():
+			pass
+
+		def fetch():
+			pass
+
+		def reset():
+			pass
+
+		def tag():
+			pass
+
+		def rev_parse():
+			pass
+
+	repo.git = mocker.create_autospec(MockGitCommand())
 
 	return repo
 
@@ -75,21 +94,18 @@ def config(mocker):
 def decompiler(mocker):
 	"""
 	Mock _setup_decompiler() to return a fake git repo with the current
-	working_tree_dir
+	path
 	"""
 
-	def mocked_setup_decompiler(local_dir: str, _remote_url: str) -> git.Repo:
+	def mocked_setup_decompiler(local_dir: str, _remote_url: str) -> Repo:
 		"""Create a fake decompiler subdirectory (.yarn or .DecompilerMC)"""
 
 		# It will be located directly under the shulkr repo directory
 		repo = get_repo()
-		decompiler_dir = os.path.join(repo.working_tree_dir, local_dir)
+		decompiler_dir = os.path.join(repo.path, local_dir)
 
-		# Create a fake git repo, and set the working_tree_dir property
-		decompiler_repo = mocker.create_autospec(git.Repo)
-		decompiler_repo.working_tree_dir = decompiler_dir
-
-		return decompiler_repo
+		# Create a fake git repo, and set the path property
+		return create_repo(mocker, decompiler_dir)
 
 	# Tell the generate_sources functions to use our fake decompiler creator
 	mocker.patch(
@@ -100,11 +116,20 @@ def decompiler(mocker):
 
 @pytest.fixture
 def empty_repo(mocker, decompiler):
-	repo = create_repo(mocker)
+	repo = create_repo(mocker, 'foo')
+
+	# Throw error when `git rev-parse` is called
+	def rev_parse(*args, **kwargs):
+		raise GitCommandError(
+			'git rev-parse...',
+			stderr="fatal: ambiguous argument 'HEAD': unknown revision or path not in the working tree."
+		)
+
+	mocker.patch.object(repo.git, 'rev_parse', side_effect=rev_parse)
 
 	# Throw error when 'git describe' is called (it will only be called with
 	# --tags)
-	describe_error = git.GitCommandError(
+	describe_error = GitCommandError(
 		'git describe...',
 		stderr='fatal: No names found, cannot describe anything.'
 	)
@@ -118,11 +143,14 @@ def empty_repo(mocker, decompiler):
 
 @pytest.fixture
 def nonempty_repo(mocker, decompiler):
-	repo = create_repo(mocker)
+	repo = create_repo(mocker, 'foo')
 
 	# Add a fake commit
-	commit = create_commit(mocker)
-	mocker.patch.object(repo, 'iter_commits', return_value=iter([commit]))
+	mocker.patch.object(
+		repo.git,
+		'rev_parse',
+		return_value=iter(['9e71573c6ae5a52195274871a679a23379ad1274'])
+	)
 
 	# Add a fake tag for that commit (it will only be called with --tags)
 	mocker.patch.object(repo.git, 'describe', return_value='abcdef')

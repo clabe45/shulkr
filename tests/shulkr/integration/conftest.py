@@ -1,6 +1,6 @@
 from tempfile import TemporaryDirectory
 
-import git
+from mint.repo import Repo
 import pytest
 
 from shulkr.minecraft.version import clear_manifest, load_manifest
@@ -16,7 +16,7 @@ def manifest():
 @pytest.fixture
 def repo(mocker):
 	tmp_dir = TemporaryDirectory(prefix='shulkr-test')
-	repo = git.Repo.init(tmp_dir.name)
+	repo = Repo.init(tmp_dir.name)
 	mocker.patch('shulkr.git.repo', repo)
 
 	yield repo

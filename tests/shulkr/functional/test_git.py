@@ -1,4 +1,4 @@
-from git import Repo
+from mint.repo import Repo
 
 
 def test_git_repo_initiated(run_yarn):
@@ -8,7 +8,8 @@ def test_git_repo_initiated(run_yarn):
 
 def test_commits_created(run_yarn):
 	repo = Repo(run_yarn.repo_path)
-	actual = [commit.message.rstrip() for commit in repo.iter_commits()]
+	history = repo.git.rev_list('HEAD').splitlines()
+	actual = [repo.git.log("--format='%B'", commit, n=1) for commit in history]
 	actual.reverse()
 
 	# Calculate expected commit messages from versions
@@ -29,8 +30,7 @@ def test_when_running_with_yarn_gitignore_and_src_are_tracked(run_yarn):
 	repo = Repo(run_yarn.repo_path)
 
 	# List files and directories that were changed directly under the root
-	root_tree = repo.head.commit.tree
-	actual = set([obj.name for obj in (root_tree.trees + root_tree.blobs)])
+	actual = set(repo.git.ls_tree('HEAD', name_only=True).splitlines())
 	expected = set(['.gitignore', 'src'])
 	assert actual == expected
 
@@ -39,15 +39,14 @@ def test_when_running_with_decompilermc_gitignore_client_and_server_are_tracked(
 	repo = Repo(run_mojang.repo_path)
 
 	# List files and directories that were changed directly under the root
-	root_tree = repo.head.commit.tree
-	actual = set([obj.name for obj in (root_tree.trees + root_tree.blobs)])
+	actual = set(repo.git.ls_tree('HEAD', name_only=True).splitlines())
 	expected = set(['.gitignore', 'client', 'server'])
 	assert actual == expected
 
 
 def test_tags_created(run_yarn):
 	repo = Repo(run_yarn.repo_path)
-	actual = set([tag.name for tag in repo.tags])
+	actual = set(repo.git.tag(list=True).splitlines())
 	expected = set(run_yarn.versions)
 	assert actual == expected
 
