@@ -31,7 +31,6 @@ def _config_path_for_repo(repo_path: str) -> str:
 
 
 def _config_exists(repo_path: str) -> bool:
-	print('_exists called')
 	return os.path.exists(
 		_config_path_for_repo(repo_path)
 	)
@@ -63,11 +62,9 @@ def init_config(repo_path: str, mappings: str = None) -> Config:
 
 	if _config_exists(repo_path):
 		config = _load_config(repo_path)
-		print('yes', config)
 	else:
 		config = Config(repo_path, mappings)
 		config.save()
-		print('no', config)
 
 	return config
 
