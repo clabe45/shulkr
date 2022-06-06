@@ -1,6 +1,6 @@
 import pytest
 
-from shulkr.minecraft.version import Version, get_latest_generated_version
+from minecraft.version import Version
 
 
 class TestVersion:
@@ -53,15 +53,15 @@ class TestVersion:
 	def test_pattern_with_snapshot_three_dots_release_returns_list_containing_snapshot_and_release(self, versions):
 		assert Version.pattern('abcdef...1.0.0') == [versions.snapshot, versions.release]
 
-	def test_pattern_with_three_dots_on_empty_repo_throws_value_error(self, empty_repo, versions):
+	def test_pattern_with_three_dots_on_empty_repo_throws_value_error(self, versions):
 		with pytest.raises(ValueError, match='No commits from which to derive current version'):
-			Version.pattern('...') == [versions.snapshot, versions.release]
+			Version.pattern('...', latest_in_repo=None) == [versions.snapshot, versions.release]
 
-	def test_pattern_with_two_dots_on_repo_with_snapshot_returns_list_containing_release(self, nonempty_repo, versions):
-		assert Version.pattern('..') == [versions.release]
+	def test_pattern_with_two_dots_on_repo_with_snapshot_returns_list_containing_release(self, versions):
+		assert Version.pattern('..', latest_in_repo=versions.snapshot) == [versions.release]
 
-	def test_pattern_with_three_dots_on_repo_with_snapshot_returns_list_containing_release(self, nonempty_repo, versions):
-		assert Version.pattern('...') == [versions.release]
+	def test_pattern_with_three_dots_on_repo_with_snapshot_returns_list_containing_release(self, versions):
+		assert Version.pattern('...', latest_in_repo=versions.snapshot) == [versions.release]
 
 	def test_patterns_with_empty_list_returns_empty_list(self, versions):
 		assert Version.patterns([]) == []
@@ -77,8 +77,3 @@ class TestVersion:
 
 	def test_patterns_with_one_positive_id_and_the_same_negative_id_and_the_same_positive_id_returns_one_version(self, versions):
 		assert Version.patterns(['1.0.0', '-1.0.0', '1.0.0']) == [versions.release]
-
-
-def test_get_latest_generated_version_with_repo_with_one_version_returns_version(nonempty_repo, versions):
-	# nonempty_repo contains one commit (the snapshot)
-	assert get_latest_generated_version() == versions.snapshot

@@ -1,6 +1,7 @@
 from mint.repo import Repo
+from minecraft.version import Version
 
-from shulkr.minecraft.version import Version, get_latest_generated_version
+from shulkr.version import get_latest_generated_version
 
 
 def test_get_latest_generated_version_with_repo_with_two_versions_returns_newer_version(repo: Repo):

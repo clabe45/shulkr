@@ -3,8 +3,6 @@ import re
 import requests
 from typing import Dict, List, Optional
 
-from shulkr.git import get_repo, head_has_versions
-
 MANIFEST_LOCATION = "https://launchermeta.mojang.com/mc/game/version_manifest.json"	 # noqa: E501
 EARLIEST_SUPPORTED_VERSION_ID = '19w36a'
 
@@ -100,7 +98,7 @@ class Version:
 		return manifest.version_for_id[id]
 
 	@staticmethod
-	def pattern(p: str) -> List[Version]:
+	def pattern(p: str, latest_in_repo: Version = None) -> List[Version]:
 		# First, check if the pattern is a range
 		m = re.match(r'(.*[^.])?(\.\.\.?)(.*)', p)
 		if m is not None:
@@ -111,9 +109,8 @@ class Version:
 				a = Version.of(a_id)
 			else:
 				# Get the next version after the latest committed one
-				if head_has_versions():
-					latest_generated_version = get_latest_generated_version()
-					a = latest_generated_version.next
+				if latest_in_repo:
+					a = latest_in_repo.next
 					if not snapshots:
 						# Find the next release
 						while a is not None and not isinstance(a, Release):
@@ -138,14 +135,14 @@ class Version:
 			return [Version.of(p)]
 
 	@staticmethod
-	def patterns(patterns: List[str]) -> List[Version]:
+	def patterns(patterns: List[str], latest_in_repo: Version = None) -> List[Version]:
 		# Parse versions
 		versions = set()
 		for pattern in patterns:
 			if pattern.startswith('-'):
-				versions -= set(Version.pattern(pattern[1:]))
+				versions -= set(Version.pattern(pattern[1:], latest_in_repo))
 			else:
-				versions |= set(Version.pattern(pattern))
+				versions |= set(Version.pattern(pattern, latest_in_repo))
 
 		# Sort
 		versions = list(versions)
@@ -269,15 +266,6 @@ def clear_manifest():
 	global manifest
 
 	manifest = None
-
-
-def get_latest_generated_version() -> Version:
-	repo = get_repo()
-
-	# Get most recent tag reachable by HEAD
-	tag_name = repo.git.describe(tags=True)
-
-	return Version.of(tag_name)
 
 
 manifest = None

@@ -5,33 +5,7 @@ from mint.command import GitCommandError
 from mint.repo import Repo
 import pytest
 from shulkr.config import Config, get_config
-from shulkr.git import get_repo
-
-from shulkr.minecraft.version import Version, clear_manifest, load_manifest
-
-
-MANIFEST_DATA = {
-	'latest': {
-		'release': '1.0.0',
-		'snapshot': '1.0.0'
-	},
-	'versions': [
-		{
-			'type': 'release',
-			'id': '1.0.0'
-		},
-		{
-			'type': 'snapshot',
-			'id': 'abcdef'
-		}
-	]
-}
-
-
-class TestVersions:
-	def __init__(self, snapshot: Version, release: Version) -> None:
-		self.snapshot = snapshot
-		self.release = release
+from shulkr.repo import get_repo
 
 
 def create_repo(mocker, path: str):
@@ -83,7 +57,8 @@ def config(mocker):
 	"""
 
 	config = Config(
-		os.path.abspath('foo')
+		os.path.abspath('foo'),
+		'mojang'
 	)
 	mocker.patch('shulkr.config.config', config)
 
@@ -109,7 +84,7 @@ def decompiler(mocker):
 
 	# Tell the generate_sources functions to use our fake decompiler creator
 	mocker.patch(
-		'shulkr.minecraft.source._setup_decompiler',
+		'minecraft.source._setup_decompiler',
 		new=mocked_setup_decompiler
 	)
 
@@ -136,7 +111,7 @@ def empty_repo(mocker, decompiler):
 	mocker.patch.object(repo.git, 'describe', side_effect=describe_error)
 
 	# get_repo() will return this value
-	mocker.patch('shulkr.git.repo', repo)
+	mocker.patch('shulkr.repo.repo', repo)
 
 	return repo
 
@@ -156,7 +131,7 @@ def nonempty_repo(mocker, decompiler):
 	mocker.patch.object(repo.git, 'describe', return_value='abcdef')
 
 	# get_repo() will return this value
-	mocker.patch('shulkr.git.repo', repo)
+	mocker.patch('shulkr.repo.repo', repo)
 
 	return repo
 
@@ -183,18 +158,6 @@ def mojang_mappings(config):
 	yield
 
 	config.mappings = prev_mappings
-
-
-@pytest.fixture
-def versions():
-	load_manifest(MANIFEST_DATA, earliest_supported_version_id='abcdef')
-
-	snapshot = Version.of('abcdef')
-	release = Version.of('1.0.0')
-
-	yield TestVersions(snapshot, release)
-
-	clear_manifest()
 
 
 @pytest.fixture

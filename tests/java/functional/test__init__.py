@@ -1,6 +1,6 @@
 from javalang.tree import CompilationUnit, ClassDeclaration, Literal, MethodDeclaration
 
-from shulkr.java import ast_nodes_equal, filter_ast_node, get_renamed_variables, undo_variable_renames
+from java import ast_nodes_equal, filter_ast_node, get_renamed_variables, undo_variable_renames
 
 
 def wrap_in_class(code: str) -> str:

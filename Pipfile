@@ -24,9 +24,9 @@ python_version = "3.9"
 
 [scripts]
 start = "python -m shulkr"
-test-unit = "python -m pytest tests/mint/unit tests/shulkr/unit"
+test-unit = "python -m pytest tests/mint/unit tests/minecraft/unit tests/shulkr/unit"
 test-int = "python -m pytest tests/shulkr/integration"
-test-func = "python -m pytest tests/mint/functional tests/shulkr/functional"
+test-func = "python -m pytest tests/java/functional tests/mint/functional tests/shulkr/functional"
 lint = "python -m flake8 mint shulkr tests"
 profile = "python -m tests.profile"
 bump = "python scripts/bump.py"

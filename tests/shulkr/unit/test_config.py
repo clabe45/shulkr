@@ -19,7 +19,7 @@ class TestConfig:
 		open_.assert_called_once_with(config_path, 'w+')
 
 
-def test_init_config_creates_new_configuration_with_provided_arguments_if_config_file_is_not_found(mocker):
+def test_init_config_creates_new_configuration_with_provided_arguments_if_config_file_is_not_found(mocker, empty_repo):
 	# 1. Spy on Config constructor
 	Config_ = mocker.patch('shulkr.config.Config')
 

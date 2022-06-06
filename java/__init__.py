@@ -1,12 +1,13 @@
 import os
 from typing import Dict, List, Tuple, Union
 
+import git
 import javalang
 from javalang.ast import Node
 from javalang.tokenizer import Identifier, tokenize
 from javalang.tree import MemberReference, VariableDeclaration
 
-from shulkr.git import get_blob, get_repo
+from java.blob import get_blob
 
 
 class JavaAnalyzationError(Exception):
@@ -381,10 +382,9 @@ def undo_variable_renames(code: str, renamed_var_names: List[Tuple]) -> str:
 	return '\n'.join(lines)
 
 
-def undo_renames() -> None:
-	# Since mint does not parse commits into objects, convert the repo to a
+def undo_renames(repo: git.Repo) -> None:
+	# Since mint does not parse commits into objects, the repo needs to be a #
 	# gitpython repo
-	repo = get_repo().to_gitpython()
 
 	commit1 = repo.commit('HEAD')
 	commit2 = None  # working tree
@@ -403,8 +403,8 @@ def undo_renames() -> None:
 		if not diff.a_path.endswith('.java'):
 			continue
 
-		source = get_blob(commit1, diff.a_path)
-		target = get_blob(commit2, diff.b_path)
+		source = get_blob(repo, commit1, diff.a_path)
+		target = get_blob(repo, commit2, diff.b_path)
 
 		try:
 			renamed_variables = get_renamed_variables(source, target)
