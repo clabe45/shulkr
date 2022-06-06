@@ -46,7 +46,7 @@ setup(
     py_modules=['java', 'minecraft', 'mint', 'shulkr'],
 	# include_package_data=True,
 	# package_data={'': package_files('shulkr/DecompilerMC')},
-	install_requires=['gitpython', 'javalang', 'unidiff', 'requests'],
+	install_requires=['gitpython', 'javalang', 'unidiff', 'requests', 'toml'],
 	entry_points={
         'console_scripts': ['shulkr=shulkr.__main__:main']
     }
