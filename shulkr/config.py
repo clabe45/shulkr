@@ -3,6 +3,8 @@ import os
 
 import toml
 
+from shulkr.repo import get_repo
+
 
 class Config:
 	def __init__(self, repo_path: str, mappings: str = None) -> None:
@@ -47,26 +49,30 @@ def _load_config(repo_path: str) -> Config:
 	)
 
 
-def init_config(repo_path: str, mappings: str = None) -> Config:
-	"""
-	Read the config for the specified shulkr repo or create a new one if it
-	doesn't exist
+def _commit_config() -> None:
+	repo = get_repo()
 
-	Args:
-		repo_path (str): Path to the shulkr repo
-		mappings (str, optional): Mappings that will be used to decompile each
-			version if creating a new config. Defaults to None.
-	"""
+	repo.git.add('.shulkr')
+	repo.git.commit(message='add .shulkr')
 
+
+def _create_config(repo_path: str, mappings: str) -> Config:
+	global config
+
+	config = Config(repo_path, mappings)
+	config.save()
+	_commit_config()
+
+	return config
+
+
+def init_config(repo_path: str, mappings: str) -> None:
 	global config
 
 	if _config_exists(repo_path):
 		config = _load_config(repo_path)
 	else:
-		config = Config(repo_path, mappings)
-		config.save()
-
-	return config
+		config = _create_config(repo_path, mappings)
 
 
 def clear_config() -> None:

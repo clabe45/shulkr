@@ -34,6 +34,24 @@ def test_init_config_creates_new_configuration_with_provided_arguments_if_config
 	Config_.assert_called_once_with('foo', 'mojang')
 
 
+def test_init_config_commits_config_when_creating_new_one(mocker, empty_repo):
+	# 1. Stub out Config class
+	mocker.patch('shulkr.config.Config')
+
+	# 2. Mock 'git commit'
+	mocker.patch.object(empty_repo.git, 'commit')
+
+	# 3. No existing config should be found
+	mocker.patch('shulkr.config.os.path.exists', return_value=False)
+
+	# 4. Call init_config
+	init_config('foo', 'mojang')
+
+	# 5. "git commit --message 'add .shulkr' .shulkr"
+	empty_repo.git.add.assert_called_once_with('.shulkr')
+	empty_repo.git.commit.assert_called_once_with(message='add .shulkr')
+
+
 def test_init_config_loads_existing_config_if_config_file_is_found(mocker):
 	# 1. Stub out the Config constructor
 	Config_ = mocker.patch('shulkr.config.Config')

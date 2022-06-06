@@ -13,7 +13,7 @@ def test_commits_created(run_yarn):
 	actual.reverse()
 
 	# Calculate expected commit messages from versions
-	expected = ['add .gitignore']
+	expected = ['add .shulkr', 'add .gitignore']
 	if run_yarn.undo_renamed_vars:
 		expected.append(f'version {run_yarn.versions[0]}')
 		expected.extend([
@@ -31,7 +31,7 @@ def test_when_running_with_yarn_gitignore_and_src_are_tracked(run_yarn):
 
 	# List files and directories that were changed directly under the root
 	actual = set(repo.git.ls_tree('HEAD', name_only=True).splitlines())
-	expected = set(['.gitignore', 'src'])
+	expected = set(['.gitignore', '.shulkr', 'src'])
 	assert actual == expected
 
 
@@ -40,7 +40,7 @@ def test_when_running_with_decompilermc_gitignore_client_and_server_are_tracked(
 
 	# List files and directories that were changed directly under the root
 	actual = set(repo.git.ls_tree('HEAD', name_only=True).splitlines())
-	expected = set(['.gitignore', 'client', 'server'])
+	expected = set(['.gitignore', '.shulkr', 'client', 'server'])
 	assert actual == expected
 
 
