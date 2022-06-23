@@ -12,7 +12,7 @@ def parse_args(args: List[str]) -> argparse.Namespace:
 		'--mappings',
 		type=str,
 		default='mojang',
-		help='Mappings for deobfuscation, mojang (default) or yarn'
+		help='Mappings for deobfuscation, mojang (default) or yarn (DEPRECATED)'
 	)
 
 	parser.add_argument(

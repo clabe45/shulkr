@@ -24,6 +24,8 @@ def _setup_decompiler(local_dir: str, remote_url: str) -> Repo:
 
 
 def _generate_sources_with_yarn(version: Version, path: str, decompiler_dir: str) -> None:
+	print('- DEPRECATION WARNING: Yarn support will be removed in a future version!')
+
 	decompiler_path = os.path.join(decompiler_dir, '.yarn')
 	decompiler_repo = _setup_decompiler(decompiler_path, YARN_REMOTE_URL)
 
