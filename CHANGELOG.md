@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `.shulkr` file for repository settings (currently only saves mappings)
 
+### Changed
+- Mojang's official mappings are now used by default
+
 ## [0.4.4] - 2022-05-31
 ### Fixed
 - Omitting the first version in a range pattern starts after the newest version in the repo instead of the oldest one.
