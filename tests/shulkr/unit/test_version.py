@@ -17,7 +17,7 @@ def test_create_version_calls_generate_sources_with_mappings_from_config_and_cor
 	shulkr.create_version(version, undo_renamed_vars=False, message_template='', tag=False)
 
 	# generate_sources() should have been called with the correct arguments
-	shulkr.version.generate_sources.assert_called_once_with(version, 'foo', empty_repo.path, empty_repo.path)
+	shulkr.version.generate_sources.assert_called_once_with(version, 'foo', empty_repo.path)
 
 
 def test_create_version_with_undo_renamed_vars_on_repo_with_no_commits_does_not_call_undo_renames(mocker, config, empty_repo):

@@ -23,10 +23,10 @@ def _setup_decompiler(local_dir: str, remote_url: str) -> Repo:
 		return Repo.clone(remote_url, local_dir)
 
 
-def _generate_sources_with_yarn(version: Version, path: str, decompiler_dir: str) -> None:
+def _generate_sources_with_yarn(version: Version, path: str) -> None:
 	print('- DEPRECATION WARNING: Yarn support will be removed in a future version!')
 
-	decompiler_path = os.path.join(decompiler_dir, '.yarn')
+	decompiler_path = os.path.join(path, '.yarn')
 	decompiler_repo = _setup_decompiler(decompiler_path, YARN_REMOTE_URL)
 
 	print(f'- Updating mappings to Minecraft {version}')
@@ -65,7 +65,7 @@ def _generate_sources_with_yarn(version: Version, path: str, decompiler_dir: str
 	)
 
 
-def _generate_sources_with_mojang(version: Version, path: str, decompiler_dir: str) -> None:
+def _generate_sources_with_mojang(version: Version, path: str) -> None:
 	"""
 	Generate sources with DecompilerMC, which uses Mojang's official mappings
 
@@ -76,7 +76,7 @@ def _generate_sources_with_mojang(version: Version, path: str, decompiler_dir: s
 		Exception: If DecompilerMC fails
 	"""
 
-	decompiler_path = os.path.join(decompiler_dir, '.DecompilerMC')
+	decompiler_path = os.path.join(path, '.DecompilerMC')
 	decompiler_repo = _setup_decompiler(decompiler_path, DECOMPILER_MC_REMOTE_URL)
 
 	for env in ('client', 'server'):
@@ -118,12 +118,12 @@ def _generate_sources_with_mojang(version: Version, path: str, decompiler_dir: s
 		)
 
 
-def generate_sources(version: Version, mappings: str, path: str, decompilers_dir: str) -> None:
+def generate_sources(version: Version, mappings: str, path: str) -> None:
 	if mappings == 'mojang':
-		_generate_sources_with_mojang(version, path, decompilers_dir)
+		_generate_sources_with_mojang(version, path)
 
 	elif mappings == 'yarn':
-		_generate_sources_with_yarn(version, path, decompilers_dir)
+		_generate_sources_with_yarn(version, path)
 
 	else:
 		raise ValueError(f"Invalid mapping type '{mappings}'")
