@@ -27,11 +27,11 @@ def test_init_config_creates_new_configuration_with_provided_arguments_if_config
 	mocker.patch('shulkr.config.os.path.exists', return_value=False)
 
 	# 3. Call init_config
-	init_config('foo', 'mojang')
+	init_config('foo', 'mojang', 'fernflower')
 
 	# 4. The Config constructor should have been called with the specified
 	# path and mappings
-	Config_.assert_called_once_with('foo', 'mojang')
+	Config_.assert_called_once_with('foo', 'mojang', 'fernflower')
 
 
 def test_init_config_commits_config_when_creating_new_one(mocker, empty_repo):
@@ -45,7 +45,7 @@ def test_init_config_commits_config_when_creating_new_one(mocker, empty_repo):
 	mocker.patch('shulkr.config.os.path.exists', return_value=False)
 
 	# 4. Call init_config
-	init_config('foo', 'mojang')
+	init_config('foo', 'mojang', 'fernflower')
 
 	# 5. "git commit --message 'add .shulkr' .shulkr"
 	empty_repo.git.add.assert_called_once_with('.shulkr')
@@ -65,13 +65,18 @@ def test_init_config_loads_existing_config_if_config_file_is_found(mocker):
 
 	# 2c. Patch toml.load to return a dummy config file
 	raw_config = {
+		'decompiler': 'cfr',
 		'mappings': 'yarn'
 	}
 	mocker.patch('shulkr.config.toml.load', return_value=raw_config)
 
 	# 3. Call init_config
-	init_config('foo', 'mojang')
+	init_config('foo', 'mojang', 'fernflower')
 
 	# 4. The Config constructor should have been called with the path and
 	# mappings from the existing config
-	Config_.assert_called_once_with(repo_path='foo', mappings='yarn')
+	Config_.assert_called_once_with(
+		repo_path='foo',
+		mappings='yarn',
+		decompiler='cfr'
+	)

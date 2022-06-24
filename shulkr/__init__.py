@@ -25,7 +25,7 @@ def main_uncaught() -> None:
 	)
 
 	init_repo(repo_path)
-	init_config(repo_path, args.mappings)
+	init_config(repo_path, args.mappings, args.decompiler)
 	ensure_gitignore_exists()
 
 	try:

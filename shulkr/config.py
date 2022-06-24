@@ -7,9 +7,16 @@ from shulkr.repo import get_repo
 
 
 class Config:
-	def __init__(self, repo_path: str, mappings: str = None) -> None:
+	def __init__(
+		self,
+		repo_path: str,
+		mappings: str = None,
+		decompiler: str = None
+	) -> None:
+
 		self.repo_path = repo_path
 		self.mappings = mappings
+		self.decompiler = decompiler
 
 	def save(self) -> None:
 		"""
@@ -18,7 +25,8 @@ class Config:
 		"""
 
 		raw_config = {
-			'mappings': self.mappings
+			'mappings': self.mappings,
+			'decompiler': self.decompiler
 			# No need to store the repo path (since it is supplied to the CLI
 			# and defaults to the CWD)
 		}
@@ -45,6 +53,7 @@ def _load_config(repo_path: str) -> Config:
 
 	return Config(
 		repo_path=repo_path,
+		decompiler=raw_config['decompiler'],
 		mappings=raw_config['mappings']
 	)
 
@@ -56,23 +65,23 @@ def _commit_config() -> None:
 	repo.git.commit(message='add .shulkr')
 
 
-def _create_config(repo_path: str, mappings: str) -> Config:
+def _create_config(repo_path: str, mappings: str, decompiler: str) -> Config:
 	global config
 
-	config = Config(repo_path, mappings)
+	config = Config(repo_path, mappings, decompiler)
 	config.save()
 	_commit_config()
 
 	return config
 
 
-def init_config(repo_path: str, mappings: str) -> None:
+def init_config(repo_path: str, mappings: str, decompiler: str) -> None:
 	global config
 
 	if _config_exists(repo_path):
 		config = _load_config(repo_path)
 	else:
-		config = _create_config(repo_path, mappings)
+		config = _create_config(repo_path, mappings, decompiler)
 
 
 def clear_config() -> None:

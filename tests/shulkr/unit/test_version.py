@@ -8,6 +8,7 @@ from shulkr.version import get_latest_generated_version
 def test_create_version_calls_generate_sources_with_mappings_from_config_and_correct_version(mocker, config: Config, empty_repo):
 	# Set mappings in config
 	config.mappings = 'foo'
+	config.decompiler = 'bar'
 
 	# Mock
 	mocker.patch('shulkr.version.generate_sources')
@@ -17,7 +18,7 @@ def test_create_version_calls_generate_sources_with_mappings_from_config_and_cor
 	shulkr.create_version(version, undo_renamed_vars=False, message_template='', tag=False)
 
 	# generate_sources() should have been called with the correct arguments
-	shulkr.version.generate_sources.assert_called_once_with(version, 'foo', empty_repo.path)
+	shulkr.version.generate_sources.assert_called_once_with(version, 'foo', 'bar', empty_repo.path)
 
 
 def test_create_version_with_undo_renamed_vars_on_repo_with_no_commits_does_not_call_undo_renames(mocker, config, empty_repo):
