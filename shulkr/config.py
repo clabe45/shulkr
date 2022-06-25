@@ -11,12 +11,14 @@ class Config:
 		self,
 		repo_path: str,
 		mappings: str,
-		message_template: str
+		message_template: str,
+		tag: bool
 	) -> None:
 
 		self.repo_path = repo_path
 		self.mappings = mappings
 		self.message_template = message_template
+		self.tag = tag
 
 	def save(self) -> None:
 		"""
@@ -26,7 +28,8 @@ class Config:
 
 		raw_config = {
 			'mappings': self.mappings,
-			'message': self.message_template
+			'message': self.message_template,
+			'tag': self.tag
 			# No need to store the repo path (since it is supplied to the CLI
 			# and defaults to the CWD)
 		}
@@ -54,7 +57,8 @@ def _load_config(repo_path: str) -> Config:
 	return Config(
 		repo_path=repo_path,
 		mappings=raw_config['mappings'],
-		message_template=raw_config['message']
+		message_template=raw_config['message'],
+		tag=raw_config['tag']
 	)
 
 
@@ -68,19 +72,25 @@ def _commit_config() -> None:
 def _create_config(
 	repo_path: str,
 	mappings: str,
-	message_template: str
+	message_template: str,
+	tag: bool
 ) -> Config:
 
 	global config
 
-	config = Config(repo_path, mappings, message_template)
+	config = Config(repo_path, mappings, message_template, tag)
 	config.save()
 	_commit_config()
 
 	return config
 
 
-def init_config(repo_path: str, mappings: str, message_template: str) -> None:
+def init_config(
+	repo_path: str,
+	mappings: str,
+	message_template: str,
+	tag: bool
+) -> None:
 	"""
 	Initialize the config state
 
@@ -97,7 +107,7 @@ def init_config(repo_path: str, mappings: str, message_template: str) -> None:
 	if _config_exists(repo_path):
 		config = _load_config(repo_path)
 	else:
-		config = _create_config(repo_path, mappings, message_template)
+		config = _create_config(repo_path, mappings, message_template, tag)
 
 
 def clear_config() -> None:

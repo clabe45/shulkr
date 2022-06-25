@@ -25,7 +25,7 @@ def main_uncaught() -> None:
 	)
 
 	init_repo(repo_path)
-	init_config(repo_path, args.mappings, args.message)
+	init_config(repo_path, args.mappings, args.message, args.tag)
 	ensure_gitignore_exists()
 
 	try:
@@ -45,8 +45,7 @@ def main_uncaught() -> None:
 	for version_id in versions:
 		create_version(
 			version_id,
-			args.undo_renamed_vars,
-			args.tag
+			args.undo_renamed_vars
 		)
 
 

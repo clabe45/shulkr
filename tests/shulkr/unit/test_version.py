@@ -14,7 +14,7 @@ def test_create_version_calls_generate_sources_with_mappings_from_config_and_cor
 
 	# Call create_version
 	version = Version('1.18.1', 0)
-	shulkr.create_version(version, undo_renamed_vars=False, tag=False)
+	shulkr.create_version(version, undo_renamed_vars=False)
 
 	# generate_sources() should have been called with the correct arguments
 	shulkr.version.generate_sources.assert_called_once_with(version, 'foo', empty_repo.path)
@@ -28,7 +28,7 @@ def test_create_version_with_undo_renamed_vars_on_repo_with_no_commits_does_not_
 
 	# Call create_version
 	version = Version('1.18.1', 0)
-	shulkr.create_version(version, undo_renamed_vars=True, tag=False)
+	shulkr.create_version(version, undo_renamed_vars=True)
 
 	# Assert that undo_renames was not called
 	shulkr.version.undo_renames.assert_not_called()
@@ -42,7 +42,7 @@ def test_create_version_with_undo_renamed_vars_on_repo_with_one_commit_calls_und
 
 	# Call create_version
 	version = Version('1.18.1', 0)
-	shulkr.create_version(version, undo_renamed_vars=True, tag=False)
+	shulkr.create_version(version, undo_renamed_vars=True)
 
 	# Assert that undo_renames was not called
 	shulkr.version.undo_renames.assert_called_once()
@@ -53,7 +53,7 @@ def test_create_version_with_yarn_mappings_stages_the_src_directory(mocker, conf
 
 	# Call _commit_version
 	version = Version('1.18.1', 0)
-	shulkr.create_version(version, undo_renamed_vars=False, tag=False)
+	shulkr.create_version(version, undo_renamed_vars=False)
 
 	# src needs to have been staged
 	empty_repo.git.add.assert_called_once_with('src')
@@ -64,7 +64,7 @@ def test_create_version_with_mojang_mappings_stages_the_src_directory(mocker, co
 
 	# Call _commit_version
 	version = Version('1.18.1', 0)
-	shulkr.create_version(version, undo_renamed_vars=False, tag=False)
+	shulkr.create_version(version, undo_renamed_vars=False)
 
 	# client and server need to have been staged
 	empty_repo.git.add.assert_called_once_with('src')
@@ -75,7 +75,7 @@ def test_create_version_creates_a_commit(mocker, config, empty_repo):
 
 	# Call _commit_version
 	version = Version('1.18.1', 0)
-	shulkr.create_version(version, undo_renamed_vars=False, tag=False)
+	shulkr.create_version(version, undo_renamed_vars=False)
 
 	# commit must have been called
 	empty_repo.git.commit.assert_called_once()
@@ -87,7 +87,7 @@ def test_create_version_replaces_all_brackets_with_the_version(mocker, config, e
 	# Call _commit_version
 	config.message_template = '{} {}'
 	version = Version('1.18.1', 0)
-	shulkr.create_version(version, undo_renamed_vars=False, tag=False)
+	shulkr.create_version(version, undo_renamed_vars=False)
 
 	# commit must have been called
 	expected_message = config.message_template.replace('{}', str(version))
@@ -99,7 +99,7 @@ def test_create_version_with_existing_commits_and_undo_renamed_vars_adds_note_to
 
 	# Call _commit_version
 	version = Version('1.18.1', 0)
-	shulkr.create_version(version, undo_renamed_vars=True, tag=False)
+	shulkr.create_version(version, undo_renamed_vars=True)
 
 	# commit must have been called
 	expected_message = f'{version}\n\nRenamed variables reverted'
@@ -110,7 +110,7 @@ def test_create_version_with_tag_calls_git_tag(mocker, config, nonempty_repo):
 	mocker.patch('shulkr.version.generate_sources')
 
 	version = Version('1.18.1', 0)
-	shulkr.create_version(version, undo_renamed_vars=False, tag=True)
+	shulkr.create_version(version, undo_renamed_vars=False)
 
 	nonempty_repo.git.tag.assert_called_once_with(version)
 

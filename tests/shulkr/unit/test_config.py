@@ -9,7 +9,8 @@ class TestConfig:
 		config = Config(
 			repo_path='foo',
 			mappings='mojang',
-			message_template='{}'
+			message_template='{}',
+			tag=True
 		)
 
 		# 2. Mock open()
@@ -31,11 +32,16 @@ def test_init_config_creates_new_configuration_with_provided_arguments_if_config
 	mocker.patch('shulkr.config.os.path.exists', return_value=False)
 
 	# 3. Call init_config
-	init_config(repo_path='foo', mappings='mojang', message_template='{}')
+	init_config(
+		repo_path='foo',
+		mappings='mojang',
+		message_template='{}',
+		tag=True
+	)
 
 	# 4. The Config constructor should have been called with the specified
 	# path and mappings
-	Config_.assert_called_once_with('foo', 'mojang', '{}')
+	Config_.assert_called_once_with('foo', 'mojang', '{}', True)
 
 
 def test_init_config_commits_config_when_creating_new_one(mocker, empty_repo):
@@ -49,7 +55,12 @@ def test_init_config_commits_config_when_creating_new_one(mocker, empty_repo):
 	mocker.patch('shulkr.config.os.path.exists', return_value=False)
 
 	# 4. Call init_config
-	init_config(repo_path='foo', mappings='mojang', message_template='{}')
+	init_config(
+		repo_path='foo',
+		mappings='mojang',
+		message_template='{}',
+		tag=True
+	)
 
 	# 5. "git commit --message 'add .shulkr' .shulkr"
 	empty_repo.git.add.assert_called_once_with('.shulkr')
@@ -70,17 +81,24 @@ def test_init_config_loads_existing_config_if_config_file_is_found(mocker):
 	# 2c. Patch toml.load to return a dummy config file
 	raw_config = {
 		'mappings': 'yarn',
-		'message': 'Minecraft {}'
+		'message': 'Minecraft {}',
+		'tag': False
 	}
 	mocker.patch('shulkr.config.toml.load', return_value=raw_config)
 
 	# 3. Call init_config
-	init_config(repo_path='foo', mappings='mojang', message_template='{}')
+	init_config(
+		repo_path='foo',
+		mappings='mojang',
+		message_template='{}',
+		tag=True
+	)
 
 	# 4. The Config constructor should have been called with the path and
 	# mappings from the existing config
 	Config_.assert_called_once_with(
 		repo_path='foo',
 		mappings='yarn',
-		message_template='Minecraft {}'
+		message_template='Minecraft {}',
+		tag=False
 	)

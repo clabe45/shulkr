@@ -39,8 +39,7 @@ def _tag_version(version: Version) -> None:
 
 def create_version(
 	version: Version,
-	undo_renamed_vars: bool,
-	tag: bool
+	undo_renamed_vars: bool
 ) -> None:
 	"""
 	Generate the sources for a Minecraft version and commit to the repo
@@ -84,7 +83,7 @@ def create_version(
 	_commit_version(version, undo_renamed_vars)
 
 	# 4. Tag
-	if tag:
+	if get_config().tag:
 		_tag_version(version)
 
 
