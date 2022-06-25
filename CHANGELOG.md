@@ -11,9 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Mojang's official mappings are now used by default
 
-### Deprecated
-- Support for yarn mappings are no longer maintained in this project.
-
 ## [0.4.4] - 2022-05-31
 ### Fixed
 - Omitting the first version in a range pattern starts after the newest version in the repo instead of the oldest one.
