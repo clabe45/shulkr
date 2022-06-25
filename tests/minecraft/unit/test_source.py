@@ -59,7 +59,7 @@ def test_generate_sources_with_yarn_runs_decompiler(mocker, versions, yarn_repo)
 	mocker.patch('shutil.move')
 	mocker.patch('os.makedirs')
 
-	generate_sources(versions.snapshot, 'yarn', '', root_path)
+	generate_sources(versions.snapshot, 'yarn', root_path)
 
 	decompiler_dir = os.path.join(root_path, '.yarn')
 	subprocess_run.assert_called_once_with(
@@ -82,7 +82,7 @@ def test_generate_sources_with_yarn_moves_sources_to_repo(mocker, versions, yarn
 	mocker.patch('os.makedirs')
 	move = mocker.patch('shutil.move')
 
-	generate_sources(versions.snapshot, 'yarn', '', root_path)
+	generate_sources(versions.snapshot, 'yarn', root_path)
 
 	decompiler_dir = os.path.join(root_path, '.yarn')
 	move.assert_called_once_with(
@@ -103,7 +103,7 @@ def test_generate_sources_with_mojang_runs_decompiler(mocker, versions, decompil
 	mocker.patch('shutil.move')
 	mocker.patch('os.makedirs')
 
-	generate_sources(versions.snapshot, 'mojang', 'cfr', root_path)
+	generate_sources(versions.snapshot, 'mojang', root_path)
 
 	decompiler_dir = os.path.join(root_path, '.DecompilerMC')
 	calls = [
@@ -115,8 +115,6 @@ def test_generate_sources_with_mojang_runs_decompiler(mocker, versions, decompil
 				str(versions.snapshot),
 				'-s',
 				env,
-				'--decompiler',
-				'cfr',
 				'-c',
 				'-f',
 				'-q'
@@ -141,7 +139,7 @@ def test_generate_sources_with_mojang_moves_sources_to_repo(mocker, versions, de
 	mocker.patch('os.makedirs')
 	move = mocker.patch('shutil.move')
 
-	generate_sources(versions.snapshot, 'mojang', 'cfr', root_path)
+	generate_sources(versions.snapshot, 'mojang', root_path)
 
 	calls = [
 		mocker.call(

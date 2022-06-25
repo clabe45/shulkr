@@ -65,12 +65,11 @@ def _generate_sources_with_yarn(version: Version, path: str) -> None:
 	)
 
 
-def _generate_sources_with_mojang(version: Version, decompiler: str, path: str) -> None:
+def _generate_sources_with_mojang(version: Version, path: str) -> None:
 	"""
 	Generate sources with DecompilerMC, which uses Mojang's official mappings
 
 	Args:
-	 	decompiler (str): Either 'cfr' or 'fernflower'
 		version (Version):
 
 	Raises:
@@ -90,8 +89,6 @@ def _generate_sources_with_mojang(version: Version, decompiler: str, path: str) 
 				str(version),
 				'-s',
 				env,
-				'--decompiler',
-				decompiler,
 				'-c',
 				'-f',
 				'-q'
@@ -121,9 +118,9 @@ def _generate_sources_with_mojang(version: Version, decompiler: str, path: str) 
 		)
 
 
-def generate_sources(version: Version, mappings: str, decompiler: str, path: str) -> None:
+def generate_sources(version: Version, mappings: str, path: str) -> None:
 	if mappings == 'mojang':
-		_generate_sources_with_mojang(version, decompiler, path)
+		_generate_sources_with_mojang(version, path)
 
 	elif mappings == 'yarn':
 		_generate_sources_with_yarn(version, path)

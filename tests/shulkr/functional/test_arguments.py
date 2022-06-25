@@ -33,11 +33,3 @@ def test_parse_args_with_negative_version_returns_version():
 
 def test_parse_args_with_one_version_and_no_tags_sets_tag_to_false():
 	assert not parse_args(['--no-tags', '1.18']).tag
-
-
-def test_parse_args_without_decompiler_defaults_to_cfr():
-	assert parse_args(['1.18']).decompiler == 'cfr'
-
-
-def test_parse_args_with_decompiler_sets_decompiler():
-	assert parse_args(['--decompiler', 'fernflower', '1.18']).decompiler == 'fernflower'

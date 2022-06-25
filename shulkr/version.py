@@ -63,11 +63,10 @@ def create_version(
 
 	repo = get_repo()
 	mappings = get_config().mappings
-	decompiler = get_config().decompiler
 	repo_path = repo.path
 
 	try:
-		generate_sources(version, mappings, decompiler, repo_path)
+		generate_sources(version, mappings, repo_path)
 	except BaseException as e:
 		# Undo src/ deletions
 		if head_has_versions():

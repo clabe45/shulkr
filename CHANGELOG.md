@@ -6,8 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Support for fernflower decompiler (`--decompiler fernflower`)
-- `.shulkr` file for repository settings (currently only saves mappings and decompiler)
+- `.shulkr` file for repository settings (currently only saves mappings)
 
 ### Changed
 - Mojang's official mappings are now used by default

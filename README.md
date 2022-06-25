@@ -83,11 +83,6 @@ shulkr --repo minecraft-sources 1.17..
 
 If the directory does not exist, a new git repo will be created there.
 
-### `--decompiler` / `-d`
-
-The decompiler to use. The default value is `cfr`, but `fernflower` is also
-supported.
-
 ### `--mappings`
 
 By default, Minecraft's bytecode is deobfuscated using [yarn's] mappings. You

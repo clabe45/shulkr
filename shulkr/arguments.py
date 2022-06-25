@@ -9,14 +9,6 @@ def parse_args(args: List[str]) -> argparse.Namespace:
 	)
 
 	parser.add_argument(
-		'--decompiler',
-		'-d',
-		type=str,
-		default='cfr',
-		help='Decompiler to use, cfr (default) or fernflower'
-	)
-
-	parser.add_argument(
 		'--mappings',
 		type=str,
 		default='mojang',
