@@ -12,13 +12,15 @@ class Config:
 		repo_path: str,
 		mappings: str,
 		message_template: str,
-		tag: bool
+		tag: bool,
+		undo_renamed_vars: bool
 	) -> None:
 
 		self.repo_path = repo_path
 		self.mappings = mappings
 		self.message_template = message_template
 		self.tag = tag
+		self.undo_renamed_vars = undo_renamed_vars
 
 	def save(self) -> None:
 		"""
@@ -29,7 +31,8 @@ class Config:
 		raw_config = {
 			'mappings': self.mappings,
 			'message': self.message_template,
-			'tag': self.tag
+			'tag': self.tag,
+			'undo_renamed_vars': self.undo_renamed_vars
 			# No need to store the repo path (since it is supplied to the CLI
 			# and defaults to the CWD)
 		}
@@ -58,7 +61,8 @@ def _load_config(repo_path: str) -> Config:
 		repo_path=repo_path,
 		mappings=raw_config['mappings'],
 		message_template=raw_config['message'],
-		tag=raw_config['tag']
+		tag=raw_config['tag'],
+		undo_renamed_vars=raw_config['undo_renamed_vars']
 	)
 
 
@@ -73,12 +77,19 @@ def _create_config(
 	repo_path: str,
 	mappings: str,
 	message_template: str,
-	tag: bool
+	tag: bool,
+	undo_renamed_vars: bool
 ) -> Config:
 
 	global config
 
-	config = Config(repo_path, mappings, message_template, tag)
+	config = Config(
+		repo_path,
+		mappings,
+		message_template,
+		tag,
+		undo_renamed_vars
+	)
 	config.save()
 	_commit_config()
 
@@ -89,7 +100,8 @@ def init_config(
 	repo_path: str,
 	mappings: str,
 	message_template: str,
-	tag: bool
+	tag: bool,
+	undo_renamed_vars: bool
 ) -> None:
 	"""
 	Initialize the config state
@@ -107,7 +119,13 @@ def init_config(
 	if _config_exists(repo_path):
 		config = _load_config(repo_path)
 	else:
-		config = _create_config(repo_path, mappings, message_template, tag)
+		config = _create_config(
+			repo_path,
+			mappings,
+			message_template,
+			tag,
+			undo_renamed_vars
+		)
 
 
 def clear_config() -> None:

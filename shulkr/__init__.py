@@ -25,7 +25,13 @@ def main_uncaught() -> None:
 	)
 
 	init_repo(repo_path)
-	init_config(repo_path, args.mappings, args.message, args.tag)
+	init_config(
+		repo_path,
+		args.mappings,
+		args.message,
+		args.tag,
+		args.undo_renamed_vars
+	)
 	ensure_gitignore_exists()
 
 	try:

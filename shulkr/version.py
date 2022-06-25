@@ -14,16 +14,12 @@ from shulkr.config import get_config
 from shulkr.repo import get_repo
 
 
-def _commit_version(
-	version: Version,
-	undo_renamed_vars: bool,
-) -> None:
-
+def _commit_version(version: Version) -> None:
 	repo = get_repo()
 	message_template = get_config().message_template
 
 	commit_msg = message_template.strip().replace('{}', str(version))
-	if undo_renamed_vars and head_has_versions():
+	if get_config().undo_renamed_vars and head_has_versions():
 		commit_msg += '\n\nRenamed variables reverted'
 
 	repo.git.add('src')
@@ -37,10 +33,7 @@ def _tag_version(version: Version) -> None:
 	repo.git.tag(version)
 
 
-def create_version(
-	version: Version,
-	undo_renamed_vars: bool
-) -> None:
+def create_version(version: Version) -> None:
 	"""
 	Generate the sources for a Minecraft version and commit to the repo
 
@@ -74,13 +67,13 @@ def create_version(
 		raise e
 
 	# 2. If there are any previous versions, undo the renamed variables
-	if undo_renamed_vars and head_has_versions():
+	if get_config().undo_renamed_vars and head_has_versions():
 		print('Undoing renamed variables')
 		undo_renames(get_repo().to_gitpython())
 
 	# 3. Commit the new version to git
 	print('Committing to git')
-	_commit_version(version, undo_renamed_vars)
+	_commit_version(version)
 
 	# 4. Tag
 	if get_config().tag:

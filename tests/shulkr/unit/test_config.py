@@ -10,7 +10,8 @@ class TestConfig:
 			repo_path='foo',
 			mappings='mojang',
 			message_template='{}',
-			tag=True
+			tag=True,
+			undo_renamed_vars=False
 		)
 
 		# 2. Mock open()
@@ -36,12 +37,13 @@ def test_init_config_creates_new_configuration_with_provided_arguments_if_config
 		repo_path='foo',
 		mappings='mojang',
 		message_template='{}',
-		tag=True
+		tag=True,
+		undo_renamed_vars=False
 	)
 
 	# 4. The Config constructor should have been called with the specified
 	# path and mappings
-	Config_.assert_called_once_with('foo', 'mojang', '{}', True)
+	Config_.assert_called_once_with('foo', 'mojang', '{}', True, False)
 
 
 def test_init_config_commits_config_when_creating_new_one(mocker, empty_repo):
@@ -59,7 +61,8 @@ def test_init_config_commits_config_when_creating_new_one(mocker, empty_repo):
 		repo_path='foo',
 		mappings='mojang',
 		message_template='{}',
-		tag=True
+		tag=True,
+		undo_renamed_vars=False
 	)
 
 	# 5. "git commit --message 'add .shulkr' .shulkr"
@@ -82,7 +85,8 @@ def test_init_config_loads_existing_config_if_config_file_is_found(mocker):
 	raw_config = {
 		'mappings': 'yarn',
 		'message': 'Minecraft {}',
-		'tag': False
+		'tag': False,
+		'undo_renamed_vars': True
 	}
 	mocker.patch('shulkr.config.toml.load', return_value=raw_config)
 
@@ -91,7 +95,8 @@ def test_init_config_loads_existing_config_if_config_file_is_found(mocker):
 		repo_path='foo',
 		mappings='mojang',
 		message_template='{}',
-		tag=True
+		tag=True,
+		undo_renamed_vars=False
 	)
 
 	# 4. The Config constructor should have been called with the path and
@@ -100,5 +105,6 @@ def test_init_config_loads_existing_config_if_config_file_is_found(mocker):
 		repo_path='foo',
 		mappings='yarn',
 		message_template='Minecraft {}',
-		tag=False
+		tag=False,
+		undo_renamed_vars=True
 	)

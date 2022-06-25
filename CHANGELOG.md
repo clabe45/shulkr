@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- `.shulkr` file for repository settings *(in-progress)*
+- `.shulkr` file for repository settings.
 
 ### Changed
 - Server sources are no longer generated seperately when using Mojang's mappings (the client includes them).
