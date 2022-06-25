@@ -105,26 +105,21 @@ def test_generate_sources_with_mojang_runs_decompiler(mocker, versions, decompil
 
 	generate_sources(versions.snapshot, 'mojang', root_path)
 
-	decompiler_dir = os.path.join(root_path, '.DecompilerMC')
-	calls = [
-		mocker.call(
-			[
-				'python3',
-				'main.py',
-				'--mcv',
-				str(versions.snapshot),
-				'-s',
-				env,
-				'-c',
-				'-f',
-				'-q'
-			],
-			stderr=subprocess.PIPE,
-			cwd=decompiler_dir
-		)
-		for env in ('client', 'server')
-	]
-	subprocess_run.assert_has_calls(calls)
+	subprocess_run.assert_called_once_with(
+		[
+			'python3',
+			'main.py',
+			'--mcv',
+			str(versions.snapshot),
+			'-s',
+			'client',
+			'-c',
+			'-f',
+			'-q',
+		],
+		stderr=subprocess.PIPE,
+		cwd=decompiler_dir
+	)
 
 
 def test_generate_sources_with_mojang_moves_sources_to_repo(mocker, versions, decompiler_mc_repo):
@@ -141,11 +136,7 @@ def test_generate_sources_with_mojang_moves_sources_to_repo(mocker, versions, de
 
 	generate_sources(versions.snapshot, 'mojang', root_path)
 
-	calls = [
-		mocker.call(
-			os.path.join(decompiler_dir, 'src', str(versions.snapshot), env),
-			os.path.join(root_path, env, 'src')
-		)
-		for env in ('client', 'server')
-	]
-	move.assert_has_calls(calls)
+	move.assert_called_once_with(
+		os.path.join(decompiler_dir, 'src', str(versions.snapshot), 'client'),
+		os.path.join(root_path, 'src')
+	)

@@ -86,9 +86,7 @@ If the directory does not exist, a new git repo will be created there.
 ### `--mappings`
 
 By default, Minecraft's bytecode is deobfuscated using [yarn's] mappings. You
-can also use `--mappings mojang` to use Mojang's official mappings. Yarn merges
-the client and server sources into one directory, which Shulkr currently does
-not support for Mojang's mappings.
+can also use `--mappings mojang` to use Mojang's official mappings.
 
 If left unspecified, the mappings used to generate the previous commit are
 detected.

@@ -26,10 +26,7 @@ def _commit_version(
 	if undo_renamed_vars and head_has_versions():
 		commit_msg += '\n\nRenamed variables reverted'
 
-	if get_config().mappings == 'mojang':
-		repo.git.add('client', 'server')
-	else:
-		repo.git.add('src')
+	repo.git.add('src')
 
 	repo.git.commit(message=commit_msg)
 

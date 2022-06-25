@@ -35,12 +35,12 @@ def test_when_running_with_yarn_gitignore_and_src_are_tracked(run_yarn):
 	assert actual == expected
 
 
-def test_when_running_with_decompilermc_gitignore_client_and_server_are_tracked(run_mojang):
+def test_when_running_with_decompilermc_gitignore_src_are_tracked(run_mojang):
 	repo = Repo(run_mojang.repo_path)
 
 	# List files and directories that were changed directly under the root
 	actual = set(repo.git.ls_tree('HEAD', name_only=True).splitlines())
-	expected = set(['.gitignore', '.shulkr', 'client', 'server'])
+	expected = set(['.gitignore', '.shulkr', 'src'])
 	assert actual == expected
 
 

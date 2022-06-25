@@ -67,7 +67,7 @@ def test_create_version_with_mojang_mappings_stages_the_src_directory(mocker, co
 	shulkr.create_version(version, undo_renamed_vars=False, message_template='{}', tag=False)
 
 	# client and server need to have been staged
-	empty_repo.git.add.assert_called_once_with('client', 'server')
+	empty_repo.git.add.assert_called_once_with('src')
 
 
 def test_create_version_creates_a_commit(mocker, config, empty_repo):

@@ -65,7 +65,8 @@ def _generate_sources_with_yarn(version: Version, path: str) -> None:
 
 def _generate_sources_with_mojang(version: Version, path: str) -> None:
 	"""
-	Generate sources with DecompilerMC, which uses Mojang's official mappings
+	Decompiles a version of the Minecraft client with DecompilerMC (which uses
+	Mojang's official mappings)
 
 	Args:
 		version (Version):
@@ -77,43 +78,37 @@ def _generate_sources_with_mojang(version: Version, path: str) -> None:
 	decompiler_path = os.path.join(path, '.DecompilerMC')
 	decompiler_repo = _setup_decompiler(decompiler_path, DECOMPILER_MC_REMOTE_URL)
 
-	for env in ('client', 'server'):
-		# Generate source code
-		p = subprocess.run(
-			[
-				'python3',
-				'main.py',
-				'--mcv',
-				str(version),
-				'-s',
-				env,
-				'-c',
-				'-f',
-				'-q'
-			],
-			stderr=subprocess.PIPE,
-			cwd=decompiler_repo.path
-		)
-		if p.returncode != 0:
-			raise Exception(p.stderr.decode())
+	# Decompile client
+	p = subprocess.run(
+		[
+			'python3',
+			'main.py',
+			'--mcv',
+			str(version),
+			'-s',
+			'client',
+			'-c',
+			'-f',
+			'-q'
+		],
+		stderr=subprocess.PIPE,
+		cwd=decompiler_repo.path
+	)
+	if p.returncode != 0:
+		raise Exception(p.stderr.decode())
 
-		# Top-level destination directory ($repo/client or $repo/server)
-		dest_dir = os.path.join(path, env)
-		dest_src_dir = os.path.join(dest_dir, 'src')
+	# Sources directory
+	dest_src_dir = os.path.join(path, 'src')
 
-		# Remove existing top-level destination directory
-		if os.path.exists(dest_src_dir):
-			shutil.rmtree(dest_src_dir)
+	# Remove existing top-level destination directory
+	if os.path.exists(dest_src_dir):
+		shutil.rmtree(dest_src_dir)
 
-		# Make top-level destination directory
-		if not os.path.exists(dest_dir):
-			os.makedirs(dest_dir)
-
-		# Move the generated source code to $dest_dir/src
-		shutil.move(
-			os.path.join(decompiler_repo.path, 'src', str(version), env),
-			dest_src_dir
-		)
+	# Move the generated source code to $dest_dir/src
+	shutil.move(
+		os.path.join(decompiler_repo.path, 'src', str(version), 'client'),
+		dest_src_dir
+	)
 
 
 def generate_sources(version: Version, mappings: str, path: str) -> None:

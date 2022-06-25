@@ -11,14 +11,9 @@ def test_when_running_with_yarn_src_directory_is_not_empty(run_yarn):
 
 
 def test_when_running_with_decompilermc_repo_only_contains_git_gitignore_yarn_client_and_server_directories(run_mojang):
-	assert set(os.listdir(run_mojang.repo_path)) == set(['.git', '.gitignore', '.shulkr', '.DecompilerMC', 'client', 'server'])
+	assert set(os.listdir(run_mojang.repo_path)) == set(['.git', '.gitignore', '.shulkr', '.DecompilerMC', 'src'])
 
 
-def test_when_running_with_decompilermc_client_directory_is_not_empty(run_mojang):
-	src_dir = os.path.join(run_mojang.repo_path, 'client')
-	assert len(os.listdir(src_dir)) > 0
-
-
-def test_when_running_with_decompilermc_server_directory_is_not_empty(run_mojang):
-	src_dir = os.path.join(run_mojang.repo_path, 'server')
+def test_when_running_with_decompilermc_src_directory_is_not_empty(run_mojang):
+	src_dir = os.path.join(run_mojang.repo_path, 'src')
 	assert len(os.listdir(src_dir)) > 0
