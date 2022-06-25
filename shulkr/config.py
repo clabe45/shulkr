@@ -32,7 +32,9 @@ class Config:
 			'mappings': self.mappings,
 			'message': self.message_template,
 			'tag': self.tag,
-			'undo_renamed_vars': self.undo_renamed_vars
+			'experimental': {
+				'undo_renamed_vars': self.undo_renamed_vars
+			}
 			# No need to store the repo path (since it is supplied to the CLI
 			# and defaults to the CWD)
 		}
@@ -62,7 +64,7 @@ def _load_config(repo_path: str) -> Config:
 		mappings=raw_config['mappings'],
 		message_template=raw_config['message'],
 		tag=raw_config['tag'],
-		undo_renamed_vars=raw_config['undo_renamed_vars']
+		undo_renamed_vars=raw_config['experimental']['undo_renamed_vars']
 	)
 
 

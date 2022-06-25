@@ -86,7 +86,9 @@ def test_init_config_loads_existing_config_if_config_file_is_found(mocker):
 		'mappings': 'yarn',
 		'message': 'Minecraft {}',
 		'tag': False,
-		'undo_renamed_vars': True
+		'experimental': {
+			'undo_renamed_vars': True
+		}
 	}
 	mocker.patch('shulkr.config.toml.load', return_value=raw_config)
 
