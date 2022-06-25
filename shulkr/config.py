@@ -10,8 +10,8 @@ class Config:
 	def __init__(
 		self,
 		repo_path: str,
-		mappings: str = None,
-		message_template: str = None
+		mappings: str,
+		message_template: str
 	) -> None:
 
 		self.repo_path = repo_path

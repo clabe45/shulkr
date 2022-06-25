@@ -6,7 +6,11 @@ from shulkr.config import Config, init_config
 class TestConfig:
 	def test_save_opens_config_file_for_writing(self, mocker):
 		# 1. Create a new configuration
-		config = Config('foo')
+		config = Config(
+			repo_path='foo',
+			mappings='mojang',
+			message_template='{}'
+		)
 
 		# 2. Mock open()
 		open_ = mocker.patch('shulkr.config.open')
