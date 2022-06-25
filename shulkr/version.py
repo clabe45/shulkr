@@ -47,7 +47,7 @@ def create_version(
 	tag: bool
 ) -> None:
 	"""
-	Generate the sources for and commit a new version of Minecraft
+	Generate the sources for a Minecraft version and commit to the repo
 
 	Args:
 		version (Version): Version to create

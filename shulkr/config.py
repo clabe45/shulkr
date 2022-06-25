@@ -76,6 +76,19 @@ def _create_config(repo_path: str, mappings: str, decompiler: str) -> Config:
 
 
 def init_config(repo_path: str, mappings: str, decompiler: str) -> None:
+	"""
+	Initialize the config state
+
+	If a .shulkr file exists for the current repo, it will be loaded.
+	Otherwise, a new one will be created with the specified mappings and
+	decompiler.
+
+	Args:
+		repo_path (str): _description_
+		mappings (str): _description_
+		decompiler (str): _description_
+	"""
+
 	global config
 
 	if _config_exists(repo_path):
@@ -85,6 +98,12 @@ def init_config(repo_path: str, mappings: str, decompiler: str) -> None:
 
 
 def clear_config() -> None:
+	"""
+	Unload the config from memory
+
+	Used in tests
+	"""
+
 	global config
 
 	config = None
