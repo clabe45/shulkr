@@ -7,9 +7,16 @@ from shulkr.repo import get_repo
 
 
 class Config:
-	def __init__(self, repo_path: str, mappings: str = None) -> None:
+	def __init__(
+		self,
+		repo_path: str,
+		mappings: str = None,
+		message_template: str = None
+	) -> None:
+
 		self.repo_path = repo_path
 		self.mappings = mappings
+		self.message_template = message_template
 
 	def save(self) -> None:
 		"""
@@ -18,7 +25,8 @@ class Config:
 		"""
 
 		raw_config = {
-			'mappings': self.mappings
+			'mappings': self.mappings,
+			'message': self.message_template
 			# No need to store the repo path (since it is supplied to the CLI
 			# and defaults to the CWD)
 		}
@@ -45,7 +53,8 @@ def _load_config(repo_path: str) -> Config:
 
 	return Config(
 		repo_path=repo_path,
-		mappings=raw_config['mappings']
+		mappings=raw_config['mappings'],
+		message_template=raw_config['message']
 	)
 
 
@@ -56,17 +65,22 @@ def _commit_config() -> None:
 	repo.git.commit(message='add .shulkr')
 
 
-def _create_config(repo_path: str, mappings: str) -> Config:
+def _create_config(
+	repo_path: str,
+	mappings: str,
+	message_template: str
+) -> Config:
+
 	global config
 
-	config = Config(repo_path, mappings)
+	config = Config(repo_path, mappings, message_template)
 	config.save()
 	_commit_config()
 
 	return config
 
 
-def init_config(repo_path: str, mappings: str) -> None:
+def init_config(repo_path: str, mappings: str, message_template: str) -> None:
 	"""
 	Initialize the config state
 
@@ -83,7 +97,7 @@ def init_config(repo_path: str, mappings: str) -> None:
 	if _config_exists(repo_path):
 		config = _load_config(repo_path)
 	else:
-		config = _create_config(repo_path, mappings)
+		config = _create_config(repo_path, mappings, message_template)
 
 
 def clear_config() -> None:

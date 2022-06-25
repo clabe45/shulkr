@@ -57,8 +57,9 @@ def config(mocker):
 	"""
 
 	config = Config(
-		os.path.abspath('foo'),
-		'mojang'
+		repo_path=os.path.abspath('foo'),
+		mappings='mojang',
+		message_template='{}'
 	)
 	mocker.patch('shulkr.config.config', config)
 

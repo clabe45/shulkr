@@ -17,10 +17,10 @@ from shulkr.repo import get_repo
 def _commit_version(
 	version: Version,
 	undo_renamed_vars: bool,
-	message_template: str
 ) -> None:
 
 	repo = get_repo()
+	message_template = get_config().message_template
 
 	commit_msg = message_template.strip().replace('{}', str(version))
 	if undo_renamed_vars and head_has_versions():
@@ -40,7 +40,6 @@ def _tag_version(version: Version) -> None:
 def create_version(
 	version: Version,
 	undo_renamed_vars: bool,
-	message_template: str,
 	tag: bool
 ) -> None:
 	"""
@@ -82,7 +81,7 @@ def create_version(
 
 	# 3. Commit the new version to git
 	print('Committing to git')
-	_commit_version(version, undo_renamed_vars, message_template)
+	_commit_version(version, undo_renamed_vars)
 
 	# 4. Tag
 	if tag:
