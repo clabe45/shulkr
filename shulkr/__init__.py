@@ -49,10 +49,7 @@ def main_uncaught() -> None:
 		sys.exit(3)
 
 	for version_id in versions:
-		create_version(
-			version_id,
-			args.undo_renamed_vars
-		)
+		create_version(version_id)
 
 
 def main() -> None:
