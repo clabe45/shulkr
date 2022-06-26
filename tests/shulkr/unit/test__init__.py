@@ -90,4 +90,3 @@ def test_main_uncaught_without_any_versions_exits_with_error(mock_all):
 	shulkr.main_uncaught()
 
 	shulkr.sys.exit.assert_called_once_with(3)
-	shulkr.create_version.assert_not_called()
