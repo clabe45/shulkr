@@ -12,7 +12,9 @@ def main():
 
 	keepachangelog.release('CHANGELOG.md')
 
-	new_version = current_version()
+	predicted_version = current_version()
+	user_input = input('New version [{}]: '.format(predicted_version))
+	new_version = user_input or predicted_version
 
 	with open('setup.py', 'r') as setuppy:
 		setuppy_code = setuppy.read()
