@@ -48,12 +48,6 @@ def _config_path_for_repo(repo_path: str) -> str:
 	return os.path.join(repo_path, '.shulkr')
 
 
-def _config_exists(repo_path: str) -> bool:
-	return os.path.exists(
-		_config_path_for_repo(repo_path)
-	)
-
-
 def _load_config(repo_path: str) -> Config:
 	config_path = _config_path_for_repo(repo_path)
 	with open(config_path, 'r') as config_file:
@@ -98,6 +92,12 @@ def _create_config(
 	return config
 
 
+def config_exists(repo_path: str) -> bool:
+	return os.path.exists(
+		_config_path_for_repo(repo_path)
+	)
+
+
 def init_config(
 	repo_path: str,
 	mappings: str,
@@ -118,7 +118,7 @@ def init_config(
 
 	global config
 
-	if _config_exists(repo_path):
+	if config_exists(repo_path):
 		config = _load_config(repo_path)
 	else:
 		config = _create_config(

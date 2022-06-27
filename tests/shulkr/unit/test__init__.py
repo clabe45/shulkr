@@ -21,6 +21,7 @@ def mock_all(mocker, versions):
 	mocker.patch('shulkr.parse_args')
 	mocker.patch('shulkr.os')
 	mocker.patch('shulkr.init_repo')
+	mocker.patch('shulkr.is_compatible')
 	mocker.patch('shulkr.init_config')
 	mocker.patch('shulkr.ensure_gitignore_exists')
 	mocker.patch('shulkr.Version.patterns', return_value=versions)
@@ -48,6 +49,14 @@ def test_main_uncaught_calls_init_repo(mocker, mock_all):
 	shulkr.main_uncaught()
 
 	shulkr.init_repo.assert_called_once_with('full/path/to/repo')
+
+
+def test_main_uncaught_with_unsupported_repo_exits_with_error(mock_all):
+	shulkr.is_compatible.return_value = False
+
+	shulkr.main_uncaught()
+
+	shulkr.sys.exit.assert_called_once_with(4)
 
 
 def test_main_uncaught_calls_init_config(mock_all):

@@ -8,6 +8,7 @@ from minecraft.version import (
 )
 
 from shulkr.arguments import parse_args
+from shulkr.compatibility import is_compatible
 from shulkr.config import init_config
 from shulkr.gitignore import ensure_gitignore_exists
 from shulkr.repo import init_repo
@@ -25,6 +26,15 @@ def main_uncaught() -> None:
 	)
 
 	init_repo(repo_path)
+
+	if not is_compatible():
+		print(
+			'This repo is not compatible with the current version of shulkr - ' +
+			'please create a new repo or downgrade shulkr.',
+			file=sys.stderr
+		)
+		sys.exit(4)
+
 	init_config(
 		repo_path,
 		args.mappings,
