@@ -135,7 +135,11 @@ class Version:
 			return [Version.of(p)]
 
 	@staticmethod
-	def patterns(patterns: List[str], latest_in_repo: Version = None) -> List[Version]:
+	def patterns(
+		patterns: List[str],
+		latest_in_repo: Version = None
+	) -> List[Version]:
+
 		# Parse versions
 		versions = set()
 		for pattern in patterns:
