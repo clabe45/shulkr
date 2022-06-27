@@ -8,7 +8,6 @@ gitpython = "*"
 javalang = "*"
 unidiff = "*"
 requests = "*"
-flake8-tabs = "*"
 toml = "*"
 
 [dev-packages]
@@ -16,6 +15,7 @@ pytest = "*"
 pytest-mock = "*"
 twine = "*"
 flake8 = "*"
+flake8-tabs = "*"
 bump2version = "*"
 keepachangelog = "*"
 
