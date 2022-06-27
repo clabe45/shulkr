@@ -18,6 +18,8 @@ flake8 = "*"
 flake8-tabs = "*"
 bump2version = "*"
 keepachangelog = "*"
+python-lsp-server = "*"
+pyls-mypy = {git = "https://github.com/tomv564/pyls-mypy.git"}
 
 [requires]
 python_version = "3.9"
