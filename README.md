@@ -1,5 +1,6 @@
 # Shulkr
 
+[![Discord](https://img.shields.io/discord/992622345334292542)](https://discord.gg/GDSft8kHWg)
 ![Check New Commits](https://github.com/clabe45/shulkr/actions/workflows/check.yml/badge.svg)
 [![PyPI version](https://badge.fury.io/py/shulkr.svg)](https://badge.fury.io/py/shulkr)
 
