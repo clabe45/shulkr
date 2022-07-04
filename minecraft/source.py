@@ -52,6 +52,8 @@ def _generate_sources_with_yarn(version: Version, path: str) -> None:
 	if p.returncode != 0:
 		raise Exception(p.stderr.decode())
 
+	click.echo('Moving generated sources')
+
 	src_path = os.path.join(path, 'src')
 
 	# Remove existing top-level destination directory
