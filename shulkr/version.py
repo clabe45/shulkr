@@ -48,7 +48,7 @@ def create_version(version: Version) -> None:
 	"""
 
 	# 1. Generate source code for the current version
-	click.echo(f'Generating sources for Minecraft {version}')
+	click.secho(f'Generating sources for Minecraft {version}', bold=True)
 
 	repo = get_repo()
 	mappings = get_config().mappings
