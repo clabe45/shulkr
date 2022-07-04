@@ -110,3 +110,49 @@ def test_init_config_loads_existing_config_if_config_file_is_found(mocker):
 		tag=False,
 		undo_renamed_vars=True
 	)
+
+
+def test_init_config_returns_true_if_config_file_is_found(mocker):
+	# 1. Mock dependencies
+	mocker.patch('shulkr.config.Config')
+	mocker.patch('shulkr.config.os.path.exists', return_value=True)
+	mocker.patch('shulkr.config.open')
+	raw_config = {
+		'mappings': 'yarn',
+		'message': 'Minecraft {}',
+		'tag': False,
+		'experimental': {
+			'undo_renamed_vars': True
+		}
+	}
+	mocker.patch('shulkr.config.toml.load', return_value=raw_config)
+
+	# 2. Call init_config
+	result = init_config(
+		repo_path='foo',
+		mappings='mojang',
+		message_template='{}',
+		tag=True,
+		undo_renamed_vars=False
+	)
+
+	# 3. The result should be True
+	assert result
+
+
+def test_init_config_returns_false_if_config_file_is_not_found(mocker, empty_repo):
+	# 1. Mock dependencies
+	mocker.patch('shulkr.config.Config')
+	mocker.patch('shulkr.config.os.path.exists', return_value=False)
+
+	# 2. Call init_config
+	result = init_config(
+		repo_path='foo',
+		mappings='mojang',
+		message_template='{}',
+		tag=True,
+		undo_renamed_vars=False
+	)
+
+	# 3. The result should be False
+	assert not result

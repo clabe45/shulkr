@@ -24,10 +24,17 @@ def _create_gitignore() -> None:
 	repo.git.commit(message='add .gitignore')
 
 
-def ensure_gitignore_exists() -> None:
+def ensure_gitignore_exists() -> bool:
 	"""
 	Create and commit a .gitignore file if one does not exist
+
+	Returns:
+		bool: True if a .gitignore file was found. False if one was created.
 	"""
 
 	if not os.path.isfile(_gitignore_path()):
 		_create_gitignore()
+		return False
+
+	else:
+		return True

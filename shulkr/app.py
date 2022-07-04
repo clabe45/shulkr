@@ -32,7 +32,7 @@ def run(
 		repo_path
 	)
 
-	init_repo(full_repo_path)
+	init_output = not init_repo(full_repo_path)
 
 	if not is_compatible():
 		click.secho(
@@ -43,14 +43,18 @@ def run(
 		)
 		sys.exit(4)
 
-	init_config(
+	init_output = not init_config(
 		full_repo_path,
 		mappings,
 		message_template,
 		tags,
 		undo_renamed_vars
-	)
-	ensure_gitignore_exists()
+	) or init_output
+	init_output = not ensure_gitignore_exists() or init_output
+
+	# If we printed anything in the initialization step, print a newline
+	if init_output:
+		click.echo()
 
 	try:
 		resolved_versions = Version.patterns(

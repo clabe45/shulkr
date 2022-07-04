@@ -107,7 +107,7 @@ def init_config(
 	message_template: str,
 	tag: bool,
 	undo_renamed_vars: bool
-) -> None:
+) -> bool:
 	"""
 	Initialize the config state
 
@@ -117,12 +117,16 @@ def init_config(
 	Args:
 		repo_path (str): _description_
 		mappings (str): _description_
+
+	Returns:
+		bool: True if a config was loaded. False if a new one was created.
 	"""
 
 	global config
 
 	if config_exists(repo_path):
 		config = _load_config(repo_path)
+		return True
 	else:
 		config = _create_config(
 			repo_path,
@@ -131,6 +135,7 @@ def init_config(
 			tag,
 			undo_renamed_vars
 		)
+		return False
 
 
 def clear_config() -> None:

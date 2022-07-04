@@ -70,7 +70,30 @@ def test_run_with_unsupported_repo_exits_with_error():
 	app.sys.exit.assert_called_once_with(4)
 
 
-def test_run_calls_init_config():
+def test_run_calls_init_config_when_init_repo_returns_false():
+	app.init_repo.return_value = False
+	app.os.path.join.return_value = 'full/path/to/repo'
+
+	app.run(
+		versions=[],
+		mappings='mappings',
+		repo_path='path/to/repo',
+		message_template='message',
+		tags=True,
+		undo_renamed_vars=True
+	)
+
+	app.init_config.assert_called_once_with(
+		'full/path/to/repo',
+		'mappings',
+		'message',
+		True,
+		True
+	)
+
+
+def test_run_calls_init_config_when_init_repo_returns_true():
+	app.init_repo.return_value = True
 	app.os.path.join.return_value = 'full/path/to/repo'
 
 	app.run(
