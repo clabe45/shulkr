@@ -1,6 +1,7 @@
 from __future__ import annotations
 import os
 
+import click
 import toml
 
 from shulkr.repo import get_repo
@@ -78,6 +79,8 @@ def _create_config(
 ) -> Config:
 
 	global config
+
+	click.echo('Saving config')
 
 	config = Config(
 		repo_path,
