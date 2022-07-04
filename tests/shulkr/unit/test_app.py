@@ -12,7 +12,7 @@ def versions():
 	]
 
 
-@pytest.fixture
+@pytest.fixture(autouse=True)
 def mock_all(mocker, versions):
 	mocker.patch('shulkr.app.load_manifest')
 	mocker.patch('shulkr.app.sys')
@@ -26,7 +26,7 @@ def mock_all(mocker, versions):
 	mocker.patch('shulkr.app.create_version')
 
 
-def test_run_loads_version_manifest(mock_all):
+def test_run_loads_version_manifest():
 	app.run(
 		versions=[],
 		mappings='mappings',
@@ -39,7 +39,7 @@ def test_run_loads_version_manifest(mock_all):
 	app.load_manifest.assert_called_once_with()
 
 
-def test_run_calls_init_repo(mocker, mock_all):
+def test_run_calls_init_repo(mocker):
 	app.os.path.join.return_value = 'full/path/to/repo'
 
 	app.run(
@@ -54,7 +54,7 @@ def test_run_calls_init_repo(mocker, mock_all):
 	app.init_repo.assert_called_once_with('full/path/to/repo')
 
 
-def test_run_with_unsupported_repo_exits_with_error(mock_all):
+def test_run_with_unsupported_repo_exits_with_error():
 	app.is_compatible.return_value = False
 
 	app.run(
@@ -69,7 +69,7 @@ def test_run_with_unsupported_repo_exits_with_error(mock_all):
 	app.sys.exit.assert_called_once_with(4)
 
 
-def test_run_calls_init_config(mock_all):
+def test_run_calls_init_config():
 	app.os.path.join.return_value = 'full/path/to/repo'
 
 	app.run(
@@ -90,7 +90,7 @@ def test_run_calls_init_config(mock_all):
 	)
 
 
-def test_run_calls_ensure_gitignore_exists(mock_all):
+def test_run_calls_ensure_gitignore_exists():
 	app.run(
 		versions=[],
 		mappings='mappings',
@@ -103,7 +103,7 @@ def test_run_calls_ensure_gitignore_exists(mock_all):
 	app.ensure_gitignore_exists.assert_called_once_with()
 
 
-def test_run_with_multiple_versions_calls_create_version_for_each_version(mocker, mock_all, versions):
+def test_run_with_multiple_versions_calls_create_version_for_each_version(mocker, versions):
 	app.run(
 		versions=[],
 		mappings='mappings',
@@ -118,7 +118,7 @@ def test_run_with_multiple_versions_calls_create_version_for_each_version(mocker
 	])
 
 
-def test_run_without_any_versions_exits_with_error(mock_all):
+def test_run_without_any_versions_exits_with_error():
 	app.Version.patterns.return_value = []
 
 	app.run(
