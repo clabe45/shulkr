@@ -29,7 +29,7 @@ def _generate_sources_with_yarn(version: Version, path: str) -> None:
 	decompiler_path = os.path.join(path, '.yarn')
 	decompiler_repo = _setup_decompiler(decompiler_path, YARN_REMOTE_URL)
 
-	click.echo(f'Updating mappings to Minecraft {version}')
+	click.echo(f'Updating mappings to version {version}')
 
 	# Get latest versions from remote
 	decompiler_repo.git.fetch(prune=True)
