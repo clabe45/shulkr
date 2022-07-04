@@ -14,6 +14,7 @@ def versions():
 
 @pytest.fixture(autouse=True)
 def mock_all(mocker, versions):
+	mocker.patch('shulkr.app.click')
 	mocker.patch('shulkr.app.load_manifest')
 	mocker.patch('shulkr.app.sys')
 	mocker.patch('shulkr.app.os')

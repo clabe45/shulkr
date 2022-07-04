@@ -1,5 +1,7 @@
 import os
 
+import click
+
 from shulkr.repo import get_repo
 
 
@@ -10,7 +12,7 @@ def _gitignore_path() -> str:
 
 
 def _create_gitignore() -> None:
-	print('Creating gitignore')
+	click.echo('Creating gitignore')
 
 	repo = get_repo()
 

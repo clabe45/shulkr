@@ -10,6 +10,7 @@ def test_create_version_calls_generate_sources_with_mappings_from_config_and_cor
 	config.mappings = 'foo'
 
 	# Mock
+	mocker.patch('shulkr.version.click')
 	mocker.patch('shulkr.version.generate_sources')
 
 	# Call create_version
@@ -23,6 +24,7 @@ def test_create_version_calls_generate_sources_with_mappings_from_config_and_cor
 def test_create_version_with_undo_renamed_vars_on_repo_with_no_commits_does_not_call_undo_renames(mocker, config, empty_repo):
 	# Mock
 	# mocker.patch('shulkr.open', create=True)
+	mocker.patch('shulkr.version.click')
 	mocker.patch('shulkr.version.generate_sources')
 	mocker.patch('shulkr.version.undo_renames')
 
@@ -38,6 +40,7 @@ def test_create_version_with_undo_renamed_vars_on_repo_with_no_commits_does_not_
 def test_create_version_with_undo_renamed_vars_on_repo_with_one_commit_calls_undo_renames(mocker, config, nonempty_repo):
 	# Mock
 	# mocker.patch('shulkr.open', create=True)
+	mocker.patch('shulkr.version.click')
 	mocker.patch('shulkr.version.generate_sources')
 	mocker.patch('shulkr.version.undo_renames')
 
@@ -51,6 +54,7 @@ def test_create_version_with_undo_renamed_vars_on_repo_with_one_commit_calls_und
 
 
 def test_create_version_with_yarn_mappings_stages_the_src_directory(mocker, config, empty_repo, yarn_mappings):
+	mocker.patch('shulkr.version.click')
 	mocker.patch('shulkr.version.generate_sources')
 
 	# Call _commit_version
@@ -62,6 +66,7 @@ def test_create_version_with_yarn_mappings_stages_the_src_directory(mocker, conf
 
 
 def test_create_version_with_mojang_mappings_stages_the_src_directory(mocker, config, empty_repo, mojang_mappings):
+	mocker.patch('shulkr.version.click')
 	mocker.patch('shulkr.version.generate_sources')
 
 	# Call _commit_version
@@ -73,6 +78,7 @@ def test_create_version_with_mojang_mappings_stages_the_src_directory(mocker, co
 
 
 def test_create_version_creates_a_commit(mocker, config, empty_repo):
+	mocker.patch('shulkr.version.click')
 	mocker.patch('shulkr.version.generate_sources')
 
 	# Call _commit_version
@@ -84,6 +90,7 @@ def test_create_version_creates_a_commit(mocker, config, empty_repo):
 
 
 def test_create_version_replaces_all_brackets_with_the_version(mocker, config, empty_repo):
+	mocker.patch('shulkr.version.click')
 	mocker.patch('shulkr.version.generate_sources')
 
 	# Call _commit_version
@@ -97,6 +104,7 @@ def test_create_version_replaces_all_brackets_with_the_version(mocker, config, e
 
 
 def test_create_version_with_existing_commits_and_undo_renamed_vars_adds_note_to_commit_message(mocker, config, nonempty_repo):
+	mocker.patch('shulkr.version.click')
 	mocker.patch('shulkr.version.generate_sources')
 
 	# Call _commit_version
@@ -110,6 +118,7 @@ def test_create_version_with_existing_commits_and_undo_renamed_vars_adds_note_to
 
 
 def test_create_version_with_tag_calls_git_tag(mocker, config, nonempty_repo):
+	mocker.patch('shulkr.version.click')
 	mocker.patch('shulkr.version.generate_sources')
 
 	version = Version('1.18.1', 0)

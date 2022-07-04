@@ -55,6 +55,7 @@ def test_generate_sources_with_yarn_runs_decompiler(mocker, versions, yarn_repo)
 		'subprocess.run',
 		return_value=SubprocessMock()
 	)
+	mocker.patch('minecraft.source.click')
 	mocker.patch('shutil.rmtree')
 	mocker.patch('shutil.move')
 	mocker.patch('os.makedirs')
@@ -78,6 +79,7 @@ def test_generate_sources_with_yarn_moves_sources_to_repo(mocker, versions, yarn
 		'subprocess.run',
 		return_value=SubprocessMock()
 	)
+	mocker.patch('minecraft.source.click')
 	mocker.patch('shutil.rmtree')
 	mocker.patch('os.makedirs')
 	move = mocker.patch('shutil.move')
@@ -99,6 +101,7 @@ def test_generate_sources_with_mojang_runs_decompiler(mocker, versions, decompil
 		'subprocess.run',
 		return_value=SubprocessMock()
 	)
+	mocker.patch('minecraft.source.click')
 	mocker.patch('shutil.rmtree')
 	mocker.patch('shutil.move')
 	mocker.patch('os.makedirs')
@@ -130,6 +133,7 @@ def test_generate_sources_with_mojang_moves_sources_to_repo(mocker, versions, de
 		'subprocess.run',
 		return_value=SubprocessMock()
 	)
+	mocker.patch('minecraft.source.click')
 	mocker.patch('shutil.rmtree')
 	mocker.patch('os.makedirs')
 	move = mocker.patch('shutil.move')

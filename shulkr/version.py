@@ -5,6 +5,7 @@ Module for management of Minecraft versions
 import os
 import shutil
 
+import click
 from java import undo_renames
 from minecraft.source import generate_sources
 from minecraft.version import Version
@@ -47,7 +48,7 @@ def create_version(version: Version) -> None:
 	"""
 
 	# 1. Generate source code for the current version
-	print(f'\nGenerating sources for Minecraft {version}')
+	click.echo(f'\nGenerating sources for Minecraft {version}')
 
 	repo = get_repo()
 	mappings = get_config().mappings
@@ -68,11 +69,11 @@ def create_version(version: Version) -> None:
 
 	# 2. If there are any previous versions, undo the renamed variables
 	if get_config().undo_renamed_vars and head_has_versions():
-		print('Undoing renamed variables')
+		click.echo('Undoing renamed variables')
 		undo_renames(get_repo().to_gitpython())
 
 	# 3. Commit the new version to git
-	print('Committing to git')
+	click.echo('Committing to git')
 	_commit_version(version)
 
 	# 4. Tag

@@ -67,8 +67,8 @@ def cli(
 		run(versions, mappings, repo, message, tags, undo_renamed_vars)
 
 	except ValueError as e:
-		print(e, file=sys.stderr)
+		click.secho(e, err=True, fg='red')
 		sys.exit(2)
 
 	except KeyboardInterrupt:
-		print('Aborted!', file=sys.stderr)
+		click.echo('Aborted!', err=True)

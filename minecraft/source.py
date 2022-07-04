@@ -2,6 +2,8 @@ import os
 import shutil
 import subprocess
 
+import click
+
 from mint.repo import Repo
 
 from minecraft.version import Version
@@ -19,7 +21,7 @@ def _setup_decompiler(local_dir: str, remote_url: str) -> Repo:
 		return Repo(local_dir)
 	else:
 		# Clone the yarn repo
-		print(f'- Cloning {remote_url} into {local_dir}')
+		click.echo(f'- Cloning {remote_url} into {local_dir}')
 		return Repo.clone(remote_url, local_dir)
 
 
@@ -27,7 +29,7 @@ def _generate_sources_with_yarn(version: Version, path: str) -> None:
 	decompiler_path = os.path.join(path, '.yarn')
 	decompiler_repo = _setup_decompiler(decompiler_path, YARN_REMOTE_URL)
 
-	print(f'- Updating mappings to Minecraft {version}')
+	click.echo(f'- Updating mappings to Minecraft {version}')
 
 	# Get latest versions from remote
 	decompiler_repo.git.fetch(prune=True)
@@ -38,7 +40,7 @@ def _generate_sources_with_yarn(version: Version, path: str) -> None:
 	# Checkout version branch
 	decompiler_repo.git.checkout(f'origin/{version}')
 
-	print('- Running decompiler')
+	click.echo('- Running decompiler')
 
 	# Generate source code
 	p = subprocess.run(

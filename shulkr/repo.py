@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import click
+
 from mint.repo import NoSuchRepoError, Repo
 
 
@@ -19,15 +21,15 @@ def init_repo(repo_path: str) -> None:
 		repo = Repo(repo_path)
 
 	except FileNotFoundError:
-		print('Initializing git')
+		click.echo('Initializing git')
 		repo = Repo.init(repo_path)
 
 	except NotADirectoryError:
-		print('Initializing git')
+		click.echo('Initializing git')
 		repo = Repo.init(repo_path)
 
 	except NoSuchRepoError:
-		print('Initializing git')
+		click.echo('Initializing git')
 		repo = Repo.init(repo_path)
 
 
