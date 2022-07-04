@@ -1,5 +1,3 @@
-from unittest.mock import MagicMock
-
 from minecraft.version import Version
 import pytest
 
@@ -18,7 +16,6 @@ def versions():
 def mock_all(mocker, versions):
 	mocker.patch('shulkr.app.load_manifest')
 	mocker.patch('shulkr.app.sys')
-	mocker.patch('shulkr.app.parse_args')
 	mocker.patch('shulkr.app.os')
 	mocker.patch('shulkr.app.init_repo')
 	mocker.patch('shulkr.app.is_compatible')
@@ -30,23 +27,29 @@ def mock_all(mocker, versions):
 
 
 def test_run_loads_version_manifest(mock_all):
-	app.run()
+	app.run(
+		versions=[],
+		mappings='mappings',
+		repo_path='path/to/repo',
+		message_template='message',
+		tags=True,
+		undo_renamed_vars=True
+	)
 
 	app.load_manifest.assert_called_once_with()
-
-
-def test_run_calls_parse_args(mock_all, mocker):
-	mocker.patch('shulkr.app.sys.argv', ['shulkr', '--repo', 'path/to/repo'])
-
-	app.run()
-
-	app.parse_args.assert_called_once_with(['--repo', 'path/to/repo'])
 
 
 def test_run_calls_init_repo(mocker, mock_all):
 	app.os.path.join.return_value = 'full/path/to/repo'
 
-	app.run()
+	app.run(
+		versions=[],
+		mappings='mappings',
+		repo_path='path/to/repo',
+		message_template='message',
+		tags=True,
+		undo_renamed_vars=True
+	)
 
 	app.init_repo.assert_called_once_with('full/path/to/repo')
 
@@ -54,21 +57,29 @@ def test_run_calls_init_repo(mocker, mock_all):
 def test_run_with_unsupported_repo_exits_with_error(mock_all):
 	app.is_compatible.return_value = False
 
-	app.run()
+	app.run(
+		versions=[],
+		mappings='mappings',
+		repo_path='path/to/repo',
+		message_template='message',
+		tags=True,
+		undo_renamed_vars=True
+	)
 
 	app.sys.exit.assert_called_once_with(4)
 
 
 def test_run_calls_init_config(mock_all):
-	app.parse_args.return_value = MagicMock(
-		mappings='mappings',
-		message='message',
-		tag=True,
-		undo_renamed_vars=True
-	)
 	app.os.path.join.return_value = 'full/path/to/repo'
 
-	app.run()
+	app.run(
+		versions=[],
+		mappings='mappings',
+		repo_path='path/to/repo',
+		message_template='message',
+		tags=True,
+		undo_renamed_vars=True
+	)
 
 	app.init_config.assert_called_once_with(
 		'full/path/to/repo',
@@ -80,13 +91,27 @@ def test_run_calls_init_config(mock_all):
 
 
 def test_run_calls_ensure_gitignore_exists(mock_all):
-	app.run()
+	app.run(
+		versions=[],
+		mappings='mappings',
+		repo_path='path/to/repo',
+		message_template='message',
+		tags=True,
+		undo_renamed_vars=True
+	)
 
 	app.ensure_gitignore_exists.assert_called_once_with()
 
 
 def test_run_with_multiple_versions_calls_create_version_for_each_version(mocker, mock_all, versions):
-	app.run()
+	app.run(
+		versions=[],
+		mappings='mappings',
+		repo_path='path/to/repo',
+		message_template='message',
+		tags=True,
+		undo_renamed_vars=True
+	)
 
 	app.create_version.assert_has_calls([
 		mocker.call(version) for version in versions
@@ -96,6 +121,13 @@ def test_run_with_multiple_versions_calls_create_version_for_each_version(mocker
 def test_run_without_any_versions_exits_with_error(mock_all):
 	app.Version.patterns.return_value = []
 
-	app.run()
+	app.run(
+		versions=[],
+		mappings='mappings',
+		repo_path='path/to/repo',
+		message_template='message',
+		tags=True,
+		undo_renamed_vars=True
+	)
 
 	app.sys.exit.assert_called_once_with(3)

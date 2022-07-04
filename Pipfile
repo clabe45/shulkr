@@ -9,6 +9,7 @@ javalang = "*"
 unidiff = "*"
 requests = "*"
 toml = "*"
+click = "*"
 
 [dev-packages]
 pytest = "*"

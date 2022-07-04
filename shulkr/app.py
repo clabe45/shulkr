@@ -1,5 +1,6 @@
 import os
 import sys
+from typing import List
 
 from minecraft.version import (
 	NoSuchVersionError,
@@ -7,7 +8,6 @@ from minecraft.version import (
 	load_manifest
 )
 
-from shulkr.arguments import parse_args
 from shulkr.compatibility import is_compatible
 from shulkr.config import init_config
 from shulkr.gitignore import ensure_gitignore_exists
@@ -15,17 +15,23 @@ from shulkr.repo import init_repo
 from shulkr.version import create_version, get_latest_generated_version
 
 
-def run() -> None:
+def run(
+	versions: List[str],
+	mappings: str,
+	repo_path: str,
+	message_template: str,
+	tags: bool,
+	undo_renamed_vars: bool
+) -> None:
+
 	load_manifest()
 
-	args = parse_args(sys.argv[1:])
-
-	repo_path = os.path.join(
+	full_repo_path = os.path.join(
 		os.getcwd(),
-		args.repo
+		repo_path
 	)
 
-	init_repo(repo_path)
+	init_repo(full_repo_path)
 
 	if not is_compatible():
 		print(
@@ -36,17 +42,17 @@ def run() -> None:
 		sys.exit(4)
 
 	init_config(
-		repo_path,
-		args.mappings,
-		args.message,
-		args.tag,
-		args.undo_renamed_vars
+		full_repo_path,
+		mappings,
+		message_template,
+		tags,
+		undo_renamed_vars
 	)
 	ensure_gitignore_exists()
 
 	try:
-		versions = Version.patterns(
-			args.version,
+		resolved_versions = Version.patterns(
+			versions,
 			latest_in_repo=get_latest_generated_version()
 		)
 
@@ -54,21 +60,9 @@ def run() -> None:
 		print(e, file=sys.stderr)
 		sys.exit(1)
 
-	if len(versions) == 0:
+	if len(resolved_versions) == 0:
 		print('No versions selected', file=sys.stderr)
 		sys.exit(3)
 
-	for version_id in versions:
+	for version_id in resolved_versions:
 		create_version(version_id)
-
-
-def main_caught() -> None:
-	try:
-		run()
-
-	except ValueError as e:
-		print(e, file=sys.stderr)
-		sys.exit(2)
-
-	except KeyboardInterrupt:
-		print('Aborted!', file=sys.stderr)

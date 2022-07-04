@@ -1,5 +1,5 @@
-from shulkr.app import main_caught
+from shulkr.cli import cli
 
 
 if __name__ == '__main__':
-	main_caught()
+	cli()
