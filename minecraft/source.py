@@ -82,6 +82,8 @@ def _generate_sources_with_mojang(version: Version, path: str) -> None:
 	decompiler_path = os.path.join(path, '.DecompilerMC')
 	decompiler_repo = _setup_decompiler(decompiler_path, DECOMPILER_MC_REMOTE_URL)
 
+	click.echo('Running decompiler')
+
 	# Decompile client
 	p = subprocess.run(
 		[
@@ -100,6 +102,8 @@ def _generate_sources_with_mojang(version: Version, path: str) -> None:
 	)
 	if p.returncode != 0:
 		raise Exception(p.stderr.decode())
+
+	click.echo('Moving generated sources')
 
 	# Sources directory
 	dest_src_dir = os.path.join(path, 'src')
