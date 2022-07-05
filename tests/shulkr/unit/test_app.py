@@ -125,6 +125,20 @@ def test_run_calls_ensure_gitignore_exists():
 	app.ensure_gitignore_exists.assert_called_once_with()
 
 
+def test_run_with_version_older_than_latest_version_in_repo_exits_with_error():
+	app.get_latest_generated_version.return_value = Version(id='1.18', index=1)
+
+	with pytest.raises(SystemExit, match='3'):
+		app.run(
+			versions=[Version(id='1.17', index=0)],
+			mappings='mappings',
+			repo_path='path/to/repo',
+			message_template='message',
+			tags=True,
+			undo_renamed_vars=True
+		)
+
+
 def test_run_with_multiple_versions_calls_create_version_for_each_version(mocker, versions):
 	app.run(
 		versions=[],

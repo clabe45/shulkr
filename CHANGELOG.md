@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improve terminal output.
 - Now exits with a status code of 0 (instead of 3) when no versions are entered.
 
+### Fixed
+- Versions older than the latest version in the repo can no longer be generated.
+
 ## [0.5.0] - 2022-06-26
 ### Added
 - `.shulkr` file for repository settings.

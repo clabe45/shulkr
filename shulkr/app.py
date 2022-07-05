@@ -70,5 +70,18 @@ def run(
 		click.secho('No versions selected', color='yellow')
 		sys.exit(0)
 
+	if resolved_versions[0] < get_latest_generated_version():
+		click.secho(
+			'The latest version in the repo is ' +
+			get_latest_generated_version().id +
+			', but you selected ' +
+			resolved_versions[0].id +
+			'. Please select a version that is newer than the latest ' +
+			'version in the repo.',
+			err=True,
+			fg='red'
+		)
+		sys.exit(3)
+
 	for version_id in resolved_versions:
 		create_version(version_id)
