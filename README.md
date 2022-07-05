@@ -125,6 +125,6 @@ Licensed under the Apache License, Version 2.0.
 
 [yarn's]: https://github.com/FabricMC/yarn
 [Fork]: https://github.com/clabe45/shulkr/fork
-[changelog]: https://github.com/clabe45/shulkr/blob/main/CHANGELOG.md
-[usage guidelines]: https://github.com/clabe45/shulkr/blob/main/usage-guidelines.md
+[changelog]: https://github.com/clabe45/shulkr/blob/main/docs/changelog.md
+[usage guidelines]: https://github.com/clabe45/shulkr/blob/main/docs/usage-guidelines.md
 [DecompilerMC]: https://github.com/hube12/DecompilerMC

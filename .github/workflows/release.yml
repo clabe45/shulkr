@@ -63,7 +63,7 @@ jobs:
         uses: mindsers/changelog-reader-action@v2
         with:
           version: ${{ steps.tag_name.outputs.current_version }}
-          path: ./CHANGELOG.md
+          path: ./docs/changelog.md
 
       - name: Publish release to PyPi
         run: pipenv run publish -u __token__ -p ${{ secrets.PYPI_TOKEN }}
