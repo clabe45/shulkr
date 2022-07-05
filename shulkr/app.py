@@ -67,8 +67,8 @@ def run(
 		sys.exit(1)
 
 	if len(resolved_versions) == 0:
-		click.secho('No versions selected', err=True, color='yellow')
-		sys.exit(3)
+		click.secho('No versions selected', color='yellow')
+		sys.exit(0)
 
 	for version_id in resolved_versions:
 		create_version(version_id)

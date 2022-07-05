@@ -142,7 +142,7 @@ def test_run_with_multiple_versions_calls_create_version_for_each_version(mocker
 	])
 
 
-def test_run_without_any_versions_exits_with_error():
+def test_run_without_any_versions_exits():
 	app.Version.patterns.return_value = []
 
 	app.run(
@@ -154,4 +154,4 @@ def test_run_without_any_versions_exits_with_error():
 		undo_renamed_vars=True
 	)
 
-	app.sys.exit.assert_called_once_with(3)
+	app.sys.exit.assert_called_once_with(0)
