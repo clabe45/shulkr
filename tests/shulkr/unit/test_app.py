@@ -16,7 +16,6 @@ def versions():
 def mock_all(mocker, versions):
 	mocker.patch('shulkr.app.click')
 	mocker.patch('shulkr.app.load_manifest')
-	mocker.patch('shulkr.app.sys')
 	mocker.patch('shulkr.app.os')
 	mocker.patch('shulkr.app.init_repo')
 	mocker.patch('shulkr.app.is_compatible')
@@ -58,16 +57,15 @@ def test_run_calls_init_repo(mocker):
 def test_run_with_unsupported_repo_exits_with_error():
 	app.is_compatible.return_value = False
 
-	app.run(
-		versions=[],
-		mappings='mappings',
-		repo_path='path/to/repo',
-		message_template='message',
-		tags=True,
-		undo_renamed_vars=True
-	)
-
-	app.sys.exit.assert_called_once_with(4)
+	with pytest.raises(SystemExit, match='4'):
+		app.run(
+			versions=[],
+			mappings='mappings',
+			repo_path='path/to/repo',
+			message_template='message',
+			tags=True,
+			undo_renamed_vars=True
+		)
 
 
 def test_run_calls_init_config_when_init_repo_returns_false():
@@ -145,13 +143,12 @@ def test_run_with_multiple_versions_calls_create_version_for_each_version(mocker
 def test_run_without_any_versions_exits():
 	app.Version.patterns.return_value = []
 
-	app.run(
-		versions=[],
-		mappings='mappings',
-		repo_path='path/to/repo',
-		message_template='message',
-		tags=True,
-		undo_renamed_vars=True
-	)
-
-	app.sys.exit.assert_called_once_with(0)
+	with pytest.raises(SystemExit, match='0'):
+		app.run(
+			versions=[],
+			mappings='mappings',
+			repo_path='path/to/repo',
+			message_template='message',
+			tags=True,
+			undo_renamed_vars=True
+		)
