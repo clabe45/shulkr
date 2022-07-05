@@ -83,5 +83,5 @@ def run(
 		)
 		sys.exit(3)
 
-	for version_id in resolved_versions:
-		create_version(version_id)
+	for version in resolved_versions:
+		create_version(version)
