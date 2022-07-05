@@ -83,5 +83,9 @@ def run(
 		)
 		sys.exit(3)
 
-	for version in resolved_versions:
+	for i, version in enumerate(resolved_versions):
 		create_version(version)
+
+		# Print line between the output of generating each version
+		if i < len(resolved_versions) - 1:
+			click.echo()
