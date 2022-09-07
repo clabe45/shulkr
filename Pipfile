@@ -21,6 +21,8 @@ bump2version = "*"
 keepachangelog = "*"
 python-lsp-server = "*"
 pyls-mypy = {git = "https://github.com/tomv564/pyls-mypy.git"}
+# Needed to run tests on windows
+atomicwrites = "*"
 
 [requires]
 python_version = "3.9"
