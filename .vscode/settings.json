@@ -3,5 +3,6 @@
 		"tests/unit"
 	],
 	"python.testing.unittestEnabled": false,
-	"python.testing.pytestEnabled": true
+	"python.testing.pytestEnabled": true,
+	"editor.defaultFormatter": "ms-python.flake8"
 }
