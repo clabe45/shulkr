@@ -35,7 +35,8 @@ def create_repo(path: str, mocker):
 
 @pytest.fixture
 def yarn_repo(mocker):
-	repo = create_repo('foo/.yarn', mocker)
+	repo_path = os.path.join('foo', '.yarn')
+	repo = create_repo(repo_path, mocker)
 	mocker.patch('minecraft.source.Repo', return_value=repo)
 	mocker.patch('minecraft.source.Repo.clone', return_value=repo)
 	yield repo
@@ -43,7 +44,8 @@ def yarn_repo(mocker):
 
 @pytest.fixture
 def decompiler_mc_repo(mocker):
-	repo = create_repo('foo/.DecompilerMC', mocker)
+	repo_path = os.path.join('foo', '.DecompilerMC')
+	repo = create_repo(repo_path, mocker)
 	mocker.patch('minecraft.source.Repo', return_value=repo)
 	mocker.patch('minecraft.source.Repo.clone', return_value=repo)
 	yield repo
