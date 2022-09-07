@@ -1,5 +1,3 @@
-import os
-import shutil
 import subprocess
 import tempfile
 from typing import Generator, List
@@ -57,26 +55,16 @@ def run() -> Generator[RunResult, None, None]:
 	"""
 
 	with tempfile.TemporaryDirectory(prefix='shulkr') as repo_path:
-		try:
-			command = create_command(repo_path)
-			p = subprocess.run(
-				command,
-				stdout=subprocess.PIPE,
-				stderr=subprocess.PIPE
-			)
-
-		except KeyboardInterrupt as e:
-			if os.path.exists(repo_path):
-				shutil.rmtree(repo_path)
-
-			raise e
+		command = create_command(repo_path)
+		p = subprocess.run(
+			command,
+			stdout=subprocess.PIPE,
+			stderr=subprocess.PIPE
+		)
 
 		stdout = p.stdout.decode('utf-8')
 		stderr = None
 		if p.returncode != 0:
-			if os.path.exists(repo_path):
-				shutil.rmtree(repo_path)
-
 			stderr = p.stderr.decode('utf-8')
 
 		yield RunResult(stdout, stderr)
