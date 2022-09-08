@@ -63,8 +63,5 @@ def run() -> Generator[RunResult, None, None]:
 		)
 
 		stdout = p.stdout.decode('utf-8')
-		stderr = None
-		if p.returncode != 0:
-			stderr = p.stderr.decode('utf-8')
-
+		stderr = p.stderr.decode('utf-8')
 		yield RunResult(stdout, stderr)
