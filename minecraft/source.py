@@ -43,8 +43,10 @@ def _generate_sources_with_yarn(version: Version, path: str) -> None:
 	click.echo('Running decompiler')
 
 	# Generate source code
+	gradlew_file_name = 'gradlew.bat' if os.name == 'nt' else 'gradlew'
+	gradlew_exec = os.path.join(decompiler_repo.path, gradlew_file_name)
 	p = subprocess.run(
-		['./gradlew', 'decompileCFR'],
+		[gradlew_exec, 'decompileCFR'],
 		stdout=subprocess.DEVNULL,
 		stderr=subprocess.PIPE,
 		cwd=decompiler_repo.path

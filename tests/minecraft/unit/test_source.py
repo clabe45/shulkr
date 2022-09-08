@@ -67,8 +67,9 @@ def test_generate_sources_with_yarn_runs_decompiler(mocker, versions, yarn_repo)
 	generate_sources(versions.snapshot, 'yarn', root_path)
 
 	decompiler_dir = os.path.join(root_path, '.yarn')
+	gradlew_exec = 'foo\\.yarn\\gradlew.bat' if os.name == 'nt' else 'foo/.yarn/gradlew'
 	subprocess_run.assert_called_once_with(
-		['./gradlew', 'decompileCFR'],
+		[gradlew_exec, 'decompileCFR'],
 		stdout=subprocess.DEVNULL,
 		stderr=subprocess.PIPE,
 		cwd=decompiler_dir
