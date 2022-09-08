@@ -6,6 +6,8 @@ on:
       - '**'
     tags:
       - '!v**'
+    paths-ignore:
+      - '**.md'
   pull_request:
   workflow_dispatch:
 
