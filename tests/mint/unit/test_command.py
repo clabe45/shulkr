@@ -9,7 +9,6 @@ from mint.repo import Repo
 
 SUBPROCESS_ANY_ARGS = {
 	'cwd': ANY,
-	'shell': ANY,
 	'check': ANY,
 	'capture_output': ANY,
 	'text': ANY,
@@ -55,7 +54,7 @@ class TestGitCommand:
 		git.status()
 
 		mint.command.subprocess.run.assert_called_once_with(
-			'git status',
+			['git', 'status'],
 			**SUBPROCESS_ANY_ARGS
 		)
 
@@ -63,7 +62,7 @@ class TestGitCommand:
 		git.status('src')
 
 		mint.command.subprocess.run.assert_called_once_with(
-			'git status src',
+			['git', 'status', 'src'],
 			**SUBPROCESS_ANY_ARGS
 		)
 
@@ -71,7 +70,7 @@ class TestGitCommand:
 		git.log(n=3)
 
 		mint.command.subprocess.run.assert_called_once_with(
-			'git log -n 3',
+			['git', 'log', '-n', '3'],
 			**SUBPROCESS_ANY_ARGS
 		)
 
@@ -80,7 +79,7 @@ class TestGitCommand:
 
 		# It should not be 'git log -n' - it should be 'git log -n 1'
 		mint.command.subprocess.run.assert_called_once_with(
-			'git log -n 1',
+			['git', 'log', '-n', '1'],
 			**SUBPROCESS_ANY_ARGS
 		)
 
@@ -88,7 +87,7 @@ class TestGitCommand:
 		git.log(oneline=True)
 
 		mint.command.subprocess.run.assert_called_once_with(
-			'git log --oneline',
+			['git', 'log', '--oneline'],
 			**SUBPROCESS_ANY_ARGS
 		)
 
@@ -96,7 +95,7 @@ class TestGitCommand:
 		git.log(oneline=False)
 
 		mint.command.subprocess.run.assert_called_once_with(
-			'git log',
+			['git', 'log'],
 			**SUBPROCESS_ANY_ARGS
 		)
 
@@ -104,6 +103,6 @@ class TestGitCommand:
 		git.log('HEAD', oneline=True)
 
 		mint.command.subprocess.run.assert_called_once_with(
-			'git log --oneline HEAD',
+			['git', 'log', '--oneline', 'HEAD'],
 			**SUBPROCESS_ANY_ARGS
 		)

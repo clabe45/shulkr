@@ -37,9 +37,8 @@ class GitCommand:
 	def _run_command(self, command: List[str]) -> str:
 		try:
 			proc = subprocess.run(
-				' '.join(command),
+				command,
 				cwd=self._path,
-				shell=True,
 				check=True,
 				capture_output=True,
 				text=True
@@ -49,7 +48,7 @@ class GitCommand:
 
 		except subprocess.CalledProcessError as e:
 			raise GitCommandError(
-				' '.join(command),
+				command,
 				e.stderr
 			)
 
