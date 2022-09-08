@@ -9,7 +9,7 @@ def test_git_repo_initiated(run_yarn):
 def test_commits_created(run_yarn):
 	repo = Repo(run_yarn.repo_path)
 	history = repo.git.rev_list('HEAD').splitlines()
-	actual = [repo.git.log("--format='%B'", commit, n=1) for commit in history]
+	actual = [repo.git.log("--format=%B", commit, n=1) for commit in history]
 	actual.reverse()
 
 	# Calculate expected commit messages from versions

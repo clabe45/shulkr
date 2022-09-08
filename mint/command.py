@@ -25,7 +25,7 @@ class GitCommand:
 
 	Currently, options that require an '=' between the key and the value must be
 	supplied as positional arguments:
-		git.log('--format="%B"')
+		git.log('--format=%B')
 	"""
 
 	def __init__(self, path: str = None) -> None:
