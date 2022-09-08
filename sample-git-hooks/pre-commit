@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Remove all git environment variables, because the tests need to run git
+# commands for another repo
+unset "${!GIT_@}"
+
+if [ "$skip_ci" != "true" ]
+then
+	for script in lint test-unit test-smoke
+	do
+		echo "Running '$script'"
+		pipenv run $script
+		if [ $? -ne 0 ]; then exit 1; fi;
+		echo
+	done
+fi
+
