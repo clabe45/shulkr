@@ -104,6 +104,8 @@ The scope should be the name of the Python package affected.
 
 The following is the list of supported scopes:
 
+* [**command**](../command)
+* [**gradle**](../gradle)
 * [**java**](../java)
 * [**minecraft**](../minecraft)
 * [**mint**](../mint)
