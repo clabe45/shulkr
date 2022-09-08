@@ -34,7 +34,7 @@ classifiers = [
 setup(
 	name='shulkr',
 	version='0.7.0',
-	description='Decompile multiple versions of Minecraft with a single command (for research)',
+	description='Diff decompiled versions of Minecraft',
 	long_description=README,
 	long_description_content_type='text/markdown',
 	url='https://github.com/clabe45/shulkr',
