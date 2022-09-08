@@ -17,6 +17,7 @@ jobs:
       os: ${{ matrix.os }}
 
   release:
+    needs: check
     runs-on: ubuntu-latest
 
     steps:
