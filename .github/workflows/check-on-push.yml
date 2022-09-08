@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - '**'
-    tags:
-      - '!v**'
+    tags-ignore:
+      - 'v**'
     paths-ignore:
       - '**.md'
   pull_request:
