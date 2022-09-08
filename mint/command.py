@@ -73,17 +73,6 @@ class GitCommand:
 		return func
 
 	@staticmethod
-	def _format_value(value: Any):
-		if not isinstance(value, str):
-			value = str(value)
-
-		if ' ' in value:
-			escaped_value = value.replace("'", "\\'")
-			return f"'{escaped_value}'"
-		else:
-			return value
-
-	@staticmethod
 	def _format_option(key: str, value: Any) -> List[str]:
 		option = key.replace('_', '-')
 		prefix = '-' if len(option) == 1 else '--'
@@ -96,7 +85,7 @@ class GitCommand:
 
 		else:
 			# Non-boolean value
-			return [f'{prefix}{option}', GitCommand._format_value(value)]
+			return [f'{prefix}{option}', str(value)]
 
 	@staticmethod
 	def _raw_command(
@@ -109,5 +98,5 @@ class GitCommand:
 			token for key, value in kwargs.items()
 			for token in GitCommand._format_option(key, value)
 		]
-		args = [GitCommand._format_value(arg) for arg in args]
+		args = [str(arg) for arg in args]
 		return ['git', subcommand, *options, *args]

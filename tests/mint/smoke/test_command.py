@@ -15,3 +15,8 @@ class TestCommand:
 		# Now, make sure the result of 'git status' is correct
 		branch = git.rev_parse('HEAD', abbrev_ref=True)
 		assert git.status() == f'On branch {branch}\nnothing to commit, working tree clean'
+
+	def test_commit_messages_with_spaces_are_not_wrapped_with_quotes(self, git):
+		git.commit(message='dummy commit', allow_empty=True)
+
+		assert git.log('--format=%B') == 'dummy commit'
