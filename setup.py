@@ -43,7 +43,7 @@ setup(
 	classifiers=classifiers,
     keywords=['minecraft', 'git', 'decompile', 'game'],
     packages=find_packages(exclude=['tests']),
-    py_modules=['java', 'minecraft', 'mint', 'shulkr'],
+    py_modules=['colorama', 'java', 'minecraft', 'mint', 'shulkr'],
 	# include_package_data=True,
 	# package_data={'': package_files('shulkr/DecompilerMC')},
 	install_requires=['gitpython', 'javalang', 'unidiff', 'requests', 'toml', 'click'],

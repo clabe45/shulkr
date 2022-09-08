@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Git commands not being tokenized correctly on Windows ([#18](https://github.com/clabe45/shulkr/issues/18)).
+- Missing dependency colorama on Windows.
 
 ## [0.6.1] - 2022-07-09
 ### Fixed

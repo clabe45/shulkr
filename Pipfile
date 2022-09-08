@@ -10,6 +10,8 @@ unidiff = "*"
 requests = "*"
 toml = "*"
 click = "*"
+# Required by click for styling on Windows
+colorama = "*"
 
 [dev-packages]
 pytest = "*"
