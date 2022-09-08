@@ -1,0 +1,46 @@
+name: release-on-push-tag
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  check:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+
+    uses: ./.github/workflows/check.yml
+    with:
+      os: ${{ matrix.os }}
+
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get version from tag
+        id: tag_name
+        run: |
+          echo ::set-output name=current_version::${GITHUB_REF#refs/tags/v}
+        shell: bash
+
+      - name: Build distribution
+        run: pipenv run build
+
+      - name: Get changelog notes
+        id: changelog_reader
+        uses: mindsers/changelog-reader-action@v2
+        with:
+          version: ${{ steps.tag_name.outputs.current_version }}
+          path: ./docs/changelog.md
+
+      - name: Publish release to PyPi
+        run: pipenv run publish -u __token__ -p ${{ secrets.PYPI_TOKEN }}
+
+      - name: Publish release to GitHub
+        uses: ncipollo/release-action@v1.10.0
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: ${{ steps.changelog_reader.outputs.changes }}

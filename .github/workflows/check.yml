@@ -1,16 +1,17 @@
 name: check
 
 on:
-  push:
-  pull_request:
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      os:
+        description: 'Operating system'
+        required: true
+        type: string
 
 jobs:
   check:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest, windows-latest]
+    runs-on: ${{ inputs.os }}
 
     steps:
       - name: Set up java
