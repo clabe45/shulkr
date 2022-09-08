@@ -108,7 +108,7 @@ will be reverted to their original names.
 
 ## Contributing
 
-See [contributing.md](docs/contributing.md).
+See the [contributing guide].
 
 ## License
 
@@ -118,3 +118,4 @@ Licensed under the Apache License, Version 2.0.
 [Fork]: https://github.com/clabe45/shulkr/fork
 [changelog]: https://github.com/clabe45/shulkr/blob/main/docs/changelog.md
 [usage guidelines]: https://github.com/clabe45/shulkr/blob/main/docs/usage-guidelines.md
+[contributing guide]: https://github.com/clabe45/shulkr/blob/main/docs/contributing.md
