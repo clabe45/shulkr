@@ -9,13 +9,15 @@ import pytest
 
 
 class RunResult:
-	def __init__(self, output: str, error: str) -> None:
+	def __init__(self, exit_code: int, output: str, error: str) -> None:
 		"""
 		Args:
+			status_code (int): The exit code of the command.
 			output (str): Stdout
 			error (str): Stderr
 		"""
 
+		self.exit_code = exit_code
 		self.output = output
 		self.error = error
 
@@ -64,4 +66,4 @@ def run() -> Generator[RunResult, None, None]:
 
 		stdout = p.stdout.decode('utf-8')
 		stderr = p.stderr.decode('utf-8')
-		yield RunResult(stdout, stderr)
+		yield RunResult(p.returncode, stdout, stderr)
