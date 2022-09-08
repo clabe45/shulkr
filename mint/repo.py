@@ -2,8 +2,9 @@ from __future__ import annotations
 import os
 
 import git
+from command import Command
 
-from mint.command import GitCommand
+from mint.error import GitError
 
 
 class NoSuchRepoError(Exception):
@@ -39,7 +40,7 @@ class Repo:
 			Repo._ensure_repo_path_is_valid(path)
 
 		self.path = path
-		self.git = GitCommand(path)
+		self.git = Command('git', working_dir=path, error=GitError)
 
 	def to_gitpython(self) -> git.Repo:
 		return git.Repo(self.path)
@@ -68,6 +69,6 @@ class Repo:
 
 	@staticmethod
 	def clone(remote: str, dest: str, **kwargs) -> Repo:
-		git = GitCommand()
+		git = Command('git', error=GitError)
 		git.clone(remote, dest, **kwargs)
 		return Repo(dest)

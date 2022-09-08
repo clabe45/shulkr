@@ -9,7 +9,7 @@ import click
 from java import undo_renames
 from minecraft.source import generate_sources
 from minecraft.version import Version
-from mint.command import GitCommandError
+from mint.error import GitError
 
 from shulkr.config import get_config
 from shulkr.repo import get_repo
@@ -101,7 +101,7 @@ def head_has_versions() -> bool:
 		# If we made it here, there is at least one tag.
 		return True
 
-	except GitCommandError as e:
+	except GitError as e:
 		if 'fatal: No names found, cannot describe anything.' in e.stderr:
 			return False
 

@@ -1,4 +1,4 @@
-from mint.command import GitCommandError
+from mint.error import GitError
 
 from shulkr.config import config_exists
 from shulkr.repo import get_repo
@@ -9,7 +9,7 @@ def _repo_has_commits() -> bool:
 		get_repo().git.rev_parse('HEAD')
 		return True
 
-	except GitCommandError:
+	except GitError:
 		return False
 
 

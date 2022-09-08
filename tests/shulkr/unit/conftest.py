@@ -1,7 +1,7 @@
 import os
 from unittest.mock import MagicMock
 
-from mint.command import GitCommandError
+from mint.error import GitError
 from mint.repo import Repo
 import pytest
 from shulkr.config import Config, get_config
@@ -98,7 +98,7 @@ def empty_repo(mocker, decompiler):
 
 	# Throw error when `git rev-parse` is called
 	def rev_parse(*args, **kwargs):
-		raise GitCommandError(
+		raise GitError(
 			'git rev-parse...',
 			stderr="fatal: ambiguous argument 'HEAD': unknown revision or path not in the working tree."
 		)
@@ -107,7 +107,7 @@ def empty_repo(mocker, decompiler):
 
 	# Throw error when 'git describe' is called (it will only be called with
 	# --tags)
-	describe_error = GitCommandError(
+	describe_error = GitError(
 		'git describe...',
 		stderr='fatal: No names found, cannot describe anything.'
 	)

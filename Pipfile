@@ -31,8 +31,8 @@ python_version = "3.9"
 
 [scripts]
 start = "python -m shulkr"
-test-unit = "python -m pytest tests/mint/unit tests/minecraft/unit tests/shulkr/unit"
-test-smoke = "python -m pytest tests/mint/smoke tests/shulkr/smoke"
+test-unit = "python -m pytest tests/command/unit tests/mint/unit tests/minecraft/unit tests/shulkr/unit"
+test-smoke = "python -m pytest tests/command/smoke tests/mint/smoke tests/shulkr/smoke"
 test-func = "python -m pytest tests/java/functional tests/shulkr/functional"
 lint = "python -m flake8 java minecraft mint shulkr tests"
 profile = "python -m tests.profile"

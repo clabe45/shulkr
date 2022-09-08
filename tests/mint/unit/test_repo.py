@@ -5,13 +5,13 @@ from mint.repo import Repo
 
 @pytest.fixture(autouse=True)
 def fs(mocker) -> None:
-	mocker.patch('mint.command.subprocess.os.path.exists', return_value=True)
-	mocker.patch('mint.command.subprocess.os.path.isfile', return_value=False)
+	mocker.patch('mint.repo.os.path.exists', return_value=True)
+	mocker.patch('mint.repo.os.path.isfile', return_value=False)
 
 
 @pytest.fixture(autouse=True)
-def subprocess(mocker) -> None:
-	mocker.patch('mint.command.subprocess')
+def command(mocker) -> None:
+	mocker.patch('mint.repo.Command')
 
 
 class TestRepo:

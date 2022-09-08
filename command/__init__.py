@@ -3,7 +3,7 @@ import subprocess
 from typing import Any, Dict, List
 
 
-class GitCommandError(Exception):
+class CommandError(Exception):
 	def __init__(self, command: str, stderr: str, *args: object) -> None:
 		super().__init__(*args)
 
@@ -14,7 +14,7 @@ class GitCommandError(Exception):
 		return f'{self.command}:\n{self.stderr}'
 
 
-class GitCommand:
+class Command:
 	"""
 	Context for running git commands
 
@@ -28,17 +28,27 @@ class GitCommand:
 		git.log('--format=%B')
 	"""
 
-	def __init__(self, path: str = None) -> None:
-		if path is None:
-			path = os.getcwd()
+	def __init__(
+		self,
+		executabale: str,
+		working_dir: str = None,
+		error = CommandError
+	) -> None:
 
-		self._path = path
+		self._executable = executabale
+
+		if working_dir is None:
+			working_dir = os.getcwd()
+
+		self._working_dir = working_dir
+
+		self._error = error
 
 	def _run_command(self, command: List[str]) -> str:
 		try:
 			proc = subprocess.run(
 				command,
-				cwd=self._path,
+				cwd=self._working_dir,
 				check=True,
 				capture_output=True,
 				text=True
@@ -47,10 +57,8 @@ class GitCommand:
 			return proc.stdout.strip()
 
 		except subprocess.CalledProcessError as e:
-			raise GitCommandError(
-				command,
-				e.stderr
-			)
+			# Convert the error to to the user-specified error type
+			raise self._error(command, e.stderr) from e
 
 	def __getattr__(self, name: str):
 		"""
@@ -63,7 +71,7 @@ class GitCommand:
 		def func(*args, **kwargs):
 			subcommand = name.replace('_', '-')
 
-			command = GitCommand._raw_command(
+			command = self._raw_command(
 				subcommand,
 				args,
 				kwargs
@@ -87,8 +95,8 @@ class GitCommand:
 			# Non-boolean value
 			return [f'{prefix}{option}', str(value)]
 
-	@staticmethod
 	def _raw_command(
+		self,
 		subcommand: str,
 		args: List[Any],
 		kwargs: Dict[str, Any]
@@ -96,7 +104,7 @@ class GitCommand:
 
 		options = [
 			token for key, value in kwargs.items()
-			for token in GitCommand._format_option(key, value)
+			for token in Command._format_option(key, value)
 		]
 		args = [str(arg) for arg in args]
-		return ['git', subcommand, *options, *args]
+		return [self._executable, subcommand, *options, *args]
