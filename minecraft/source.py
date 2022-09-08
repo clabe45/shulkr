@@ -4,6 +4,7 @@ import subprocess
 
 import click
 
+from gradle.project import Project
 from mint.repo import Repo
 
 from minecraft.version import Version
@@ -43,16 +44,11 @@ def _generate_sources_with_yarn(version: Version, path: str) -> None:
 	click.echo('Running decompiler')
 
 	# Generate source code
-	gradlew_file_name = 'gradlew.bat' if os.name == 'nt' else 'gradlew'
-	gradlew_exec = os.path.join(decompiler_repo.path, gradlew_file_name)
-	p = subprocess.run(
-		[gradlew_exec, 'decompileCFR'],
-		stdout=subprocess.DEVNULL,
-		stderr=subprocess.PIPE,
-		cwd=decompiler_repo.path
-	)
-	if p.returncode != 0:
-		raise Exception(p.stderr.decode())
+	# Create gradle project
+	decompiler_project = Project(decompiler_repo.path)
+
+	# Call gradle task to generate sources
+	decompiler_project.gradle.decompileCFR()
 
 	click.echo('Moving generated sources')
 
