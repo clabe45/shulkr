@@ -17,7 +17,7 @@ with open(os.path.join(script_dir, 'README.md'), 'r') as f:
 	README = f.read()
 
 classifiers = [
-	'Development Status :: 2 - Pre-Alpha',
+	'Development Status :: 3 - Alpha',
 	'Environment :: Console',
 	'Intended Audience :: Developers',
 	'Intended Audience :: Science/Research',
