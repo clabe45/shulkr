@@ -108,16 +108,7 @@ will be reverted to their original names.
 
 ## Contributing
 
-Pull requests are welcome. For major changes, please open an issue first to
-discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
-
-At a high-level, shulkr does the following for each version of Minecraft
-resolved from the supplied version patterns:
-1. Generate the source code using [DecompilerMC] or [yarn]
-2. Commit the version to git
-3. Optionally, tag the version
+See [contributing.md](docs/contributing.md).
 
 ## License
 
@@ -127,5 +118,3 @@ Licensed under the Apache License, Version 2.0.
 [Fork]: https://github.com/clabe45/shulkr/fork
 [changelog]: https://github.com/clabe45/shulkr/blob/main/docs/changelog.md
 [usage guidelines]: https://github.com/clabe45/shulkr/blob/main/docs/usage-guidelines.md
-[DecompilerMC]: https://github.com/hube12/DecompilerMC
-[yarn]: https://github.com/FabricMC/yarn
