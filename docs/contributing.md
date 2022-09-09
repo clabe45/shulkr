@@ -10,6 +10,38 @@ resolved from the supplied version patterns:
 1. Generate the source code using [DecompilerMC] or [yarn]
 2. Commit the version to git
 3. Optionally, tag the version
+
+## Getting Started
+
+### Prerequisites
+
+- [Python 3.9]
+- [Pipenv]
+- [Git]
+- [Java 17+]
+- [Gradle]
+
+### Installation
+
+1. [Fork] the repo
+1. Clone your fork:
+   ```sh
+   git clone https://github.com/<your-username>/shulkr.git
+   cd shulkr
+   ```
+1. Install dependencies with Pipenv
+   ```sh
+   pipenv install --dev
+   ```
+1. Install internal packages:
+   ```sh
+   pipenv run setup
+   ```
+1. Run shulkr:
+   ```sh
+   pipenv run start
+   ```
+
 ## Testing
 
 Please make sure to update tests as appropriate:
@@ -138,6 +170,12 @@ the place to reference GitHub issues that this commit **Closes**.
 
 [DecompilerMC]: https://github.com/hube12/DecompilerMC
 [yarn]: https://github.com/FabricMC/yarn
+[Python 3.9]: https://www.python.org/downloads/release/python-3914
+[Pipenv]: https://pipenv.pypa.io/en/latest
+[Git]: https://git-scm.com
+[Java 17+]: https://adoptium.net
+[Gradle]: https://gradle.org
+[Fork]: https://github.com/clabe45/shulkr/fork
 [Angular's commit message guidelines]: https://github.com/angular/angular/blob/main/CONTRIBUTING.md
 [closing reference to an issue]: https://help.github.com/articles/closing-issues-via-commit-messages
 [samples]: https://github.com/clabe45/shulkr/commits/main
