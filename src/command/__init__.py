@@ -47,7 +47,7 @@ class Command:
 		self,
 		executabale: str,
 		working_dir: str = None,
-		error = CommandError
+		error=CommandError
 	) -> None:
 
 		if not shutil.which(executabale):

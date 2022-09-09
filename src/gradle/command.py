@@ -8,9 +8,9 @@ class Gradle(Command):
 		exec = Gradle._executable(project_dir)
 		super().__init__(exec, working_dir=project_dir)
 
-
 	def __getattr__(self, name: str):
 		super_func = super().__getattr__(name)
+
 		def func(*args, **kwargs):
 			return super_func(
 				name,
@@ -21,7 +21,6 @@ class Gradle(Command):
 			)
 
 		return func
-
 
 	@staticmethod
 	def _executable(project_dir: str) -> bool:
@@ -37,4 +36,3 @@ class Gradle(Command):
 			return gradlew_exec
 
 		return 'gradle'
-
