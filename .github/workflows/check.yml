@@ -8,6 +8,14 @@ on:
         description: 'Operating system'
         required: true
         type: string
+      java-version:
+        description: 'Java version'
+        required: true
+        type: string
+      python-version:
+        description: 'Python version'
+        required: true
+        type: string
 
 jobs:
   check:
@@ -18,7 +26,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'adopt'
-          java-version: '17'
+          java-version: ${{ inputs.java-version }}
 
       - name: Check out repository code
         uses: actions/checkout@v2
@@ -28,7 +36,7 @@ jobs:
       - name: Set up python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.9'
+          python-version: ${{ inputs.python-version }}
 
       - name: Install pipenv
         run: pip install pipenv

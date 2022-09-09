@@ -15,6 +15,8 @@ jobs:
     uses: ./.github/workflows/check.yml
     with:
       os: ${{ matrix.os }}
+      python-version: ['3.6', '3.7', '3.8', '3.9', '3.10']
+      java-version: ['17', '18']
 
   release:
     needs: check
