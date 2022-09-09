@@ -36,6 +36,8 @@ def create_repo(path: str, mocker):
 
 def create_yarn_project(mocker):
 	mocker.patch('gradle.command.os')
+	# Mock command.shutil.which for creating a Project
+	mocker.patch('command.shutil.which', return_value='/path/to/gradle')
 	project = mocker.create_autospec(Project(None))
 	project.gradle.decompileCFR = mocker.MagicMock()
 

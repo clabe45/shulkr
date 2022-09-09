@@ -1,9 +1,14 @@
 import os
+import shutil
 import subprocess
 from typing import Any, Dict, List
 
 
-class CommandError(Exception):
+class BaseCommandError(Exception):
+	pass
+
+
+class CommandError(BaseCommandError):
 	def __init__(self, command: str, stderr: str, *args: object) -> None:
 		super().__init__(*args)
 
@@ -12,6 +17,16 @@ class CommandError(Exception):
 
 	def __str__(self) -> str:
 		return f'{self.command}:\n{self.stderr}'
+
+
+class CommandNotFoundError(BaseCommandError):
+	def __init__(self, command: str, *args: object) -> None:
+		super().__init__(*args)
+
+		self.command = command
+
+	def __str__(self) -> str:
+		return f'Command not found: {self.command}'
 
 
 class Command:
@@ -34,6 +49,9 @@ class Command:
 		working_dir: str = None,
 		error = CommandError
 	) -> None:
+
+		if not shutil.which(executabale):
+			raise CommandNotFoundError(executabale)
 
 		self._executable = executabale
 

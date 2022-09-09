@@ -20,8 +20,9 @@ class GitError(CommandError):
 
 
 @pytest.fixture(autouse=True)
-def subprocess(mocker) -> None:
+def processes(mocker) -> None:
 	mocker.patch('command.subprocess.run')
+	mocker.patch('command.shutil.which', return_value=True)
 
 
 @pytest.fixture
