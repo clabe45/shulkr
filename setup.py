@@ -32,7 +32,8 @@ setup(
 	license='GPLv3',
 	classifiers=classifiers,
     keywords=['minecraft', 'git', 'decompile', 'game'],
-    packages=find_packages(exclude=['tests']),
+	package_dir={'': 'src'},
+    packages=find_packages(where='src'),
     py_modules=['colorama', 'java', 'minecraft', 'mint', 'shulkr'],
 	install_requires=['gitpython', 'javalang', 'unidiff', 'requests', 'toml', 'click'],
 	entry_points={
