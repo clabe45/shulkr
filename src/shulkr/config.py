@@ -8,6 +8,17 @@ from shulkr.repo import get_repo
 
 
 class Config:
+	"""
+	A class representing the configuration of a shulkr repo
+
+	Attributes:
+		repo_path (str): The path to the shulkr repo
+		mappings (str): The path to the mappings file
+		message_template (str): The template for the commit message
+		tag (bool): Whether or not to tag the commit
+		undo_renamed_vars (bool): Whether or not to undo renamed variables
+	"""
+
 	def __init__(
 		self,
 		repo_path: str,
@@ -46,10 +57,30 @@ class Config:
 
 
 def _config_path_for_repo(repo_path: str) -> str:
+	"""
+	Get the path to the .shulkr file for a repo
+
+	Args:
+		repo_path (str): The path to the repo
+
+	Returns:
+		str: The path to the .shulkr file
+	"""
+
 	return os.path.join(repo_path, '.shulkr')
 
 
 def _load_config(repo_path: str) -> Config:
+	"""
+	Load the config from the .shulkr file in the repo
+
+	Args:
+		repo_path (str): The path to the repo
+
+	Returns:
+		Config: The loaded config
+	"""
+
 	config_path = _config_path_for_repo(repo_path)
 	with open(config_path, 'r') as config_file:
 		raw_config = toml.load(config_file)
@@ -64,6 +95,10 @@ def _load_config(repo_path: str) -> Config:
 
 
 def _commit_config() -> None:
+	"""
+	Commit the .shulkr file to the repo
+	"""
+
 	repo = get_repo()
 
 	repo.git.add('.shulkr')
@@ -77,6 +112,19 @@ def _create_config(
 	tag: bool,
 	undo_renamed_vars: bool
 ) -> Config:
+	"""
+	Create a new config and save it to the .shulkr file
+
+	Args:
+		repo_path (str): The path to the repo
+		mappings (str): The path to the mappings file
+		message_template (str): The template for the commit message
+		tag (bool): Whether or not to tag the commit
+		undo_renamed_vars (bool): Whether or not to undo renamed variables
+
+	Returns:
+		Config: The created config
+	"""
 
 	global config
 
@@ -96,6 +144,16 @@ def _create_config(
 
 
 def config_exists(repo_path: str) -> bool:
+	"""
+	Check if a .shulkr file exists for the repo
+
+	Args:
+		repo_path (str): The path to the repo
+
+	Returns:
+		bool: True if a .shulkr file exists. False otherwise.
+	"""
+
 	return os.path.exists(
 		_config_path_for_repo(repo_path)
 	)
@@ -115,8 +173,11 @@ def init_config(
 	Otherwise, a new one will be created with the specified mappings.
 
 	Args:
-		repo_path (str): _description_
-		mappings (str): _description_
+		repo_path (str): The path to the repo
+		mappings (str): The path to the mappings file
+		message_template (str): The template for the commit message
+		tag (bool): Whether or not to tag the commit
+		undo_renamed_vars (bool): Whether or not to undo renamed variables
 
 	Returns:
 		bool: True if a config was loaded. False if a new one was created.
@@ -151,6 +212,13 @@ def clear_config() -> None:
 
 
 def get_config():
+	"""
+	Get the config
+
+	Returns:
+		Config: The config
+	"""
+
 	return config
 
 

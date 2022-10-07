@@ -7,3 +7,6 @@ gitpython's use of git's plumbing commands can lead to unexpected results. To
 ease the migration process, Mint's API was designed to be very similar to that
 of gitpython.
 """
+
+from .repo import Repo
+from .exceptions import GitError

@@ -5,10 +5,16 @@ from typing import Any, Dict, List
 
 
 class BaseCommandError(Exception):
-	pass
+	"""
+	Base class for all command errors
+	"""
 
 
 class CommandError(BaseCommandError):
+	"""
+	Error raised when a command fails
+	"""
+
 	def __init__(self, command: str, stderr: str, *args: object) -> None:
 		super().__init__(*args)
 
@@ -20,6 +26,10 @@ class CommandError(BaseCommandError):
 
 
 class CommandNotFoundError(BaseCommandError):
+	"""
+	Error raised when a command is not found
+	"""
+
 	def __init__(self, command: str, *args: object) -> None:
 		super().__init__(*args)
 
@@ -49,6 +59,12 @@ class Command:
 		working_dir: str = None,
 		error=CommandError
 	) -> None:
+		"""
+		Args:
+			executabale (str): Name of the executable
+			working_dir (str): Path to the working directory
+			error (Exception): Error to raise when a command fails
+		"""
 
 		if not shutil.which(executabale):
 			raise CommandNotFoundError(executabale)
@@ -63,6 +79,16 @@ class Command:
 		self._error = error
 
 	def _run_command(self, command: List[str]) -> str:
+		"""
+		Run the specified command
+
+		Args:
+			command (List[str]): Command to run
+
+		Returns:
+			str: Output of the command
+		"""
+
 		try:
 			proc = subprocess.run(
 				command,
@@ -100,6 +126,17 @@ class Command:
 
 	@staticmethod
 	def _format_option(key: str, value: Any) -> List[str]:
+		"""
+		Format the specified option
+
+		Args:
+			key (str): Name of the option
+			value (Any): Value of the option
+
+		Returns:
+			List[str]: Formatted option
+		"""
+
 		option = key.replace('_', '-')
 		prefix = '-' if len(option) == 1 else '--'
 
@@ -119,6 +156,17 @@ class Command:
 		args: List[Any],
 		kwargs: Dict[str, Any]
 	) -> List[str]:
+		"""
+		Format the specified command
+
+		Args:
+			subcommand (str): Name of the subcommand
+			args (List[Any]): Positional arguments
+			kwargs (Dict[str, Any]): Keyword arguments
+
+		Returns:
+			List[str]: Formatted command
+		"""
 
 		options = [
 			token for key, value in kwargs.items()

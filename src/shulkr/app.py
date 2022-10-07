@@ -24,16 +24,30 @@ def run(
 	tags: bool,
 	undo_renamed_vars: bool
 ) -> None:
+	"""
+	Runs the application.
 
+	:param versions: The versions to generate.
+	:param mappings: The mappings to use.
+	:param repo_path: The path to the repository.
+	:param message_template: The commit message template.
+	:param tags: Whether to create tags.
+	:param undo_renamed_vars: Whether to undo renamed variables.
+	"""
+
+	# Load the manifest
 	load_manifest()
 
+	# Get the full path to the repository
 	full_repo_path = os.path.join(
 		os.getcwd(),
 		repo_path
 	)
 
+	# Initialize the repository
 	init_output = not init_repo(full_repo_path)
 
+	# Check if the repository is compatible with the current version of shulkr
 	if not is_compatible():
 		click.secho(
 			'This repo is not compatible with the current version of shulkr - ' +
@@ -43,6 +57,7 @@ def run(
 		)
 		sys.exit(4)
 
+	# Initialize the configuration
 	init_output = not init_config(
 		full_repo_path,
 		mappings,
@@ -50,6 +65,8 @@ def run(
 		tags,
 		undo_renamed_vars
 	) or init_output
+
+	# Ensure that the .gitignore file exists
 	init_output = not ensure_gitignore_exists() or init_output
 
 	# If we printed anything in the initialization step, print a newline
@@ -57,6 +74,7 @@ def run(
 		click.echo()
 
 	try:
+		# Resolve the versions
 		resolved_versions = Version.patterns(
 			versions,
 			latest_in_repo=get_latest_generated_version()
@@ -66,10 +84,12 @@ def run(
 		click.secho(e, err=True, fg='red')
 		sys.exit(1)
 
+	# If no versions were selected, exit
 	if len(resolved_versions) == 0:
 		click.secho('No versions selected', color='yellow')
 		sys.exit(0)
 
+	# If the first version is older than the latest version in the repo, exit
 	if resolved_versions[0] < get_latest_generated_version():
 		click.secho(
 			'The latest version in the repo is ' +
@@ -83,6 +103,7 @@ def run(
 		)
 		sys.exit(3)
 
+	# Generate each version
 	for i, version in enumerate(resolved_versions):
 		create_version(version)
 

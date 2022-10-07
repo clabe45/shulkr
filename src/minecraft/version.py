@@ -8,14 +8,23 @@ EARLIEST_SUPPORTED_VERSION_ID = '19w36a'
 
 
 class VersionError(Exception):
-	pass
+	"""Base class for all exceptions raised by this module."""
 
 
 class NoSuchVersionError(VersionError):
-	pass
+	"""Raised when a version is not supported by this module."""
 
 
 class Version:
+	"""Represents a Minecraft version.
+
+	Attributes:
+		id (str): The version ID.
+		_index (int): The index of this version in the manifest.
+		next (Optional[Version]): The next version, or None if this is the
+			latest version.
+	"""
+
 	def __init__(
 		self,
 		id: str,
@@ -73,6 +82,16 @@ class Version:
 
 	@staticmethod
 	def parse(raw: Dict, index: int) -> Version:
+		"""Parse a version from a dictionary.
+
+		Args:
+			raw (Dict): The dictionary to parse.
+			index (int): The index of this version in the manifest.
+
+		Returns:
+			Version: The parsed version.
+		"""
+
 		id = raw['id']
 		type_ = raw['type']
 
@@ -89,6 +108,18 @@ class Version:
 
 	@staticmethod
 	def of(id: Optional[str]) -> Version:
+		"""Get a version by its ID.
+
+		Args:
+			id (Optional[str]): The ID of the version to get.
+
+		Returns:
+			Version: The version with the given ID.
+
+		Raises:
+			NoSuchVersionError: If the version is not supported.
+		"""
+
 		if id is None:
 			return manifest.latest_snapshot
 
@@ -99,6 +130,20 @@ class Version:
 
 	@staticmethod
 	def pattern(p: str, latest_in_repo: Version = None) -> List[Version]:
+		"""Parse a version pattern.
+
+		Args:
+			p (str): The pattern to parse.
+			latest_in_repo (Version, optional): The latest version in the
+				repository. Defaults to None.
+
+		Returns:
+			List[Version]: The versions matching the pattern.
+
+		Raises:
+			ValueError: If the pattern is invalid.
+		"""
+
 		# First, check if the pattern is a range
 		m = re.match(r'(.*[^.])?(\.\.\.?)(.*)', p)
 		if m is not None:
@@ -139,6 +184,19 @@ class Version:
 		patterns: List[str],
 		latest_in_repo: Version = None
 	) -> List[Version]:
+		"""Parse a list of version patterns.
+
+		Args:
+			patterns (List[str]): The patterns to parse.
+			latest_in_repo (Version, optional): The latest version in the
+				repository. Defaults to None.
+
+		Returns:
+			List[Version]: The versions matching the patterns.
+
+		Raises:
+			ValueError: If a pattern is invalid.
+		"""
 
 		# Parse versions
 		versions = set()
@@ -156,8 +214,29 @@ class Version:
 
 
 class Release(Version):
+	"""Represents a Minecraft release.
+
+	Attributes:
+		id (str): The version ID.
+		_index (int): The index of this version in the manifest.
+		next (Optional[Version]): The next version, or None if this is the
+			latest version.
+	"""
+
 	@staticmethod
 	def of(id: Optional[str]) -> Release:
+		"""Get a release by its ID.
+
+		Args:
+			id (Optional[str]): The ID of the release to get.
+
+		Returns:
+			Release: The release with the given ID.
+
+		Raises:
+			ValueError: If the version is not a release.
+		"""
+
 		if id is None:
 			return manifest.latest_release
 
@@ -170,22 +249,62 @@ class Release(Version):
 
 
 class Snapshot(Version):
-	pass
+	"""Represents a Minecraft snapshot.
+
+	Attributes:
+		id (str): The version ID.
+		_index (int): The index of this version in the manifest.
+		next (Optional[Version]): The next version, or None if this is the
+			latest version.
+	"""
 
 
 class OldVersion(Version):
-	pass
+	"""Represents an old Minecraft version.
+
+	Attributes:
+		id (str): The version ID.
+		_index (int): The index of this version in the manifest.
+		next (Optional[Version]): The next version, or None if this is the
+			latest version.
+	"""
 
 
 class OldAlphaVersion(Version):
-	pass
+	"""Represents an old Minecraft alpha version.
+
+	Attributes:
+		id (str): The version ID.
+		_index (int): The index of this version in the manifest.
+		next (Optional[Version]): The next version, or None if this is the
+			latest version.
+	"""
 
 
 class OldBetaVersion(Version):
-	pass
+	"""Represents an old Minecraft beta version.
+
+	Attributes:
+		id (str): The version ID.
+		_index (int): The index of this version in the manifest.
+		next (Optional[Version]): The next version, or None if this is the
+			latest version.
+	"""
 
 
 class Manifest:
+	"""Represents the Minecraft version manifest.
+
+	Attributes:
+		versions (List[Version]): All the versions in the manifest.
+		version_for_id (Dict[str, Version]): A mapping from version IDs to
+			versions.
+		earliest_release (Release): The earliest release in the manifest.
+		earliest_snapshot (Version): The earliest snapshot in the manifest.
+		latest_release (Release): The latest release in the manifest.
+		latest_snapshot (Version): The latest snapshot in the manifest.
+	"""
+
 	def __init__(
 		self,
 		versions: List[Version],
@@ -210,6 +329,16 @@ class Manifest:
 		raw: Dict,
 		earliest_supported_version_id: Optional[str]
 	) -> Manifest:
+		"""Parse a manifest from a dictionary.
+
+		Args:
+			raw (Dict): The dictionary to parse.
+			earliest_supported_version_id (Optional[str]): The earliest
+				supported version ID.
+
+		Returns:
+			Manifest: The parsed manifest.
+		"""
 
 		# Reverse to get ascending chronological order
 		reversed_versions = reversed(raw['versions'])
@@ -258,6 +387,13 @@ def load_manifest(
 	raw: Optional[Dict] = None,
 	earliest_supported_version_id: Optional[str] = EARLIEST_SUPPORTED_VERSION_ID
 ):
+	"""Load the Minecraft version manifest.
+
+	Args:
+		raw (Optional[Dict], optional): The manifest to load. Defaults to None.
+		earliest_supported_version_id (Optional[str], optional): The earliest
+			supported version ID. Defaults to EARLIEST_SUPPORTED_VERSION_ID.
+	"""
 
 	global manifest
 
@@ -267,9 +403,8 @@ def load_manifest(
 
 
 def clear_manifest():
+	"""Clear the loaded Minecraft version manifest."""
+
 	global manifest
 
 	manifest = None
-
-
-manifest = None

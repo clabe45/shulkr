@@ -44,6 +44,13 @@ def init_repo(repo_path: str) -> bool:
 
 
 def get_repo() -> Repo:
+	"""
+	Get the current shulkr/git repo
+
+	Returns:
+		Repo: The current shulkr/git repo
+	"""
+
 	return repo
 
 

@@ -16,6 +16,13 @@ from shulkr.repo import get_repo
 
 
 def _commit_version(version: Version) -> None:
+	"""
+	Commit the generated sources for a Minecraft version to the repo
+
+	Args:
+		version (Version): Version to commit
+	"""
+
 	repo = get_repo()
 	message_template = get_config().message_template
 
@@ -29,6 +36,13 @@ def _commit_version(version: Version) -> None:
 
 
 def _tag_version(version: Version) -> None:
+	"""
+	Tag the commit for a Minecraft version
+
+	Args:
+		version (Version): Version to tag
+	"""
+
 	repo = get_repo()
 
 	repo.git.tag(version)

@@ -4,7 +4,17 @@ from command import Command
 
 
 class Gradle(Command):
+	"""
+	A wrapper around the gradle command line tool.
+	"""
+
 	def __init__(self, project_dir: str) -> None:
+		"""
+		Initialize a new Gradle instance.
+
+		:param project_dir: The directory containing the gradle project.
+		"""
+
 		exec = Gradle._executable(project_dir)
 		super().__init__(exec, working_dir=project_dir)
 
@@ -26,6 +36,9 @@ class Gradle(Command):
 	def _executable(project_dir: str) -> bool:
 		"""
 		Get the path to gradlew or gradle (if gradlew is not found)
+
+		:param project_dir: The directory containing the gradle project.
+		:return: The path to the gradle executable.
 		"""
 
 		gradlew_exec = os.path.join(

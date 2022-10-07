@@ -61,6 +61,16 @@ def cli(
 	no_tags: bool,
 	undo_renamed_vars: bool
 ) -> None:
+	"""
+	Generate multiple versions of the Minecraft source code.
+
+	:param versions: List of versions to generate.
+	:param mappings: Mappings for deobfuscation.
+	:param repo: Path to the Minecraft repo.
+	:param message: Commit message template.
+	:param no_tags: Do not tag commits.
+	:param undo_renamed_vars: Revert local variables that were renamed in new versions to their original names.
+	"""
 
 	tags = not no_tags
 	try:

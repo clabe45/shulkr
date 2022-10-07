@@ -15,6 +15,19 @@ YARN_REMOTE_URL = 'https://github.com/FabricMC/yarn.git'
 
 
 def _setup_decompiler(local_dir: str, remote_url: str) -> Repo:
+	"""
+	Sets up a decompiler repo.
+
+	If the repo already exists, it will be used. Otherwise, it will be cloned.
+
+	Args:
+		local_dir (str): The local directory to clone the repo into.
+		remote_url (str): The remote URL of the repo.
+
+	Returns:
+		Repo: The repo.
+	"""
+
 	if os.path.exists(
 		os.path.join(local_dir, '.git')
 	):
@@ -27,6 +40,14 @@ def _setup_decompiler(local_dir: str, remote_url: str) -> Repo:
 
 
 def _generate_sources_with_yarn(version: Version, path: str) -> None:
+	"""
+	Decompiles a version of the Minecraft client with Yarn.
+
+	Args:
+		version (Version): The version to decompile.
+		path (str): The path to the repo.
+	"""
+
 	decompiler_path = os.path.join(path, '.yarn')
 	decompiler_repo = _setup_decompiler(decompiler_path, YARN_REMOTE_URL)
 
@@ -71,7 +92,8 @@ def _generate_sources_with_mojang(version: Version, path: str) -> None:
 	Mojang's official mappings)
 
 	Args:
-		version (Version):
+		version (Version): The version to decompile.
+		path (str): The path to the repo.
 
 	Raises:
 		Exception: If DecompilerMC fails
@@ -118,6 +140,18 @@ def _generate_sources_with_mojang(version: Version, path: str) -> None:
 
 
 def generate_sources(version: Version, mappings: str, path: str) -> None:
+	"""
+	Generates the source code for a version of Minecraft.
+
+	Args:
+		version (Version): The version to decompile.
+		mappings (str): The type of mappings to use.
+		path (str): The path to the repo.
+
+	Raises:
+		ValueError: If the mapping type is invalid.
+	"""
+
 	if mappings == 'mojang':
 		_generate_sources_with_mojang(version, path)
 

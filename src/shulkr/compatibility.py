@@ -5,6 +5,10 @@ from shulkr.repo import get_repo
 
 
 def _repo_has_commits() -> bool:
+	"""
+	Check if the current repo has commits.
+	"""
+
 	try:
 		get_repo().git.rev_parse('HEAD')
 		return True

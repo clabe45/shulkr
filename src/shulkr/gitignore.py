@@ -1,17 +1,29 @@
 import os
-
 import click
-
 from shulkr.repo import get_repo
 
 
 def _gitignore_path() -> str:
+	"""
+	Get the path to the .gitignore file
+
+	Returns:
+		str: The path to the .gitignore file
+	"""
+
 	repo = get_repo()
 
 	return os.path.join(repo.path, '.gitignore')
 
 
 def _create_gitignore() -> None:
+	"""
+	Create a .gitignore file and commit it to the repository
+
+	Returns:
+		None
+	"""
+
 	click.echo('Creating gitignore')
 
 	repo = get_repo()

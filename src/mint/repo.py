@@ -8,6 +8,10 @@ from mint.error import GitError
 
 
 class NoSuchRepoError(Exception):
+	"""
+	Exception raised when a path is not a git repo
+	"""
+
 	def __init__(self, path: str, *args: object) -> None:
 		super().__init__(*args)
 
@@ -43,10 +47,16 @@ class Repo:
 		self.git = Command('git', working_dir=path, error=GitError)
 
 	def to_gitpython(self) -> git.Repo:
+		"""
+		Return a GitPython repo object
+		"""
 		return git.Repo(self.path)
 
 	@staticmethod
 	def _ensure_repo_path_is_valid(path: str):
+		"""
+		Ensure that the path is a valid git repo
+		"""
 		if not os.path.exists(path):
 			raise FileNotFoundError(path)
 
@@ -60,6 +70,9 @@ class Repo:
 
 	@staticmethod
 	def init(path: str, **kwargs) -> Repo:
+		"""
+		Create an empty repo
+		"""
 		if not os.path.exists(path):
 			os.mkdir(path)
 
@@ -69,6 +82,9 @@ class Repo:
 
 	@staticmethod
 	def clone(remote: str, dest: str, **kwargs) -> Repo:
+		"""
+		Clone a repo
+		"""
 		git = Command('git', error=GitError)
 		git.clone(remote, dest, **kwargs)
 		return Repo(dest)
