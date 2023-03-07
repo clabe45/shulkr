@@ -4,5 +4,6 @@
 	],
 	"python.testing.unittestEnabled": false,
 	"python.testing.pytestEnabled": true,
-	"editor.defaultFormatter": "ms-python.flake8"
+	"editor.defaultFormatter": "ms-python.flake8",
+	"editor.insertSpaces": false
 }
