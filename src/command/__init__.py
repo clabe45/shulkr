@@ -47,6 +47,7 @@ class Command:
 		self,
 		executabale: str,
 		working_dir: str = None,
+		capture_output: bool = True,
 		error=CommandError
 	) -> None:
 
@@ -59,6 +60,7 @@ class Command:
 			working_dir = os.getcwd()
 
 		self._working_dir = working_dir
+		self._capture_output = capture_output
 
 		self._error = error
 
@@ -68,11 +70,12 @@ class Command:
 				command,
 				cwd=self._working_dir,
 				check=True,
-				capture_output=True,
+				capture_output=self._capture_output,
 				text=True
 			)
 
-			return proc.stdout.strip()
+			if self._capture_output:
+				return proc.stdout.strip()
 
 		except subprocess.CalledProcessError as e:
 			# Convert the error to to the user-specified error type

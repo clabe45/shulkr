@@ -4,9 +4,15 @@ from command import Command
 
 
 class Gradle(Command):
-	def __init__(self, project_dir: str) -> None:
+	# `capture_output` is set to False by default because gradle commands can
+	# be very verbose and can cause the command to hang on windows
+	def __init__(self, project_dir: str, capture_output=False) -> None:
 		exec = Gradle._executable(project_dir)
-		super().__init__(exec, working_dir=project_dir)
+		super().__init__(
+			exec,
+			working_dir=project_dir,
+			capture_output=capture_output
+		)
 
 	def __getattr__(self, name: str):
 		super_func = super().__getattr__(name)

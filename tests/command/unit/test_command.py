@@ -30,6 +30,11 @@ def git() -> Command:
 	return Command('git', working_dir='/foo/bar', error=GitError)
 
 
+@pytest.fixture
+def silent_git() -> Command:
+	return Command('git', working_dir='/foo/bar', capture_output=False, error=GitError)
+
+
 class TestGitCommand:
 	def test_getattr_calls_subprocess_with_cwd_set_to_repo_path(self, git):
 		git.status()
@@ -110,3 +115,16 @@ class TestGitCommand:
 
 		with pytest.raises(GitError):
 			git.status()
+
+	def test_getattr_with_capture_output_set_to_false_does_not_capture_output(self, silent_git):
+		silent_git.status()
+
+		subprocess_args = {
+			**SUBPROCESS_ANY_ARGS,
+			'capture_output': False
+		}
+
+		command.subprocess.run.assert_called_once_with(
+			ANY,
+			**subprocess_args
+		)
