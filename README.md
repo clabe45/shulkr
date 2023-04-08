@@ -120,6 +120,6 @@ Licensed under the Apache License, Version 2.0.
 
 [yarn's]: https://github.com/FabricMC/yarn
 [Fork]: https://github.com/clabe45/shulkr/fork
-[changelog]: https://github.com/clabe45/shulkr/blob/main/docs/changelog.md
-[usage guidelines]: https://github.com/clabe45/shulkr/blob/main/docs/usage-guidelines.md
-[contributing guide]: https://github.com/clabe45/shulkr/blob/main/docs/contributing.md
+[changelog]: ./docs/changelog.md
+[usage guidelines]: ./docs/usage-guidelines.md
+[contributing guide]: ./docs/contributing.md
