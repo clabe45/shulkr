@@ -106,6 +106,10 @@ can be disabled with `--no-tags`.
 When this option is enabled, local variables that were renamed in new versions
 will be reverted to their original names.
 
+## Changelog
+
+See the [changelog].
+
 ## Contributing
 
 See the [contributing guide].
