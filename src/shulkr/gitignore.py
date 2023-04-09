@@ -17,7 +17,7 @@ def _create_gitignore() -> None:
 	repo = get_repo()
 
 	with open(_gitignore_path(), 'w+') as gitignore:
-		to_ignore = ['.yarn', '.DecompilerMC']
+		to_ignore = ['yarn', 'DecompilerMC']
 		gitignore.write('\n'.join(to_ignore) + '\n')
 
 	repo.git.add('.gitignore')

@@ -46,7 +46,7 @@ def create_yarn_project(mocker):
 
 @pytest.fixture
 def yarn_project(mocker):
-	repo_path = os.path.join('foo', '.yarn')
+	repo_path = os.path.join('foo', 'yarn')
 	repo = create_repo(repo_path, mocker)
 	project = create_yarn_project(mocker)
 	mocker.patch('minecraft.source.Project', return_value=project)
@@ -57,7 +57,7 @@ def yarn_project(mocker):
 
 @pytest.fixture
 def decompiler_mc_repo(mocker):
-	repo_path = os.path.join('foo', '.DecompilerMC')
+	repo_path = os.path.join('foo', 'DecompilerMC')
 	repo = create_repo(repo_path, mocker)
 	mocker.patch('minecraft.source.Repo', return_value=repo)
 	mocker.patch('minecraft.source.Repo.clone', return_value=repo)
@@ -77,9 +77,29 @@ def test_generate_sources_with_yarn_runs_decompiler(mocker, versions, yarn_proje
 	yarn_project.gradle.decompileCFR.assert_called_once_with()
 
 
+def test_generate_sources_with_yarn_removes_old_decompiler_dir_if_exists(mocker, versions, yarn_project):
+	root_path = 'foo'
+	old_decompiler_dir = os.path.join(root_path, '.yarn')
+
+	mocker.patch(
+		'subprocess.run',
+		return_value=SubprocessMock()
+	)
+	mocker.patch('minecraft.source.click')
+	mocker.patch('shutil.move')
+	mocker.patch('os.makedirs')
+	mocker.patch('os.path.exists', return_value=True)
+
+	rmtree = mocker.patch('shutil.rmtree')
+
+	generate_sources(versions.snapshot, 'yarn', root_path)
+
+	rmtree.assert_any_call(old_decompiler_dir)
+
+
 def test_generate_sources_with_yarn_moves_sources_to_repo(mocker, versions, yarn_project):
 	root_path = 'foo'
-	decompiler_dir = os.path.join(root_path, '.DecompilerMC')
+	decompiler_dir = os.path.join(root_path, 'DecompilerMC')
 
 	mocker.patch(
 		'subprocess.run',
@@ -92,7 +112,7 @@ def test_generate_sources_with_yarn_moves_sources_to_repo(mocker, versions, yarn
 
 	generate_sources(versions.snapshot, 'yarn', root_path)
 
-	decompiler_dir = os.path.join(root_path, '.yarn')
+	decompiler_dir = os.path.join(root_path, 'yarn')
 	move.assert_called_once_with(
 		os.path.join(decompiler_dir, 'namedSrc'),
 		os.path.join(root_path, 'src')
@@ -101,7 +121,7 @@ def test_generate_sources_with_yarn_moves_sources_to_repo(mocker, versions, yarn
 
 def test_generate_sources_with_mojang_runs_decompiler(mocker, versions, decompiler_mc_repo):
 	root_path = 'foo'
-	decompiler_dir = os.path.join(root_path, '.DecompilerMC')
+	decompiler_dir = os.path.join(root_path, 'DecompilerMC')
 
 	subprocess_run = mocker.patch(
 		'subprocess.run',
@@ -131,9 +151,29 @@ def test_generate_sources_with_mojang_runs_decompiler(mocker, versions, decompil
 	)
 
 
+def test_generate_sources_with_mojang_removes_old_decompiler_dir_if_exists(mocker, versions, decompiler_mc_repo):
+	root_path = 'foo'
+	old_decompiler_dir = os.path.join(root_path, '.DecompilerMC')
+
+	mocker.patch(
+		'subprocess.run',
+		return_value=SubprocessMock()
+	)
+	mocker.patch('minecraft.source.click')
+	mocker.patch('shutil.move')
+	mocker.patch('os.makedirs')
+	mocker.patch('os.path.exists', return_value=True)
+
+	rmtree = mocker.patch('shutil.rmtree')
+
+	generate_sources(versions.snapshot, 'mojang', root_path)
+
+	rmtree.assert_any_call(old_decompiler_dir)
+
+
 def test_generate_sources_with_mojang_moves_sources_to_repo(mocker, versions, decompiler_mc_repo):
 	root_path = 'foo'
-	decompiler_dir = os.path.join(root_path, '.DecompilerMC')
+	decompiler_dir = os.path.join(root_path, 'DecompilerMC')
 
 	mocker.patch(
 		'subprocess.run',

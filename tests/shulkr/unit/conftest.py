@@ -76,7 +76,7 @@ def decompiler(mocker):
 	"""
 
 	def mocked_setup_decompiler(local_dir: str, _remote_url: str) -> Repo:
-		"""Create a fake decompiler subdirectory (.yarn or .DecompilerMC)"""
+		"""Create a fake decompiler subdirectory (yarn or DecompilerMC)"""
 
 		# It will be located directly under the shulkr repo directory
 		repo = get_repo()
