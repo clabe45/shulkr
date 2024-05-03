@@ -18,13 +18,13 @@ pytest = "*"
 pytest-mock = "*"
 twine = "*"
 flake8 = "*"
-flake8-tabs = "*"
 bump2version = "*"
 keepachangelog = "*"
 python-lsp-server = "*"
 pyls-mypy = {git = "https://github.com/tomv564/pyls-mypy.git"}
 # Needed to run tests on windows
 atomicwrites = "*"
+black = "*"
 
 [requires]
 python_version = "3.9"
@@ -36,6 +36,7 @@ test-unit = "python -m pytest tests/command/unit tests/gradle/unit tests/mint/un
 test-smoke = "python -m pytest tests/command/smoke tests/gradle/smoke tests/mint/smoke tests/shulkr/smoke"
 test-func = "python -m pytest tests/java/functional tests/shulkr/functional"
 lint = "python -m flake8 src"
+format = "black ."
 profile = "python -m tests.profile"
 bump = "python -m scripts.bump"
 build = "python setup.py clean --all sdist bdist_wheel"

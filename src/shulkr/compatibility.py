@@ -5,18 +5,18 @@ from shulkr.repo import get_repo
 
 
 def _repo_has_commits() -> bool:
-	try:
-		get_repo().git.rev_parse('HEAD')
-		return True
+    try:
+        get_repo().git.rev_parse("HEAD")
+        return True
 
-	except GitError:
-		return False
+    except GitError:
+        return False
 
 
 def is_compatible() -> bool:
-	"""
-	Check if the current repo is compatible with the current shulkr version.
-	"""
+    """
+    Check if the current repo is compatible with the current shulkr version.
+    """
 
-	repo = get_repo()
-	return config_exists(repo.path) or not _repo_has_commits()
+    repo = get_repo()
+    return config_exists(repo.path) or not _repo_has_commits()

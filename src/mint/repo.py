@@ -8,67 +8,67 @@ from mint.error import GitError
 
 
 class NoSuchRepoError(Exception):
-	def __init__(self, path: str, *args: object) -> None:
-		super().__init__(*args)
+    def __init__(self, path: str, *args: object) -> None:
+        super().__init__(*args)
 
-		self.path = path
+        self.path = path
 
-	def __str__(self) -> str:
-		return f'{self.path} is not a git repo'
+    def __str__(self) -> str:
+        return f"{self.path} is not a git repo"
 
 
 class Repo:
-	"""
-	Git repo
+    """
+    Git repo
 
-	Creating a Repo object:
-		# Use an existing repo
-		repo = Repo(PATH)
+    Creating a Repo object:
+            # Use an existing repo
+            repo = Repo(PATH)
 
-		# Create an empty repo
-		repo = Repo.init(PATH)
+            # Create an empty repo
+            repo = Repo.init(PATH)
 
-		# Clone a repo
-		repo = Repo.clone(REMOTE_URL, DESTINATION)
+            # Clone a repo
+            repo = Repo.clone(REMOTE_URL, DESTINATION)
 
-	Using a Repo object:
-		repo.git.commit('src', message='Some commit')  # or m='Some commit'
-	"""
+    Using a Repo object:
+            repo.git.commit('src', message='Some commit')  # or m='Some commit'
+    """
 
-	def __init__(self, path: str, check_path=True) -> None:
-		if check_path:
-			Repo._ensure_repo_path_is_valid(path)
+    def __init__(self, path: str, check_path=True) -> None:
+        if check_path:
+            Repo._ensure_repo_path_is_valid(path)
 
-		self.path = path
-		self.git = Command('git', working_dir=path, error=GitError)
+        self.path = path
+        self.git = Command("git", working_dir=path, error=GitError)
 
-	def to_gitpython(self) -> git.Repo:
-		return git.Repo(self.path)
+    def to_gitpython(self) -> git.Repo:
+        return git.Repo(self.path)
 
-	@staticmethod
-	def _ensure_repo_path_is_valid(path: str):
-		if not os.path.exists(path):
-			raise FileNotFoundError(path)
+    @staticmethod
+    def _ensure_repo_path_is_valid(path: str):
+        if not os.path.exists(path):
+            raise FileNotFoundError(path)
 
-		# Make sure the path is a directory or a symlink
-		if os.path.isfile(path):
-			raise NotADirectoryError(path)
+        # Make sure the path is a directory or a symlink
+        if os.path.isfile(path):
+            raise NotADirectoryError(path)
 
-		git_dir = os.path.join(path, '.git')
-		if not os.path.exists(git_dir) or os.path.isfile(git_dir):
-			raise NoSuchRepoError(path)
+        git_dir = os.path.join(path, ".git")
+        if not os.path.exists(git_dir) or os.path.isfile(git_dir):
+            raise NoSuchRepoError(path)
 
-	@staticmethod
-	def init(path: str, **kwargs) -> Repo:
-		if not os.path.exists(path):
-			os.mkdir(path)
+    @staticmethod
+    def init(path: str, **kwargs) -> Repo:
+        if not os.path.exists(path):
+            os.mkdir(path)
 
-		repo = Repo(path, check_path=False)
-		repo.git.init(**kwargs)
-		return repo
+        repo = Repo(path, check_path=False)
+        repo.git.init(**kwargs)
+        return repo
 
-	@staticmethod
-	def clone(remote: str, dest: str, **kwargs) -> Repo:
-		git = Command('git', error=GitError)
-		git.clone(remote, dest, **kwargs)
-		return Repo(dest)
+    @staticmethod
+    def clone(remote: str, dest: str, **kwargs) -> Repo:
+        git = Command("git", error=GitError)
+        git.clone(remote, dest, **kwargs)
+        return Repo(dest)
