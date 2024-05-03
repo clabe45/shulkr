@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Security
-- Updated `cryptography` to 41.0.6
+- Updated `cryptography` to 42.0.4
 - Updated `requests` to 2.31.0
 - Updated `certifi` to 2023.7.22
 - Updated `urllib3` to 2.0.7
