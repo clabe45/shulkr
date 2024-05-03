@@ -42,6 +42,12 @@ class Version:
 
 		return self._index > other._index
 
+	def __le__(self, other) -> bool:
+		return self < other or self == other
+
+	def __ge__(self, other) -> bool:
+		return self > other or self == other
+
 	def to(self, other: Optional[Version], snapshots=True) -> List[Version]:
 		"""Iterate over all the versions from this version (inclusive) to
 		`other` (exclusive)

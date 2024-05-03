@@ -65,7 +65,7 @@ def _generate_sources_with_yarn(version: Version, path: str) -> None:
 
 	# Move the generated source code to $repo_dir/src
 	shutil.move(
-		os.path.join(decompiler_repo.path, 'namedSrc'),
+		os.path.join(decompiler_repo.path, 'src' if version >= Version.of('1.20.5') else 'namedSrc'),
 		src_path
 	)
 

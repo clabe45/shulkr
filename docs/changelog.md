@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- *namedSrc not found* error when decompiling Minecraft 1.20.5 with Yarn mappings.
+
 ### Security
 - Updated `cryptography` from 40.0.2 to 42.0.4
 - Updated `requests` from 2.28.1 to 2.31.0

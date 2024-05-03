@@ -36,7 +36,7 @@ class TestVersion:
 			versions.release.to(versions.snapshot)
 
 	def test_pattern_with_no_range_operator_returns_list_containing_version(self, versions):
-		assert Version.pattern('1.0.0') == [versions.release]
+		assert Version.pattern('1.20.5') == [versions.release]
 
 	def test_pattern_with_snapshot_two_dots_returns_list_containing_release(self, versions):
 		assert Version.pattern('abcdef..') == [versions.release]
@@ -45,13 +45,13 @@ class TestVersion:
 		assert Version.pattern('abcdef...') == [versions.snapshot, versions.release]
 
 	def test_pattern_with_release_two_dots_returns_list_containing_release(self, versions):
-		assert Version.pattern('1.0.0..') == [versions.release]
+		assert Version.pattern('1.20.5..') == [versions.release]
 
 	def test_pattern_with_release_two_dots_release_returns_list_containing_release(self, versions):
-		assert Version.pattern('1.0.0..1.0.0') == [versions.release]
+		assert Version.pattern('1.20.5..1.20.5') == [versions.release]
 
 	def test_pattern_with_snapshot_three_dots_release_returns_list_containing_snapshot_and_release(self, versions):
-		assert Version.pattern('abcdef...1.0.0') == [versions.snapshot, versions.release]
+		assert Version.pattern('abcdef...1.20.5') == [versions.snapshot, versions.release]
 
 	def test_pattern_with_three_dots_on_empty_repo_throws_value_error(self, versions):
 		with pytest.raises(ValueError, match='No commits from which to derive current version'):
@@ -67,13 +67,13 @@ class TestVersion:
 		assert Version.patterns([]) == []
 
 	def test_patterns_with_one_positive_id_returns_corresponding_version(self, versions):
-		assert Version.patterns(['1.0.0']) == [versions.release]
+		assert Version.patterns(['1.20.5']) == [versions.release]
 
 	def test_patterns_with_two_positive_identical_ids_returns_one_version(self, versions):
-		assert Version.patterns(['1.0.0', '1.0.0']) == [versions.release]
+		assert Version.patterns(['1.20.5', '1.20.5']) == [versions.release]
 
 	def test_patterns_with_one_positive_id_and_the_same_negative_id_returns_empty_list(self, versions):
-		assert Version.patterns(['1.0.0', '-1.0.0']) == []
+		assert Version.patterns(['1.20.5', '-1.20.5']) == []
 
 	def test_patterns_with_one_positive_id_and_the_same_negative_id_and_the_same_positive_id_returns_one_version(self, versions):
-		assert Version.patterns(['1.0.0', '-1.0.0', '1.0.0']) == [versions.release]
+		assert Version.patterns(['1.20.5', '-1.20.5', '1.20.5']) == [versions.release]

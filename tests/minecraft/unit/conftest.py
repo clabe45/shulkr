@@ -8,26 +8,32 @@ from minecraft.version import Version, clear_manifest, load_manifest
 
 MANIFEST_DATA = {
 	'latest': {
-		'release': '1.0.0',
-		'snapshot': '1.0.0'
+		'release': '1.20.5',
+		'snapshot': 'abcdef'
 	},
 	'versions': [
 		{
 			'type': 'release',
-			'id': '1.0.0'
+			'id': '1.20.5'
 		},
 		{
 			'type': 'snapshot',
 			'id': 'abcdef'
+		},
+		{
+			'type': 'release',
+			'id': '1.20.4'
 		}
 	]
 }
 
 
 class TestVersions:
-	def __init__(self, snapshot: Version, release: Version) -> None:
+	def __init__(self, v1_20_4: Version, snapshot: Version, v1_20_5: Version) -> None:
+		self.v1_20_4 = v1_20_4
 		self.snapshot = snapshot
-		self.release = release
+		self.v1_20_5 = v1_20_5
+		self.release = v1_20_5
 
 
 def create_repo(mocker, path: str):
@@ -71,11 +77,12 @@ def create_repo(mocker, path: str):
 
 @pytest.fixture
 def versions():
-	load_manifest(MANIFEST_DATA, earliest_supported_version_id='abcdef')
+	load_manifest(MANIFEST_DATA, earliest_supported_version_id='1.20.4')
 
+	v1_20_4 = Version.of('1.20.4')
 	snapshot = Version.of('abcdef')
-	release = Version.of('1.0.0')
+	v1_20_5 = Version.of('1.20.5')
 
-	yield TestVersions(snapshot, release)
+	yield TestVersions(v1_20_4, snapshot, v1_20_5)
 
 	clear_manifest()

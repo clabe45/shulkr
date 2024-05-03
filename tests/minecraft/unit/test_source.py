@@ -97,7 +97,7 @@ def test_generate_sources_with_yarn_removes_old_decompiler_dir_if_exists(mocker,
 	rmtree.assert_any_call(old_decompiler_dir)
 
 
-def test_generate_sources_with_yarn_moves_sources_to_repo(mocker, versions, yarn_project):
+def test_generate_sources_with_1_20_4_and_yarn_moves_sources_to_repo(mocker, versions, yarn_project):
 	root_path = 'foo'
 	decompiler_dir = os.path.join(root_path, 'DecompilerMC')
 
@@ -110,11 +110,33 @@ def test_generate_sources_with_yarn_moves_sources_to_repo(mocker, versions, yarn
 	mocker.patch('os.makedirs')
 	move = mocker.patch('shutil.move')
 
-	generate_sources(versions.snapshot, 'yarn', root_path)
+	generate_sources(versions.v1_20_4, 'yarn', root_path)
 
 	decompiler_dir = os.path.join(root_path, 'yarn')
 	move.assert_called_once_with(
 		os.path.join(decompiler_dir, 'namedSrc'),
+		os.path.join(root_path, 'src')
+	)
+
+
+def test_generate_sources_with_1_20_5_and_yarn_moves_sources_to_repo(mocker, versions, yarn_project):
+	root_path = 'foo'
+	decompiler_dir = os.path.join(root_path, 'DecompilerMC')
+
+	mocker.patch(
+		'subprocess.run',
+		return_value=SubprocessMock()
+	)
+	mocker.patch('minecraft.source.click')
+	mocker.patch('shutil.rmtree')
+	mocker.patch('os.makedirs')
+	move = mocker.patch('shutil.move')
+
+	generate_sources(versions.v1_20_5, 'yarn', root_path)
+
+	decompiler_dir = os.path.join(root_path, 'yarn')
+	move.assert_called_once_with(
+		os.path.join(decompiler_dir, 'src'),
 		os.path.join(root_path, 'src')
 	)
 
