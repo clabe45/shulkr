@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated `certifi` to 2023.7.22
 - Updated `urllib3` to 2.0.7
 - Updated `gitpython` to 3.1.41
+- Updated `idna` to 3.7
 
 ## [0.7.1] - 2023-04-08
 ### Fixed
