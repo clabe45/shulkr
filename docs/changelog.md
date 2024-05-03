@@ -6,12 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Security
-- Updated `cryptography` to 42.0.4
-- Updated `requests` to 2.31.0
-- Updated `certifi` to 2023.7.22
-- Updated `urllib3` to 2.0.7
-- Updated `gitpython` to 3.1.41
-- Updated `idna` to 3.7
+- Updated `cryptography` from 40.0.2 to 42.0.4
+- Updated `requests` from 2.28.1 to 2.31.0
+- Updated `certifi` from 2023.5.7 to 2023.7.22
+- Updated `urllib3` from 2.0.5 to 2.0.7
+- Updated `gitpython` from 3.1.30 to 3.1.41
+- Updated `idna` from 3.4 to 3.7
 
 ## [0.7.1] - 2023-04-08
 ### Fixed
