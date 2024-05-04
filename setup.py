@@ -23,7 +23,7 @@ classifiers = [
 
 setup(
     name="shulkr",
-    version="0.7.1",
+    version="0.7.2",
     description="Diff decompiled versions of Minecraft",
     long_description=README,
     long_description_content_type="text/markdown",
